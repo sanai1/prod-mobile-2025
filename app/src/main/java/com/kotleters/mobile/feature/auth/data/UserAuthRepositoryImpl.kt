@@ -1,6 +1,8 @@
 package com.kotleters.mobile.feature.auth.data
 
+import android.content.Context
 import com.kotleters.mobile.common.ResponseTemplate
+import com.kotleters.mobile.common.SecretStorage
 import com.kotleters.mobile.feature.auth.data.network.AuthRetrofitClient
 import com.kotleters.mobile.feature.auth.data.network.model.ClientAuthRegisterModel
 import com.kotleters.mobile.feature.auth.data.network.model.CompanyAuthRegisterModel
@@ -9,7 +11,9 @@ import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import javax.inject.Inject
 
-class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
+class UserAuthRepositoryImpl @Inject constructor(
+    private val context: Context
+) : UserAuthRepository {
     override suspend fun register(userAuth: UserAuth): ResponseTemplate<Boolean> {
         try {
             when (userAuth) {
@@ -23,6 +27,15 @@ class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
                         )
                     ).execute().body().also {
                         return if (it?.isNotEmpty() == true) {
+                            SecretStorage.savePassAndEmail(
+                                context = context,
+                                email = userAuth.email,
+                                password = userAuth.password
+                            )
+                            SecretStorage.saveToken(
+                                context = context,
+                                token = it
+                            )
                             ResponseTemplate.Success(
                                 data = true
                             )
@@ -42,6 +55,15 @@ class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
                         )
                     ).execute().body().also {
                         return if (it?.isNotEmpty() == true) {
+                            SecretStorage.savePassAndEmail(
+                                context = context,
+                                email = userAuth.email,
+                                password = userAuth.password
+                            )
+                            SecretStorage.saveToken(
+                                context = context,
+                                token = it
+                            )
                             ResponseTemplate.Success(
                                 data = true
                             )
@@ -71,6 +93,10 @@ class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
                         )
                     ).execute().body().also { 
                         return if (it?.isNotEmpty() == true) {
+                            SecretStorage.saveToken(
+                                context = context,
+                                token = it
+                            )
                             ResponseTemplate.Success(
                                 data = true
                             )
@@ -89,6 +115,10 @@ class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
                         )
                     ).execute().body().also { 
                         return if (it?.isNotEmpty() == true) {
+                            SecretStorage.saveToken(
+                                context = context,
+                                token = it
+                            )
                             ResponseTemplate.Success(
                                 data = true
                             )

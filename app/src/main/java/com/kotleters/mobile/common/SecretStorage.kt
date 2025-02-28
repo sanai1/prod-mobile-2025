@@ -1,4 +1,4 @@
-package com.kotleters.mobile.feature.auth.data
+package com.kotleters.mobile.common
 
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
