@@ -25,11 +25,17 @@ object SecretStorage {
         ) as EncryptedSharedPreferences
     }
 
-    fun saveData(context: Context, token: String, email: String, password: String) {
+    fun savePassAndEmail(context: Context, email: String, password: String) {
         getPrefs(context).edit().apply {
-            putString(TOKEN_FIELD, token)
             putString(EMAIL_FIELD, email)
             putString(PASSWORD_FIELD, password)
+            apply()
+        }
+    }
+
+    fun saveToken(context: Context, token: String){
+        getPrefs(context).edit().apply {
+            putString(TOKEN_FIELD, token)
             apply()
         }
     }
