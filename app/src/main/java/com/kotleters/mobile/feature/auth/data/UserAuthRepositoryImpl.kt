@@ -4,6 +4,7 @@ import com.kotleters.mobile.common.ResponseTemplate
 import com.kotleters.mobile.feature.auth.data.network.AuthRetrofitClient
 import com.kotleters.mobile.feature.auth.data.network.model.ClientAuthRegisterModel
 import com.kotleters.mobile.feature.auth.data.network.model.CompanyAuthRegisterModel
+import com.kotleters.mobile.feature.auth.data.network.model.UserAuthLoginModel
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import javax.inject.Inject
@@ -15,8 +16,8 @@ class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
                 is UserAuth.Client -> {
                     AuthRetrofitClient.authRetrofitService.registerClient(
                         clientAuthRegisterModel = ClientAuthRegisterModel(
-                            firstName = userAuth.firstName,
-                            lastName = userAuth.secondName,
+                            firstName = userAuth.firstName ?: "",
+                            lastName = userAuth.secondName ?: "",
                             email = userAuth.email,
                             password = userAuth.password
                         )
@@ -35,7 +36,7 @@ class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
                 is UserAuth.Company -> {
                     AuthRetrofitClient.authRetrofitService.registerCompany(
                         companyAuthRegisterModel = CompanyAuthRegisterModel(
-                            name = userAuth.name,
+                            name = userAuth.name ?: "",
                             email = userAuth.email,
                             password = userAuth.password
                         )
@@ -59,7 +60,50 @@ class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
         }
     }
 
-    override suspend fun auth(emailPassword: Pair<String, String>): ResponseTemplate<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun auth(userAuth: UserAuth): ResponseTemplate<Boolean> {
+        try {
+            when (userAuth) {
+                is UserAuth.Client -> {
+                    AuthRetrofitClient.authRetrofitService.authClient(
+                        userAuthLoginModel = UserAuthLoginModel(
+                            email = userAuth.email,
+                            password = userAuth.password
+                        )
+                    ).execute().body().also { 
+                        return if (it?.isNotEmpty() == true) {
+                            ResponseTemplate.Success(
+                                data = true
+                            )
+                        } else {
+                            ResponseTemplate.Error(
+                                message = "error authClient"
+                            )
+                        }
+                    }
+                }
+                is UserAuth.Company -> {
+                    AuthRetrofitClient.authRetrofitService.authCompany(
+                        userAuthLoginModel = UserAuthLoginModel(
+                            email = userAuth.email,
+                            password = userAuth.password
+                        )
+                    ).execute().body().also { 
+                        return if (it?.isNotEmpty() == true) {
+                            ResponseTemplate.Success(
+                                data = true
+                            )
+                        } else {
+                            ResponseTemplate.Error(
+                                message = "error authCompany"
+                            )
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            return ResponseTemplate.Error(
+                message = e.message.toString()
+            )
+        }
     }
 }
