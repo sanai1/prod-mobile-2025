@@ -13,7 +13,6 @@ import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreat
 import com.kotleters.mobile.feature.company.data.network.model.ScanQrMapper
 import com.kotleters.mobile.feature.company.domain.CompanyRepository
 import com.kotleters.mobile.feature.company.domain.ScanQr
-import retrofit2.HttpException
 
 class CompanyRepositoryImpl(
     private val context: Context,
@@ -28,19 +27,20 @@ class CompanyRepositoryImpl(
             endDate = offer.endDate.toString()
         )
         try {
-            create(offerForCreate)
-            return ResponseTemplate.Success(data = true)
-        } catch (http: HttpException) {
-            if (http.code() == 403) {
+            val call = create(offerForCreate)
+            if (call.code() == 200) {
+                return ResponseTemplate.Success(data = true)
+            } else if (call.code() == 401) {
                 updateToken()
-                create(offerForCreate).also {
-                    return if (it.code() == 200) {
-                        ResponseTemplate.Success(data = true)
-                    } else {
-                        ResponseTemplate.Error(message = it.message())
-                    }
+                val callAgain = create(offerForCreate)
+                return if (callAgain.code() == 200) {
+                    ResponseTemplate.Success(data = true)
+                } else {
+                    ResponseTemplate.Error(message = callAgain.message())
                 }
-            } else { throw Exception() }
+            } else {
+                throw Exception()
+            }
         } catch (e: Exception) {
             return ResponseTemplate.Error(message = e.message.toString())
         }
@@ -48,28 +48,24 @@ class CompanyRepositoryImpl(
 
     override suspend fun getOffersByCompany(): ResponseTemplate<Company> {
         try {
-            return getOffers().let {
-                if (it.body() != null) {
+            val call = getOffers()
+            if (call.code() == 200) {
+                return ResponseTemplate.Success(
+                    data = CompanyMapper.map(call.body()!!)[0]
+                )
+            } else if (call.code() == 401) {
+                updateToken()
+                val callAgain = getOffers()
+                return if (callAgain.code() == 200) {
                     ResponseTemplate.Success(
-                        data = CompanyMapper.map(it.body()!!)[0]
+                        data = CompanyMapper.map(callAgain.body()!!)[0]
                     )
                 } else {
-                    ResponseTemplate.Error(message = it.message())
+                    ResponseTemplate.Error(message = callAgain.message())
                 }
+            } else {
+                throw Exception()
             }
-        } catch (http: HttpException) {
-            if (http.code() == 403) {
-                updateToken()
-                return getOffers().let { 
-                    if (it.body() != null) {
-                        ResponseTemplate.Success(
-                            data = CompanyMapper.map(it.body()!!)[0]
-                        )
-                    } else {
-                        ResponseTemplate.Error(message = it.message())
-                    }
-                }
-            } else { throw Exception() }
         } catch (e: Exception) {
             return ResponseTemplate.Error(message = e.message.toString())
         }
@@ -77,28 +73,24 @@ class CompanyRepositoryImpl(
 
     override suspend fun scanQr(payload: Payload): ResponseTemplate<ScanQr> {
         try {
-            return scanQrRetrofit(payload).let {
-                if (it.body() != null) {
+            val call = scanQrRetrofit(payload)
+            if (call.code() == 200) {
+                return ResponseTemplate.Success(
+                    data = ScanQrMapper.toScanQr(call.body()!!)
+                )
+            } else if (call.code() == 401) {
+                updateToken()
+                val callAgain = scanQrRetrofit(payload)
+                return if (callAgain.code() == 200) {
                     ResponseTemplate.Success(
-                        data = ScanQrMapper.toScanQr(it.body()!!)
+                        data = ScanQrMapper.toScanQr(call.body()!!)
                     )
                 } else {
-                    ResponseTemplate.Error(message = it.message())
+                    ResponseTemplate.Error(message = call.message())
                 }
+            } else {
+                throw Exception()
             }
-        } catch (http: HttpException) {
-            if (http.code() == 403) {
-                updateToken()
-                return scanQrRetrofit(payload).let {
-                    if (it.body() != null) {
-                        ResponseTemplate.Success(
-                            data = ScanQrMapper.toScanQr(it.body()!!)
-                        )
-                    } else {
-                        ResponseTemplate.Error(message = it.message())
-                    }
-                }
-            } else { throw Exception() }
         } catch (e: Exception) {
             return ResponseTemplate.Error(message = e.message.toString())
         }
