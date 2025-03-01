@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.auth.presentation.register
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -37,9 +38,15 @@ class RegisterViewModel @Inject constructor(
     var companyEmail = mutableStateOf("")
     var companyPassword = mutableStateOf("")
 
+    var photoUri = mutableStateOf<Uri>(Uri.parse(""))
+
     var isError = mutableStateOf(false)
 
     private var isClient = mutableStateOf(false)
+
+    fun changePhoto(new: Uri){
+        photoUri.value = new
+    }
 
     fun changeCompanyEmail(name: String) {
         companyEmail.value = name
@@ -88,6 +95,7 @@ class RegisterViewModel @Inject constructor(
                 RegisterScreenState.Loading
             }
             val result = authRepository.register(authState)
+            val photoResult = photoRepository.addCompanyPhoto(photoUri.value)
             when (result) {
                 is ResponseTemplate.Error -> {
                     _state.update {
