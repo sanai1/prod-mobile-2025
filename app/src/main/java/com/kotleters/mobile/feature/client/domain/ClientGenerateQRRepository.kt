@@ -1,0 +1,7 @@
+package com.kotleters.mobile.feature.client.domain
+
+import com.kotleters.mobile.common.data.network.model.ResponseTemplate
+
+interface ClientGenerateQRRepository {
+    suspend fun clientGenerateQRRepository(): ResponseTemplate<String>
+}

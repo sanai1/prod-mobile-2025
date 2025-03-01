@@ -8,6 +8,7 @@ data class Company(
     val offers: List<Offer>
 ) {
     data class Offer(
+        val id: String,
         val title: String,
         val description: String,
         val discount: Long,
