@@ -5,10 +5,9 @@ import com.kotleters.mobile.feature.auth.domain.UserAuth
 sealed class RegisterScreenState {
 
     data class Content(
-        val userAuth: UserAuth
+        val userAuth: UserAuth,
+        val isError: Boolean = false,
     ) : RegisterScreenState()
-
-    data object Error : RegisterScreenState()
 
     data object Loading : RegisterScreenState()
 

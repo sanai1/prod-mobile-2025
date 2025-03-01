@@ -80,17 +80,19 @@ class RegisterViewModel @Inject constructor(
 
     fun onRegister() {
         viewModelScope.launch(Dispatchers.IO) {
-            val authState = _state.asStateFlow().value as RegisterScreenState.Content
+            val authState = (_state.asStateFlow().value as RegisterScreenState.Content).userAuth
             _state.update {
                 RegisterScreenState.Loading
             }
-            val result = authRepository.register(authState.userAuth)
+            val result = authRepository.register(authState)
             when (result) {
                 is ResponseTemplate.Error -> {
                     _state.update {
-                        RegisterScreenState.Error
+                        RegisterScreenState.Content(
+                            userAuth = authState,
+                            isError = true
+                        )
                     }
-                    Log.d("ERROR", result.message)
                 }
 
                 is ResponseTemplate.Success -> {

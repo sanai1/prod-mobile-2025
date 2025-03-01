@@ -80,58 +80,76 @@ fun LoginScreen(
                     )
 
                 }
-               when(state){
-                   is LoginScreenState.Content -> {
-                       DefaultTextField(
-                           placeholder = "Email",
-                           text = viewModel.email.value,
-                           isError = viewModel.isError.value
-                       ) {
-                           viewModel.updateEmail(it)
-                       }
-                       DefaultTextField(
-                           placeholder = "Пароль",
-                           text = viewModel.password.value,
-                           isError = viewModel.isError.value
-                       ) {
-                           viewModel.updatePassword(it)
-                       }
-                       WhiteButton("Войти") {
-                           viewModel.onLogin()
-                       }
-                       Spacer(Modifier.height(64.dp))
-                       Row (
-                           Modifier.fillMaxWidth(),
-                           horizontalArrangement = Arrangement.Center
-                       ){
-                           Text(buildAnnotatedString {
-                               withStyle(SpanStyle(
-                                   fontSize = 16.sp, color = lightGray, fontWeight = FontWeight.Medium
-                               )){
-                                   append("Нет аккаунта? ")
-                               }
-                               withStyle(SpanStyle(
-                                   fontSize = 16.sp, color = blue, fontWeight = FontWeight.Medium,
-                               )){
-                                   append("Зарегистрируйтесь")
-                               }
-                           }, modifier = Modifier.noRippleClickable {
-                               goToReg()
-                           })
-                       }
-                   }
-                   LoginScreenState.Error -> {
-                       Text("Error", color = Color.White)
-                   }
-                   LoginScreenState.Loading -> {
-                       ShimmerEffectCard(modifier = Modifier.fillMaxSize())
-                   }
-                   LoginScreenState.Success -> {
-                       LaunchedEffect(Unit) {
-                           success()
-                       }
-                   }
-               }
+                when (state) {
+                    is LoginScreenState.Content -> {
+                        DefaultTextField(
+                            placeholder = "Email",
+                            text = viewModel.email.value,
+                            isError = (state as LoginScreenState.Content).isError
+                        ) {
+                            viewModel.updateEmail(it)
+                        }
+                        DefaultTextField(
+                            placeholder = "Пароль",
+                            isPassword = true,
+                            text = viewModel.password.value,
+                            isError = (state as LoginScreenState.Content).isError
+                        ) {
+                            viewModel.updatePassword(it)
+                        }
+                        WhiteButton(
+                            "Войти",
+                            isEnabled = viewModel.password.value.isNotEmpty()
+                                    && viewModel.email.value.isNotEmpty()
+                        ) {
+                            if (viewModel.password.value.isNotEmpty()
+                                && viewModel.email.value.isNotEmpty()
+                            ) {
+                                viewModel.onLogin()
+                            }
+
+                        }
+                        Spacer(Modifier.height(64.dp))
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(buildAnnotatedString {
+                                withStyle(
+                                    SpanStyle(
+                                        fontSize = 16.sp,
+                                        color = lightGray,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                ) {
+                                    append("Нет аккаунта? ")
+                                }
+                                withStyle(
+                                    SpanStyle(
+                                        fontSize = 16.sp,
+                                        color = blue,
+                                        fontWeight = FontWeight.Medium,
+                                    )
+                                ) {
+                                    append("Зарегистрируйтесь")
+                                }
+                            }, modifier = Modifier.noRippleClickable {
+                                goToReg()
+                            })
+                        }
+                    }
+
+
+                    LoginScreenState.Loading -> {
+                        ShimmerEffectCard(modifier = Modifier.fillMaxSize())
+                    }
+
+                    LoginScreenState.Success -> {
+                        LaunchedEffect(Unit) {
+                            success()
+                        }
+                    }
+                }
             }
         }
     }

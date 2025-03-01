@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.auth.presentation.login
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,15 +33,18 @@ class LoginViewModel @Inject constructor(
 
     fun onLogin() {
         viewModelScope.launch(Dispatchers.IO) {
-            val authState = _state.asStateFlow().value as LoginScreenState.Content
+            val authState = (_state.asStateFlow().value as LoginScreenState.Content).auth
             _state.update {
                 LoginScreenState.Loading
             }
-            val result = authRepository.auth(authState.auth)
+            val result = authRepository.auth(authState)
             when (result) {
                 is ResponseTemplate.Error -> {
                     _state.update {
-                        LoginScreenState.Error
+                        LoginScreenState.Content(
+                            authState,
+                            isError = true
+                        )
                     }
                 }
 

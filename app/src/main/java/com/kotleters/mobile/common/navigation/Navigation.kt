@@ -49,7 +49,7 @@ fun AppNavigation(
                     navController, startDestination = if (loginState is LoginState.Auth) "success" else AUTH_ROUTE,
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(backgroundColor)
+                        .background(backgroundColor),
                 ) {
 
                     authNavGraph(navController, {

@@ -58,68 +58,85 @@ fun ClientRegisterScreen(
             .fillMaxSize()
             .background(backgroundColor)
             .systemBarsPadding(),
-    ){
+    ) {
 
-        LazyColumn{
+        LazyColumn {
             item {
-                Row (
+                Row(
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     IconButton(back) {
-                        Icon(Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
+                        Icon(
+                            Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
                             tint = Color.White,
-                            modifier = Modifier.size(70.dp))
+                            modifier = Modifier.size(70.dp)
+                        )
                     }
-                    Text("Регистрация", color = Color.White,
+                    Text(
+                        "Регистрация", color = Color.White,
                         fontSize = 46.sp, fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(16.dp))
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
-                when(state){
-                    is RegisterScreenState.Content -> {
-                        when((state as RegisterScreenState.Content).userAuth){
-                            is UserAuth.Client -> {
-                                DefaultTextField(
-                                    "Имя", viewModel.userName.value,
-                                    isError = viewModel.isError.value
-                                ) {
-                                    viewModel.changeUserName(it)
-                                }
-                                DefaultTextField(
-                                    "Фамилия", viewModel.userSecondName.value,
-                                    isError = viewModel.isError.value
-                                ) {
-                                    viewModel.changeUserSecondName(it)
-                                }
-                                DefaultTextField(
-                                    "Email", viewModel.userEmail.value,
-                                    isError = viewModel.isError.value
-                                ) {
-                                    viewModel.changeUserEmail(it)
-                                }
-                                DefaultTextField(
-                                    "Пароль", viewModel.userPassword.value,
-                                    isError = viewModel.isError.value
-                                ) {
-                                    viewModel.changeUserPassword(it)
-                                }
-                                WhiteButton("Продолжить") {
-                                    viewModel.onRegister()
-                                }
-                            }
-                            is UserAuth.Company -> {
+                when (state) {
 
-                            }
-                        }
-                    }
-                    RegisterScreenState.Error -> {
-                        Text("Error", color = Color.White)
-                    }
                     RegisterScreenState.Loading -> {
                         ShimmerEffectCard(modifier = Modifier.fillMaxSize())
                     }
 
                     RegisterScreenState.Success -> {
                         success()
+                    }
+
+                    else -> {
+                        when ((state as RegisterScreenState.Content).userAuth) {
+                            is UserAuth.Client -> {
+                                DefaultTextField(
+                                    "Имя", viewModel.userName.value,
+                                    isError = (state as RegisterScreenState.Content).isError
+                                ) {
+                                    viewModel.changeUserName(it)
+                                }
+                                DefaultTextField(
+                                    "Фамилия", viewModel.userSecondName.value,
+                                    isError = (state as RegisterScreenState.Content).isError
+                                ) {
+                                    viewModel.changeUserSecondName(it)
+                                }
+                                DefaultTextField(
+                                    "Email", viewModel.userEmail.value,
+                                    isError = (state as RegisterScreenState.Content).isError
+                                ) {
+                                    viewModel.changeUserEmail(it)
+                                }
+                                DefaultTextField(
+                                    "Пароль", viewModel.userPassword.value,
+                                    isError = (state as RegisterScreenState.Content).isError,
+                                    isPassword = true
+                                ) {
+                                    viewModel.changeUserPassword(it)
+                                }
+                                WhiteButton(
+                                    "Продолжить",
+                                    isEnabled = viewModel.userName.value.isNotEmpty()
+                                            && viewModel.userEmail.value.isNotEmpty()
+                                            && viewModel.userPassword.value.isNotEmpty()
+                                            && viewModel.userSecondName.value.isNotEmpty()
+                                ) {
+                                    if (viewModel.userName.value.isNotEmpty()
+                                        && viewModel.userEmail.value.isNotEmpty()
+                                        && viewModel.userPassword.value.isNotEmpty()
+                                        && viewModel.userSecondName.value.isNotEmpty()
+                                    ) {
+                                        viewModel.onRegister()
+                                    }
+                                }
+                            }
+
+                            is UserAuth.Company -> {
+
+                            }
+                        }
                     }
                 }
             }
