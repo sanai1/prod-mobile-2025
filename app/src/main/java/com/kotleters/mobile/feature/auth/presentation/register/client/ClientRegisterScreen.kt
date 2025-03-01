@@ -83,19 +83,19 @@ fun ClientRegisterScreen(
                                     viewModel.changeUserName(it)
                                 }
                                 DefaultTextField(
-                                    "Фамилия", viewModel.userName.value,
+                                    "Фамилия", viewModel.userSecondName.value,
                                     isError = viewModel.isError.value
                                 ) {
                                     viewModel.changeUserSecondName(it)
                                 }
                                 DefaultTextField(
-                                    "Email", viewModel.userName.value,
+                                    "Email", viewModel.userEmail.value,
                                     isError = viewModel.isError.value
                                 ) {
                                     viewModel.changeUserEmail(it)
                                 }
                                 DefaultTextField(
-                                    "Пароль", viewModel.userName.value,
+                                    "Пароль", viewModel.userPassword.value,
                                     isError = viewModel.isError.value
                                 ) {
                                     viewModel.changeUserPassword(it)
