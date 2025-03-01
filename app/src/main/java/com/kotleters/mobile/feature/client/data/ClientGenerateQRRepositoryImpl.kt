@@ -21,7 +21,6 @@ class ClientGenerateQRRepositoryImpl(
                     .execute()
             if (call.code() == 401) {
                 val (email, pass) = getPassAndEmail()
-                Log.d("PASS EMAIL", "$pass, $email")
 
                 userAuthRepository.auth(
                     userAuth = UserAuth.Client(
@@ -32,7 +31,10 @@ class ClientGenerateQRRepositoryImpl(
                     )
                 )
                 val call =
-                    ClientGenerateQRClient.clientGenerateQRService.getPayload(getToken(), offerId)
+                    ClientGenerateQRClient.clientGenerateQRService.getPayload(
+                        token = getToken(),
+                        offerId = offerId
+                    )
                         .execute()
                 return if (call.body() != null) {
                     ResponseTemplate.Success(call.body()!!.payload)
