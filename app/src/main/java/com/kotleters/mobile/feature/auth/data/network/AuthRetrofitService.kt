@@ -3,6 +3,7 @@ package com.kotleters.mobile.feature.auth.data.network
 import com.kotleters.mobile.feature.auth.data.network.model.ClientAuthRegisterModel
 import com.kotleters.mobile.feature.auth.data.network.model.CompanyAuthRegisterModel
 import com.kotleters.mobile.feature.auth.data.network.model.UserAuthLoginModel
+import com.kotleters.mobile.feature.auth.data.network.model.response.RegisterResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -16,7 +17,7 @@ interface AuthRetrofitService {
     @POST("clients/register")
     fun registerClient(
         @Body clientAuthRegisterModel: ClientAuthRegisterModel
-    ): Call<String>
+    ): Call<RegisterResponse>
 
     @POST("companies/login")
     fun authCompany(

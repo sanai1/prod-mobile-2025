@@ -1,0 +1,52 @@
+package com.kotleters.mobile.common.ui.components
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.Ro
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.kotleters.mobile.common.ui.theme.secondaryGray
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DefaultTextField(
+    placeholder: String,
+    text: String,
+    isError: Boolean,
+    onChange: (String) -> Unit
+) {
+
+    OutlinedTextField(
+        value = text,
+        onValueChange = { onChange(it) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            containerColor = secondaryGray,
+            cursorColor = Color.White,
+            focusedBorderColor = Color.White
+        ),
+        placeholder = {
+            Text(placeholder, color = Color(0xFFBABABA), fontSize = 20.sp)
+        },
+        shape = RoundedCornerShape(16.dp),
+        textStyle = TextStyle(
+            color = Color.White, fontSize = 20.sp
+        ),
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+        isError = isError
+    )
+}

@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.auth.data
 
 import android.content.Context
+import android.util.Log
 import com.kotleters.mobile.common.ResponseTemplate
 import com.kotleters.mobile.common.SecretStorage
 import com.kotleters.mobile.feature.auth.data.network.AuthRetrofitClient
@@ -24,7 +25,8 @@ class UserAuthRepositoryImpl(
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body()
+                    ).execute().body()?.token
+                    Log.d("BODY", token.toString())
                     return if (token?.isNotEmpty() == true) {
                         userAuth.apply {
                             save(email, password, token)
