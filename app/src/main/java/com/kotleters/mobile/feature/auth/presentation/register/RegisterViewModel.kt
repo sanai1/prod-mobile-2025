@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.auth.presentation.register
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -71,6 +72,7 @@ class RegisterViewModel @Inject constructor(
                     _state.update {
                         RegisterScreenState.Error
                     }
+                    Log.d("ERROR", result.message)
                 }
                 is ResponseTemplate.Success -> {
 
