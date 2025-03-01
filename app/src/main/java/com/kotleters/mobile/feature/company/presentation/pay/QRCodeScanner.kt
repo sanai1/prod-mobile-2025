@@ -10,11 +10,16 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -32,7 +37,7 @@ fun QRScannerScreen(onResult: (String) -> Unit) {
                 implementationMode = PreviewView.ImplementationMode.COMPATIBLE
             }
         },
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.padding(16.dp).size(300.dp).clip(RoundedCornerShape(16.dp)),
         update = { previewView ->
             val cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also {
