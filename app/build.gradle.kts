@@ -73,4 +73,7 @@ dependencies {
 
     // Security Storage
     implementation (libs.androidx.security.crypto)
+
+    // QR code
+    implementation(libs.core)
 }

@@ -2,6 +2,7 @@ package com.kotleters.mobile.feature.client.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -17,6 +18,7 @@ import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreen
 import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreenViewModel
 import com.kotleters.mobile.feature.client.presentation.main.states.ClientMainScreenState
 import com.kotleters.mobile.feature.client.presentation.offer.ClientOfferScreen
+import com.kotleters.mobile.feature.client.presentation.offer.ClientOfferScreenViewModel
 import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreen
 
 fun NavGraphBuilder.clientNavGraph(
@@ -71,7 +73,12 @@ fun NavGraphBuilder.clientNavGraph(
             val offer =
                 (clientMainScreenViewModel.state.value as ClientMainScreenState.Content).companies[companyIndex].offers[offerIndex]
 
-            ClientOfferScreen(offer) {
+            val viewModel = hiltViewModel<ClientOfferScreenViewModel>()
+
+            ClientOfferScreen(
+                offer,
+                viewModel = viewModel
+            ) {
                 navController.popBackStack()
             }
         }

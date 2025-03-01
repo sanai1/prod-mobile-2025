@@ -3,7 +3,9 @@ package com.kotleters.mobile.di
 import android.content.Context
 import com.kotleters.mobile.feature.auth.data.UserAuthRepositoryImpl
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
+import com.kotleters.mobile.feature.client.data.ClientGenerateQRRepositoryImpl
 import com.kotleters.mobile.feature.client.data.ClientRepositoryImpl
+import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
 import com.kotleters.mobile.feature.client.domain.ClientRepository
 import dagger.Module
 import dagger.Provides
@@ -27,9 +29,18 @@ class AppModule {
     @Singleton
     fun provideClientRepository(
         @ApplicationContext context: Context
-    ): ClientRepository
-     = ClientRepositoryImpl(
+    ): ClientRepository = ClientRepositoryImpl(
         context = context,
         userAuthRepository = UserAuthRepositoryImpl(context)
     )
+
+    @Provides
+    @Singleton
+    fun provideQRCodeRepository(
+        @ApplicationContext context: Context
+    ): ClientGenerateQRRepository =
+        ClientGenerateQRRepositoryImpl(
+            context = context,
+            userAuthRepository = UserAuthRepositoryImpl(context)
+        )
 }
