@@ -1,5 +1,6 @@
 package com.kotleters.mobile.common.ui.components
 
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key.Companion.Ro
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.ui.theme.secondaryGray
@@ -25,6 +29,7 @@ fun DefaultTextField(
     placeholder: String,
     text: String,
     isError: Boolean,
+    isPassword: Boolean = false,
     onChange: (String) -> Unit
 ) {
 
@@ -46,7 +51,11 @@ fun DefaultTextField(
         textStyle = TextStyle(
             color = Color.White, fontSize = 20.sp
         ),
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        keyboardOptions = KeyboardOptions(
+            capitalization = if (isPassword) KeyboardCapitalization.None else KeyboardCapitalization.Sentences,
+            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text
+        ),
         isError = isError
     )
 }

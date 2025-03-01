@@ -22,6 +22,7 @@ import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 @Composable
 fun WhiteButton(
     text: String,
+    isEnabled: Boolean,
     onClick: () -> Unit
 ) {
 
@@ -33,11 +34,11 @@ fun WhiteButton(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFE0E0E0))
+                .background(Color(0xFFE0E0E0).copy(alpha = if (isEnabled) 1f else 0.5f))
                 .noRippleClickable {
                     onClick()
                 }
-                .padding(16.dp),
+                .padding(vertical = 16.dp, horizontal = 25.dp),
             contentAlignment = Alignment.Center
         ){
 

@@ -38,35 +38,37 @@ class RegisterViewModel @Inject constructor(
 
     private var isClient = mutableStateOf(false)
 
-    fun changeCompanyEmail(name: String){
+    fun changeCompanyEmail(name: String) {
         companyEmail.value = name
         updateState(isClient.value)
     }
-    fun changeCompanyPassword(name: String){
+
+    fun changeCompanyPassword(name: String) {
         companyPassword.value = name
         updateState(isClient.value)
     }
-    fun changeCompanyName(name: String){
+
+    fun changeCompanyName(name: String) {
         companyName.value = name
         updateState(isClient.value)
     }
 
-    fun changeUserSecondName(name: String){
+    fun changeUserSecondName(name: String) {
         userSecondName.value = name
         updateState(isClient.value)
     }
 
-    fun changeUserPassword(name: String){
+    fun changeUserPassword(name: String) {
         userPassword.value = name
         updateState(isClient.value)
     }
 
-    fun changeUserEmail(name: String){
+    fun changeUserEmail(name: String) {
         userEmail.value = name
         updateState(isClient.value)
     }
 
-    fun changeUserName(name: String){
+    fun changeUserName(name: String) {
         userName.value = name
         updateState(isClient.value)
     }
@@ -76,18 +78,27 @@ class RegisterViewModel @Inject constructor(
         updateState(isClient.value)
     }
 
-    fun onRegister(){
+    fun onRegister() {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = authRepository.register((_state.value as RegisterScreenState.Content).userAuth)
-            when(result){
+            val authState = (_state.asStateFlow().value as RegisterScreenState.Content).userAuth
+            _state.update {
+                RegisterScreenState.Loading
+            }
+            val result = authRepository.register(authState)
+            when (result) {
                 is ResponseTemplate.Error -> {
                     _state.update {
-                        RegisterScreenState.Error
+                        RegisterScreenState.Content(
+                            userAuth = authState,
+                            isError = true
+                        )
                     }
-                    Log.d("ERROR", result.message)
                 }
-                is ResponseTemplate.Success -> {
 
+                is ResponseTemplate.Success -> {
+                    _state.update {
+                        RegisterScreenState.Success
+                    }
                 }
             }
         }
@@ -95,7 +106,7 @@ class RegisterViewModel @Inject constructor(
 
     private fun updateState(isClient: Boolean) {
         viewModelScope.launch {
-            if (isClient){
+            if (isClient) {
                 _state.update {
                     RegisterScreenState.Content(
                         userAuth = UserAuth.Client(
@@ -106,7 +117,7 @@ class RegisterViewModel @Inject constructor(
                         )
                     )
                 }
-            }else{
+            } else {
                 _state.update {
                     RegisterScreenState.Content(
                         userAuth = UserAuth.Company(

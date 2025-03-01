@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.ui.components.DefaultTextField
+import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.feature.auth.domain.UserAuth
@@ -41,6 +42,7 @@ import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterSc
 @Composable
 fun ClientRegisterScreen(
     back: () -> Unit,
+    success: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
 
@@ -56,64 +58,85 @@ fun ClientRegisterScreen(
             .fillMaxSize()
             .background(backgroundColor)
             .systemBarsPadding(),
-    ){
+    ) {
 
-        LazyColumn{
+        LazyColumn {
             item {
-                Row (
+                Row(
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     IconButton(back) {
-                        Icon(Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
+                        Icon(
+                            Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
                             tint = Color.White,
-                            modifier = Modifier.size(70.dp))
+                            modifier = Modifier.size(70.dp)
+                        )
                     }
-                    Text("Регистрация", color = Color.White,
+                    Text(
+                        "Регистрация", color = Color.White,
                         fontSize = 46.sp, fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(16.dp))
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
-                when(state){
-                    is RegisterScreenState.Content -> {
-                        when((state as RegisterScreenState.Content).userAuth){
+                when (state) {
+
+                    RegisterScreenState.Loading -> {
+                        ShimmerEffectCard(modifier = Modifier.fillMaxSize())
+                    }
+
+                    RegisterScreenState.Success -> {
+                        success()
+                    }
+
+                    else -> {
+                        when ((state as RegisterScreenState.Content).userAuth) {
                             is UserAuth.Client -> {
                                 DefaultTextField(
                                     "Имя", viewModel.userName.value,
-                                    isError = viewModel.isError.value
+                                    isError = (state as RegisterScreenState.Content).isError
                                 ) {
                                     viewModel.changeUserName(it)
                                 }
                                 DefaultTextField(
                                     "Фамилия", viewModel.userSecondName.value,
-                                    isError = viewModel.isError.value
+                                    isError = (state as RegisterScreenState.Content).isError
                                 ) {
                                     viewModel.changeUserSecondName(it)
                                 }
                                 DefaultTextField(
                                     "Email", viewModel.userEmail.value,
-                                    isError = viewModel.isError.value
+                                    isError = (state as RegisterScreenState.Content).isError
                                 ) {
                                     viewModel.changeUserEmail(it)
                                 }
                                 DefaultTextField(
                                     "Пароль", viewModel.userPassword.value,
-                                    isError = viewModel.isError.value
+                                    isError = (state as RegisterScreenState.Content).isError,
+                                    isPassword = true
                                 ) {
                                     viewModel.changeUserPassword(it)
                                 }
-                                WhiteButton("Продолжить") {
-                                    viewModel.onRegister()
+                                WhiteButton(
+                                    "Продолжить",
+                                    isEnabled = viewModel.userName.value.isNotEmpty()
+                                            && viewModel.userEmail.value.isNotEmpty()
+                                            && viewModel.userPassword.value.isNotEmpty()
+                                            && viewModel.userSecondName.value.isNotEmpty()
+                                ) {
+                                    if (viewModel.userName.value.isNotEmpty()
+                                        && viewModel.userEmail.value.isNotEmpty()
+                                        && viewModel.userPassword.value.isNotEmpty()
+                                        && viewModel.userSecondName.value.isNotEmpty()
+                                    ) {
+                                        viewModel.onRegister()
+                                    }
                                 }
                             }
+
                             is UserAuth.Company -> {
 
                             }
                         }
-                    }
-                    RegisterScreenState.Error -> {
-                        Text("Error", color = Color.White)
-                    }
-                    RegisterScreenState.Loading -> {
-
                     }
                 }
             }

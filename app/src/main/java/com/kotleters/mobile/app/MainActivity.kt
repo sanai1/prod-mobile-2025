@@ -5,6 +5,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import com.kotleters.mobile.R
+import com.kotleters.mobile.common.navigation.AppNavigation
+import com.kotleters.mobile.common.navigation.BottomBarScreen
+import com.kotleters.mobile.common.ui.components.BottomBar
+import com.kotleters.mobile.common.ui.components.TopScreenHeader
+import com.kotleters.mobile.common.ui.theme.backgroundColor
+import com.kotleters.mobile.feature.auth.presentation.login.LoginScreen
 import com.kotleters.mobile.feature.auth.presentation.onboard.AuthOnBoardScreen
 import com.kotleters.mobile.feature.auth.presentation.register.client.ClientRegisterScreen
 import com.kotleters.mobile.feature.auth.presentation.register.company.CompanyRegisterScreen
@@ -19,9 +38,7 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(0)
         )
         setContent {
-            CompanyRegisterScreen(
-                back = {  },
-            )
+            AppNavigation()
         }
     }
 }
