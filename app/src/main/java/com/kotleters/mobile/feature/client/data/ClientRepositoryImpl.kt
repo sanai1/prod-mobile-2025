@@ -1,18 +1,27 @@
 package com.kotleters.mobile.feature.client.data
 
+import android.content.Context
 import com.kotleters.mobile.common.network.model.ClientOffers
 import com.kotleters.mobile.common.network.model.ResponseTemplate
+import com.kotleters.mobile.common.network.model.SecretStorage
+import com.kotleters.mobile.feature.client.data.network.ClientRetrofitClient
 import com.kotleters.mobile.feature.client.domain.ClientRepository
 
-class ClientRepositoryImpl : ClientRepository {
+class ClientRepositoryImpl(
+    private val context: Context
+) : ClientRepository {
 
     override suspend fun getAllOffers(): ResponseTemplate<List<ClientOffers>> {
-        try {
-
+        return try {
+            ResponseTemplate.Success(
+                ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken().toString())
+            )
         } catch (e: Exception) {
-
+            ResponseTemplate.Error(message = e.message.toString())
         }
-        return TODO()
     }
+
+    private fun getToken() = SecretStorage.readToken(context)
+
 
 }
