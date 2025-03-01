@@ -41,23 +41,23 @@ class PhotoRepositoryImpl(
 
     override suspend fun addCompanyPhoto(photo: Uri): ResponseTemplate<Boolean> {
         return try {
-          val res = PhotoRetrofitClient.photoRetrofitService.addCompanyPhoto(
+            val res = PhotoRetrofitClient.photoRetrofitService.addCompanyPhoto(
                 token = getToken(),
                 photo = compressImage(context, photo)
             ).execute()
-          return if (res.code() == 200){
-               ResponseTemplate.Success(true)
-           }else{
-               throw Exception()
-           }
-        } catch (e: Exception){
+            return if (res.code() == 200) {
+                ResponseTemplate.Success(true)
+            } else {
+                throw Exception()
+            }
+        } catch (e: Exception) {
             ResponseTemplate.Error(message = e.message.toString())
         }
     }
 
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
-    private fun compressImage(context: Context, imageUri: Uri): ByteArray{
+    private fun compressImage(context: Context, imageUri: Uri): ByteArray {
         val quality = 40
         val contentResolver = context.contentResolver
         val inputStream: InputStream? = contentResolver.openInputStream(imageUri)
@@ -84,7 +84,7 @@ class PhotoRepositoryImpl(
         outputStream.flush()
         outputStream.close()
 
-        return  bitmap.let {
+        return bitmap.let {
             val outputStream = ByteArrayOutputStream()
             it?.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
             outputStream.toByteArray()
@@ -92,8 +92,7 @@ class PhotoRepositoryImpl(
     }
 
     private fun calculateInSampleSize(
-        options: BitmapFactory.Options,
-
+        options: BitmapFactory.Options
         ): Int {
         val reqWidth = 800
         val reqHeight = 800

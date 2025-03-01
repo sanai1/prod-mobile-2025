@@ -1,6 +1,8 @@
 package com.kotleters.mobile.di
 
 import android.content.Context
+import com.kotleters.mobile.common.photo.data.PhotoRepositoryImpl
+import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.data.UserAuthRepositoryImpl
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.ClientGenerateQRRepositoryImpl
@@ -52,6 +54,16 @@ class AppModule {
         @ApplicationContext context: Context
     ): ClientGenerateQRRepository =
         ClientGenerateQRRepositoryImpl(
+            context = context,
+            userAuthRepository = UserAuthRepositoryImpl(context)
+        )
+
+    @Provides
+    @Singleton
+    fun providePhotoRepository(
+        @ApplicationContext context: Context
+    ): PhotoRepository =
+        PhotoRepositoryImpl(
             context = context,
             userAuthRepository = UserAuthRepositoryImpl(context)
         )
