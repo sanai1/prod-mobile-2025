@@ -3,12 +3,14 @@ package com.kotleters.mobile.common.data.network.model
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.kotleters.mobile.common.domain.UserLogIn
 
 object SecretStorage {
     private const val PREF_NAME = "user_prefs"
     private const val TOKEN_FIELD = "token"
     private const val EMAIL_FIELD = "email"
     private const val PASSWORD_FIELD = "password"
+    private const val COMPANY_OR_USER = "company_or_user"
 
 
     private fun getPrefs(context: Context): EncryptedSharedPreferences {
@@ -25,15 +27,24 @@ object SecretStorage {
         ) as EncryptedSharedPreferences
     }
 
-    fun savePassAndEmail(context: Context, email: String, password: String) {
+    fun savePassAndEmail(
+        context: Context,
+        email: String,
+        password: String,
+        companyOrUser: UserLogIn
+    ) {
         getPrefs(context).edit().apply {
             putString(EMAIL_FIELD, email)
             putString(PASSWORD_FIELD, password)
+            putBoolean(
+                COMPANY_OR_USER,
+                companyOrUser == UserLogIn.CLIENT
+            )
             apply()
         }
     }
 
-    fun saveToken(context: Context, token: String){
+    fun saveToken(context: Context, token: String) {
         getPrefs(context).edit().apply {
             putString(TOKEN_FIELD, token)
             apply()
@@ -44,10 +55,11 @@ object SecretStorage {
         return getPrefs(context).getString(TOKEN_FIELD, null)
     }
 
-    fun readPassAndEmail(context: Context): Pair<String?, String?> {
-        return Pair(
+    fun readPassAndEmail(context: Context): Triple<String?, String?, UserLogIn?> {
+        return Triple(
             getPrefs(context).getString(EMAIL_FIELD, null),
-            getPrefs(context).getString(PASSWORD_FIELD, null)
+            getPrefs(context).getString(PASSWORD_FIELD, null),
+            if (getPrefs(context).getBoolean(COMPANY_OR_USER,false)) UserLogIn.CLIENT else UserLogIn.COMPANY
         )
     }
 
