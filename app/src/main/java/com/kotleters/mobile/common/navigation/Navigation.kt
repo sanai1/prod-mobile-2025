@@ -10,6 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,6 +44,7 @@ fun AppNavigation(
     val loginState by viewModel.state.collectAsState()
 
 
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +60,12 @@ fun AppNavigation(
             else -> {
                 NavHost(
                     navController,
-                    startDestination = if (loginState is LoginState.Auth) CLIENT_ROUTE else AUTH_ROUTE,
+                    startDestination = when(loginState){
+                        LoginState.AuthClient -> CLIENT_ROUTE
+                        LoginState.AuthCompany -> COMPANY_ROUTE
+                        LoginState.Loading -> "hui"
+                        LoginState.NotAuth -> AUTH_ROUTE
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .background(backgroundColor),

@@ -1,10 +1,12 @@
 package com.kotleters.mobile.common.navigation
 
+import android.util.Log
 import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kotleters.mobile.common.domain.UserLogIn
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,11 +28,11 @@ class NavigationViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = authRepository.checkLogIn()
             _state.update {
-                if (result) {
-                    LoginState.Auth
-                } else {
-                    LoginState.NotAuth
-                }
+               when(result){
+                   UserLogIn.CLIENT ->  LoginState.AuthClient
+                   UserLogIn.COMPANY -> LoginState.AuthCompany
+                   else -> LoginState.NotAuth
+               }
             }
         }
     }
