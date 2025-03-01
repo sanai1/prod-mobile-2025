@@ -12,19 +12,6 @@ fun NavGraphBuilder.companyNavGraph(
     navController: NavHostController
 ){
 
-    val bottomBarItems = listOf(
-        BottomBarScreen(
-            route = COMPANY_MAIN,
-            icon = R.drawable.company,
-            name = "Компания"
-        ),
-        BottomBarScreen(
-            route = COMPANY_PAY,
-            icon = R.drawable.pay,
-            name = "Касса"
-        )
-    )
-
     navigation(startDestination = COMPANY_MAIN, route = COMPANY_ROUTE){
         composable(COMPANY_MAIN){
 
