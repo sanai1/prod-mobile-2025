@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.gson.annotations.Until
 import com.kotleters.mobile.common.ui.components.DefaultTextField
+import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.feature.auth.domain.UserAuth
@@ -35,6 +36,7 @@ import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterSc
 @Composable
 fun CompanyRegisterScreen(
     back: () -> Unit,
+    success: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
 
@@ -50,61 +52,79 @@ fun CompanyRegisterScreen(
             .fillMaxSize()
             .background(backgroundColor)
             .systemBarsPadding(),
-    ){
+    ) {
 
-        LazyColumn{
+        LazyColumn {
             item {
-                Row (
+                Row(
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     IconButton(back) {
                         Icon(
                             Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
                             tint = Color.White,
-                            modifier = Modifier.size(70.dp))
+                            modifier = Modifier.size(70.dp)
+                        )
                     }
-                    Text("Регистрация", color = Color.White,
+                    Text(
+                        "Регистрация", color = Color.White,
                         fontSize = 46.sp, fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(16.dp))
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
-                when(state){
+                when (state) {
                     is RegisterScreenState.Content -> {
-                        when((state as RegisterScreenState.Content).userAuth){
+                        when ((state as RegisterScreenState.Content).userAuth) {
                             is UserAuth.Client -> {
                             }
+
                             is UserAuth.Company -> {
                                 DefaultTextField(
                                     "Имя компании",
                                     text = viewModel.companyName.value,
-                                    isError = viewModel.isError.value,
+                                    isError = (state as RegisterScreenState.Content).isError,
                                 ) {
                                     viewModel.changeCompanyName(it)
                                 }
                                 DefaultTextField(
                                     "Email",
                                     text = viewModel.companyEmail.value,
-                                    isError = viewModel.isError.value,
+                                    isError = (state as RegisterScreenState.Content).isError,
                                 ) {
                                     viewModel.changeCompanyEmail(it)
                                 }
                                 DefaultTextField(
                                     "Пароль",
                                     text = viewModel.companyPassword.value,
-                                    isError = viewModel.isError.value,
+                                    isError = (state as RegisterScreenState.Content).isError,
+                                    isPassword = true
                                 ) {
                                     viewModel.changeCompanyPassword(it)
                                 }
-                                WhiteButton("Продолжить") {
-                                    viewModel.onRegister()
+                                WhiteButton(
+                                    "Продолжить",
+                                    isEnabled = viewModel.companyName.value.isNotEmpty()
+                                            && viewModel.companyEmail.value.isNotEmpty()
+                                            && viewModel.companyPassword.value.isNotEmpty()
+                                ) {
+                                    if (viewModel.companyName.value.isNotEmpty()
+                                        && viewModel.companyEmail.value.isNotEmpty()
+                                        && viewModel.companyPassword.value.isNotEmpty()
+                                    ) {
+                                        viewModel.onRegister()
+                                    }
                                 }
                             }
                         }
                     }
-                    RegisterScreenState.Error -> {
-                        Text("Error", color = Color.White)
-                    }
-                    RegisterScreenState.Loading -> {
 
+
+                    RegisterScreenState.Loading -> {
+                        ShimmerEffectCard(modifier = Modifier.fillMaxSize())
+                    }
+
+                    RegisterScreenState.Success -> {
+                        success()
                     }
                 }
             }
