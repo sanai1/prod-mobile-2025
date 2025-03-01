@@ -39,6 +39,19 @@ class RegisterViewModel @Inject constructor(
 
     private var isClient = mutableStateOf(false)
 
+    fun changeCompanyEmail(name: String){
+        companyEmail.value = name
+        updateState(isClient.value)
+    }
+    fun changeCompanyPassword(name: String){
+        companyPassword.value = name
+        updateState(isClient.value)
+    }
+    fun changeCompanyName(name: String){
+        companyName.value = name
+        updateState(isClient.value)
+    }
+
     fun changeUserSecondName(name: String){
         userSecondName.value = name
         updateState(isClient.value)
