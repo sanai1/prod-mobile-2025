@@ -1,6 +1,6 @@
 package com.kotleters.mobile.feature.auth.data.network
 
-import com.kotleters.mobile.common.BaseURL
+import com.kotleters.mobile.common.network.model.BaseURL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

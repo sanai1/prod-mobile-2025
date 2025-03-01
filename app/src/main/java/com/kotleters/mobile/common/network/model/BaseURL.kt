@@ -1,4 +1,4 @@
-package com.kotleters.mobile.common
+package com.kotleters.mobile.common.network.model
 
 object BaseURL {
     private var BASE_URL: String? = null
