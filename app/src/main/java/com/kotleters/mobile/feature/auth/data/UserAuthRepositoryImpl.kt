@@ -67,7 +67,7 @@ class UserAuthRepositoryImpl(
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body()
+                    ).execute().body()?.token
                     return if (token?.isNotEmpty() == true) {
                         userAuth.apply {
                             save(email, password, token)
@@ -83,7 +83,7 @@ class UserAuthRepositoryImpl(
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body()
+                    ).execute().body()?.token
                     return if (token?.isNotEmpty() == true) {
                         userAuth.apply {
                             save(email, password, token)
