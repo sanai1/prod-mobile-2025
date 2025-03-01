@@ -80,11 +80,11 @@ class CompanyRepositoryImpl(
     }
 
     private fun create(offer: OfferCompanyCreateModel) = CompanyRetrofitClient.companyRetrofitService.createOffer(
-        token = SecretStorage.readToken(context)!!,
+        token = "Bearer ${SecretStorage.readToken(context)}",
         offer = offer
     ).execute()
     
     private fun getOffers() = CompanyRetrofitClient.companyRetrofitService.getOffersByCompany(
-        token = SecretStorage.readToken(context)!!
+        token = "Bearer ${SecretStorage.readToken(context)}"
     ).execute()
 }
