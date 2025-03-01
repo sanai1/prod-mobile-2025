@@ -4,6 +4,7 @@ import com.kotleters.mobile.common.data.network.model.ClientOffers
 import com.kotleters.mobile.common.domain.Payload
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
 import com.kotleters.mobile.feature.company.data.network.model.ScanQrModel
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,7 +17,7 @@ interface CompanyRetrofitService {
     fun createOffer(
         @Header("Authorization") token: String,
         @Body offer: OfferCompanyCreateModel
-    ): Call<String>
+    ): Call<ResponseBody>
 
     @GET("offers/company")
     fun getOffersByCompany(

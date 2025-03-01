@@ -9,6 +9,7 @@ import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.feature.company.domain.CompanyRepository
 import com.kotleters.mobile.feature.company.presentation.main.states.CompanyMainScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,8 +31,8 @@ class CompanyMainViewModel @Inject constructor(
         fetchOffers()
     }
 
-    private fun fetchOffers() {
-        viewModelScope.launch {
+    fun fetchOffers() {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.d("HUI", "f")
             _state.update {
                 CompanyMainScreenState.Loading

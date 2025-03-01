@@ -29,7 +29,7 @@ class CompanyRepositoryImpl(
         )
         try {
             val call = create(offerForCreate)
-            if (call.code() == 200) {
+            if (call.code() == 201) {
                 return ResponseTemplate.Success(data = true)
             } else if (call.code() == 401) {
                 updateToken()

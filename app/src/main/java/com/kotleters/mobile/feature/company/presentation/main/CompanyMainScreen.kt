@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.company.presentation.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,20 +51,27 @@ fun CompanyMainScreen(
         TopScreenHeader("Компания")
         when(state){
             is CompanyMainScreenState.Content -> {
-                Row (
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Text("Предложения", fontSize = 32.sp, fontWeight = FontWeight.Medium, color = lightGray)
-                    Spacer(Modifier.weight(1f))
-                    Text("+", fontSize = 32.sp, fontWeight = FontWeight.Medium, color = lightGray,
-                        modifier = Modifier.noRippleClickable { goToAdd() })
-                }
-                FlowRow {
-                    (state as CompanyMainScreenState.Content).offers.forEach {
-                        OfferCard(it) { }
+                LazyColumn {
+                    item{
+                        Row (
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            Text("Предложения", fontSize = 32.sp, fontWeight = FontWeight.Medium, color = lightGray)
+                            Spacer(Modifier.weight(1f))
+                            Text("+", fontSize = 32.sp, fontWeight = FontWeight.Medium, color = lightGray,
+                                modifier = Modifier.noRippleClickable { goToAdd() })
+                        }
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            (state as CompanyMainScreenState.Content).offers.forEach {
+                                OfferCard(it) { }
+                            }
+                        }
                     }
                 }
             }

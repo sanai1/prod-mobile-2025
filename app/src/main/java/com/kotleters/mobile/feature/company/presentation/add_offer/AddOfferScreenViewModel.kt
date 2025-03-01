@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.company.presentation.add_offer
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,7 +35,7 @@ class AddOfferScreenViewModel @Inject constructor(
 
     private var title = mutableStateOf("")
     private var description = mutableStateOf("")
-    private var discount = mutableStateOf("")
+    private var discount = mutableStateOf("0.1")
     private var startDate = mutableStateOf("")
     private var endDate = mutableStateOf("")
 
@@ -78,6 +79,7 @@ class AddOfferScreenViewModel @Inject constructor(
                 )
             when (result) {
                 is ResponseTemplate.Error -> {
+                    Log.d("ERROR", result.message)
                     _state.update {
                         AddOfferScreenState.Error
                     }

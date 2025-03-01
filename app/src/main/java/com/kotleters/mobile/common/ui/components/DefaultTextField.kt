@@ -28,7 +28,7 @@ import com.kotleters.mobile.common.ui.theme.secondaryGray
 fun DefaultTextField(
     placeholder: String,
     text: String,
-    isError: Boolean,
+    isError: Boolean = false,
     isPassword: Boolean = false,
     onChange: (String) -> Unit
 ) {

@@ -17,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph
 import androidx.navigation.NavGraphBuilder
@@ -120,7 +121,8 @@ fun AppNavigation(
                         },
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(backgroundColor),
+                            .background(backgroundColor)
+                            .padding(bottom = if (currentRoute in clientBottomBarItems.map { it.route } + companyBottomBarItems.map { it.route }) 90.dp else 0.dp),
                     ) {
 
                         authNavGraph(
