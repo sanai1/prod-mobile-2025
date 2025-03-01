@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.navigation.BottomBarScreen
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainScreen
+import com.kotleters.mobile.feature.company.presentation.pay.CompanyPayScreen
 
 fun NavGraphBuilder.companyNavGraph(
     navController: NavHostController
@@ -18,7 +19,7 @@ fun NavGraphBuilder.companyNavGraph(
             CompanyMainScreen()
         }
         composable(COMPANY_PAY){
-
+            CompanyPayScreen()
         }
     }
 }

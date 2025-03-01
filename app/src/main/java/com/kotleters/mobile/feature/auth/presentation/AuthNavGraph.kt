@@ -28,7 +28,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController,
         composable(USER_LOGIN) {
             LoginScreen(
                 isClient = true, goToReg = { navController.navigate(USER_REG) },
-                success = clientSuccess,
+                success = { clientSuccess() },
                 back = { navController.popBackStack() }
             )
         }
@@ -36,7 +36,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController,
             LoginScreen(
                 isClient = false,
                 goToReg = { navController.navigate(COMPANY_REG) },
-                success = companySuccess,
+                success = { companySuccess() },
                 back = { navController.popBackStack() }
             )
         }
@@ -44,13 +44,13 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController,
         composable(COMPANY_REG) {
             CompanyRegisterScreen(
                 back = { navController.popBackStack() },
-                success = companySuccess
+                success = { companySuccess() }
             )
         }
         composable(USER_REG) {
             ClientRegisterScreen(
                 back = { navController.popBackStack() },
-                success = clientSuccess
+                success = { clientSuccess() }
             )
         }
     }
