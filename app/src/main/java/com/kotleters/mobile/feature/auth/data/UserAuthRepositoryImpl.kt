@@ -1,54 +1,74 @@
 package com.kotleters.mobile.feature.auth.data
 
+import android.content.Context
 import com.kotleters.mobile.common.ResponseTemplate
+import com.kotleters.mobile.common.SecretStorage
 import com.kotleters.mobile.feature.auth.data.network.AuthRetrofitClient
 import com.kotleters.mobile.feature.auth.data.network.model.ClientAuthRegisterModel
 import com.kotleters.mobile.feature.auth.data.network.model.CompanyAuthRegisterModel
+import com.kotleters.mobile.feature.auth.data.network.model.UserAuthLoginModel
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
-import javax.inject.Inject
 
-class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
+class UserAuthRepositoryImpl(
+    private val context: Context
+) : UserAuthRepository {
     override suspend fun register(userAuth: UserAuth): ResponseTemplate<Boolean> {
         try {
             when (userAuth) {
                 is UserAuth.Client -> {
-                    AuthRetrofitClient.authRetrofitService.registerClient(
+                    val token = AuthRetrofitClient.authRetrofitService.registerClient(
                         clientAuthRegisterModel = ClientAuthRegisterModel(
-                            firstName = userAuth.firstName,
-                            lastName = userAuth.secondName,
+                            firstName = userAuth.firstName ?: "",
+                            lastName = userAuth.secondName ?: "",
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body().also {
-                        return if (it?.isNotEmpty() == true) {
-                            ResponseTemplate.Success(
-                                data = true
-                            )
-                        } else {
-                            ResponseTemplate.Error(
-                                message = "error registerClient"
-                            )
-                        }
+                    ).execute().body()
+                    return if (token?.isNotEmpty() == true) {
+                        SecretStorage.savePassAndEmail(
+                            context = context,
+                            email = userAuth.email,
+                            password = userAuth.password
+                        )
+                        SecretStorage.saveToken(
+                            context = context,
+                            token = token
+                        )
+                        ResponseTemplate.Success(
+                            data = true
+                        )
+                    } else {
+                        ResponseTemplate.Error(
+                            message = "error registerClient"
+                        )
                     }
                 }
                 is UserAuth.Company -> {
-                    AuthRetrofitClient.authRetrofitService.registerCompany(
+                    val token = AuthRetrofitClient.authRetrofitService.registerCompany(
                         companyAuthRegisterModel = CompanyAuthRegisterModel(
-                            name = userAuth.name,
+                            name = userAuth.name ?: "",
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body().also {
-                        return if (it?.isNotEmpty() == true) {
-                            ResponseTemplate.Success(
-                                data = true
-                            )
-                        } else {
-                            ResponseTemplate.Error(
-                                message = "error registerCompany"
-                            )
-                        }
+                    ).execute().body()
+                    return if (token?.isNotEmpty() == true) {
+                        SecretStorage.savePassAndEmail(
+                            context = context,
+                            email = userAuth.email,
+                            password = userAuth.password
+                        )
+                        SecretStorage.saveToken(
+                            context = context,
+                            token = token
+                        )
+                        ResponseTemplate.Success(
+                            data = true
+                        )
+                    } else {
+                        ResponseTemplate.Error(
+                            message = "error registerCompany"
+                        )
                     }
                 }
             }
@@ -59,7 +79,64 @@ class UserAuthRepositoryImpl @Inject constructor() : UserAuthRepository {
         }
     }
 
-    override suspend fun auth(emailPassword: Pair<String, String>): ResponseTemplate<Boolean> {
+    override suspend fun auth(userAuth: UserAuth): ResponseTemplate<Boolean> {
+        try {
+            when (userAuth) {
+                is UserAuth.Client -> {
+                    val token = AuthRetrofitClient.authRetrofitService.authClient(
+                        userAuthLoginModel = UserAuthLoginModel(
+                            email = userAuth.email,
+                            password = userAuth.password
+                        )
+                    ).execute().body()
+                    return if (token?.isNotEmpty() == true) {
+                        SecretStorage.saveToken(
+                            context = context,
+                            token = token
+                        )
+                        ResponseTemplate.Success(
+                            data = true
+                        )
+                    } else {
+                        ResponseTemplate.Error(
+                            message = "error authClient"
+                        )
+                    }
+                }
+                is UserAuth.Company -> {
+                    val token = AuthRetrofitClient.authRetrofitService.authCompany(
+                        userAuthLoginModel = UserAuthLoginModel(
+                            email = userAuth.email,
+                            password = userAuth.password
+                        )
+                    ).execute().body()
+                    return if (token?.isNotEmpty() == true) {
+                        SecretStorage.saveToken(
+                            context = context,
+                            token = token
+                        )
+                        ResponseTemplate.Success(
+                            data = true
+                        )
+                    } else {
+                        ResponseTemplate.Error(
+                            message = "error authCompany"
+                        )
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            return ResponseTemplate.Error(
+                message = e.message.toString()
+            )
+        }
+    }
+
+    override suspend fun checkLogIn(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun logOut() {
         TODO("Not yet implemented")
     }
 }
