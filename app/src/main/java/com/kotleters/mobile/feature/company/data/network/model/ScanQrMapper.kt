@@ -8,7 +8,7 @@ object ScanQrMapper {
             firstName = scanQrModel.client_first_name,
             lastName = scanQrModel.client_last_name,
             offerTitle = scanQrModel.offer_title,
-            discount = scanQrModel.offer_discount.toLong()
+            discount = scanQrModel.offer_discount
         )
     }
 }

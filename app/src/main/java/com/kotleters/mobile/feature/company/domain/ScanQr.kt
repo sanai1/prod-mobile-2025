@@ -4,5 +4,5 @@ data class ScanQr(
     val firstName: String,
     val lastName: String,
     val offerTitle: String,
-    val discount: Long
+    val discount: Double
 )
