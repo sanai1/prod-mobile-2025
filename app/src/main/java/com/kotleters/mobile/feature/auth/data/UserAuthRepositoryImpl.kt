@@ -26,22 +26,12 @@ class UserAuthRepositoryImpl(
                         )
                     ).execute().body()
                     return if (token?.isNotEmpty() == true) {
-                        SecretStorage.savePassAndEmail(
-                            context = context,
-                            email = userAuth.email,
-                            password = userAuth.password
-                        )
-                        SecretStorage.saveToken(
-                            context = context,
-                            token = token
-                        )
-                        ResponseTemplate.Success(
-                            data = true
-                        )
+                        userAuth.apply {
+                            save(email, password, token)
+                        }
+                        ResponseTemplate.Success(data = true)
                     } else {
-                        ResponseTemplate.Error(
-                            message = "error registerClient"
-                        )
+                        ResponseTemplate.Error(message = "error registerClient")
                     }
                 }
                 is UserAuth.Company -> {
@@ -53,29 +43,17 @@ class UserAuthRepositoryImpl(
                         )
                     ).execute().body()
                     return if (token?.isNotEmpty() == true) {
-                        SecretStorage.savePassAndEmail(
-                            context = context,
-                            email = userAuth.email,
-                            password = userAuth.password
-                        )
-                        SecretStorage.saveToken(
-                            context = context,
-                            token = token
-                        )
-                        ResponseTemplate.Success(
-                            data = true
-                        )
+                        userAuth.apply {
+                            save(email, password, token)
+                        }
+                        ResponseTemplate.Success(data = true)
                     } else {
-                        ResponseTemplate.Error(
-                            message = "error registerCompany"
-                        )
+                        ResponseTemplate.Error(message = "error registerCompany")
                     }
                 }
             }
         } catch (e: Exception) {
-            return ResponseTemplate.Error(
-                message = e.message.toString()
-            )
+            return ResponseTemplate.Error(message = e.message.toString())
         }
     }
 
@@ -90,17 +68,12 @@ class UserAuthRepositoryImpl(
                         )
                     ).execute().body()
                     return if (token?.isNotEmpty() == true) {
-                        SecretStorage.saveToken(
-                            context = context,
-                            token = token
-                        )
-                        ResponseTemplate.Success(
-                            data = true
-                        )
+                        userAuth.apply {
+                            save(email, password, token)
+                        }
+                        ResponseTemplate.Success(data = true)
                     } else {
-                        ResponseTemplate.Error(
-                            message = "error authClient"
-                        )
+                        ResponseTemplate.Error(message = "error authClient")
                     }
                 }
                 is UserAuth.Company -> {
@@ -111,32 +84,39 @@ class UserAuthRepositoryImpl(
                         )
                     ).execute().body()
                     return if (token?.isNotEmpty() == true) {
-                        SecretStorage.saveToken(
-                            context = context,
-                            token = token
-                        )
-                        ResponseTemplate.Success(
-                            data = true
-                        )
+                        userAuth.apply {
+                            save(email, password, token)
+                        }
+                        ResponseTemplate.Success(data = true)
                     } else {
-                        ResponseTemplate.Error(
-                            message = "error authCompany"
-                        )
+                        ResponseTemplate.Error(message = "error authCompany")
                     }
                 }
             }
         } catch (e: Exception) {
-            return ResponseTemplate.Error(
-                message = e.message.toString()
-            )
+            return ResponseTemplate.Error(message = e.message.toString())
         }
     }
 
-    override suspend fun checkLogIn(): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun checkLogIn(): Boolean = SecretStorage.readPassAndEmail(context).let {
+        !(it.first == null && it.second == null)
     }
 
-    override suspend fun logOut() {
-        TODO("Not yet implemented")
+    override suspend fun logOut() = SecretStorage.logOut(context)
+
+    private fun save(
+        email: String,
+        password: String,
+        token: String
+    ) = SecretStorage.apply {
+        savePassAndEmail(
+            context = context,
+            email = email,
+            password = password
+        )
+        saveToken(
+            context = context,
+            token = token
+        )
     }
 }
