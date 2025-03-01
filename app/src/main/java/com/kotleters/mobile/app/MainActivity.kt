@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.kotleters.mobile.common.navigation.AppNavigation
+import com.kotleters.mobile.feature.auth.presentation.login.LoginScreen
 import com.kotleters.mobile.feature.auth.presentation.onboard.AuthOnBoardScreen
 import com.kotleters.mobile.feature.auth.presentation.register.client.ClientRegisterScreen
 import com.kotleters.mobile.feature.auth.presentation.register.company.CompanyRegisterScreen
@@ -19,9 +21,7 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(0)
         )
         setContent {
-            CompanyRegisterScreen(
-                back = {  },
-            )
+            AppNavigation()
         }
     }
 }

@@ -11,4 +11,6 @@ sealed class LoginScreenState {
     data object Loading : LoginScreenState()
 
     data object Error : LoginScreenState()
+
+    data object Success : LoginScreenState()
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.gson.annotations.Until
 import com.kotleters.mobile.common.ui.components.DefaultTextField
+import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.feature.auth.domain.UserAuth
@@ -35,6 +36,7 @@ import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterSc
 @Composable
 fun CompanyRegisterScreen(
     back: () -> Unit,
+    success: () -> Unit,
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
 
@@ -104,7 +106,11 @@ fun CompanyRegisterScreen(
                         Text("Error", color = Color.White)
                     }
                     RegisterScreenState.Loading -> {
+                        ShimmerEffectCard(modifier = Modifier.fillMaxSize())
+                    }
 
+                    RegisterScreenState.Success -> {
+                        success()
                     }
                 }
             }

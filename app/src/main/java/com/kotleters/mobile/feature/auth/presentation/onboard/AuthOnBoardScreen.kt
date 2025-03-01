@@ -33,7 +33,10 @@ import com.kotleters.mobile.R
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 
 @Composable
-fun AuthOnBoardScreen() {
+fun AuthOnBoardScreen(
+    asClient: () -> Unit,
+    asCompany: () -> Unit
+) {
 
     Box(
         modifier = Modifier
@@ -50,11 +53,15 @@ fun AuthOnBoardScreen() {
             AuthButton(
                 text = "Продолжить как\nклиент",
                 pic = R.drawable.profile
-            ) { }
+            ) {
+                asClient()
+            }
             AuthButton(
                 text = "Продолжить как\nкомпания",
                 pic = R.drawable.company
-            ) { }
+            ) {
+                asCompany()
+            }
             Spacer(Modifier.weight(1f))
         }
     }
@@ -67,7 +74,7 @@ fun AuthButton(
     onClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(25.dp),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) { 

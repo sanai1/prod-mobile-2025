@@ -11,4 +11,6 @@ sealed class RegisterScreenState {
     data object Error : RegisterScreenState()
 
     data object Loading : RegisterScreenState()
+
+    data object Success : RegisterScreenState()
 }
