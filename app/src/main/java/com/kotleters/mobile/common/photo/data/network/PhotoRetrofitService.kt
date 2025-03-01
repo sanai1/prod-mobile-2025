@@ -1,6 +1,7 @@
 package com.kotleters.mobile.common.photo.data.network
 
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -17,5 +18,6 @@ interface PhotoRetrofitService {
     @POST("company/image")
     fun addCompanyPhoto(
         @Header("Authorization") token: String,
-    )
+        @Body photo: ByteArray
+    ): Call<String>
 }
