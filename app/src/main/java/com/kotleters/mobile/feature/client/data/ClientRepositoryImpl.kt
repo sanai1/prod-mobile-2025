@@ -48,5 +48,4 @@ class ClientRepositoryImpl(
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
     private fun getPassAndToken() = SecretStorage.readPassAndEmail(context)
-
 }
