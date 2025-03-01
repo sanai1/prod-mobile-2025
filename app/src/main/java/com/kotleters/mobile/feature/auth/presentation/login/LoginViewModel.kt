@@ -1,10 +1,9 @@
 package com.kotleters.mobile.feature.auth.presentation.login
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kotleters.mobile.common.network.model.ResponseTemplate
+import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.auth.presentation.login.states.LoginScreenState
