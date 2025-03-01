@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.client.data
 
 import android.content.Context
+import android.util.Log
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.feature.auth.domain.UserAuth
@@ -12,24 +13,40 @@ import retrofit2.HttpException
 class ClientGenerateQRRepositoryImpl(
     private val context: Context,
     private val userAuthRepository: UserAuthRepository
-): ClientGenerateQRRepository {
+) : ClientGenerateQRRepository {
     override suspend fun clientGenerateQRRepository(offerId: String): ResponseTemplate<String> {
         return try {
-            ResponseTemplate.Success(ClientGenerateQRClient.clientGenerateQRService.getPayload(offerId, getToken()).toString())
-        }catch (h: HttpException) {
-            if (h.code() == 403){
-                val (pass, email) = getPassAndToken()
+            val call =
+                ClientGenerateQRClient.clientGenerateQRService.getPayload(offerId, getToken())
+                    .execute()
+            if (call.code() == 401) {
+                val (email, pass) = getPassAndEmail()
+                Log.d("PASS EMAIL", "$pass, $email")
 
-                userAuthRepository.auth(userAuth = UserAuth.Client(
-                    firstName = null,
-                    secondName = null,
-                    email = email!!,
-                    password = pass!!
-                ))
-                return ResponseTemplate.Success(ClientGenerateQRClient.clientGenerateQRService.getPayload(offerId, getToken()).toString())
-            }else {
-                return ResponseTemplate.Error(message = "Ошибка HTTP ${h.code()}: ${h.message()}")
+                userAuthRepository.auth(
+                    userAuth = UserAuth.Client(
+                        firstName = null,
+                        secondName = null,
+                        email = email!!,
+                        password = pass!!
+                    )
+                )
+                val call =
+                    ClientGenerateQRClient.clientGenerateQRService.getPayload(getToken(), offerId)
+                        .execute()
+                return if (call.body() != null) {
+                    ResponseTemplate.Success(call.body()!!.payload)
+                } else {
+                    ResponseTemplate.Error("hui")
+                }
+            } else {
+                if (call.body() != null) {
+                    ResponseTemplate.Success(call.body()!!.payload)
+                } else {
+                    ResponseTemplate.Error("hui")
+                }
             }
+
         } catch (e: Exception) {
             ResponseTemplate.Error(message = e.message.toString())
         }
@@ -38,5 +55,5 @@ class ClientGenerateQRRepositoryImpl(
 
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
-    private fun getPassAndToken() = SecretStorage.readPassAndEmail(context)
+    private fun getPassAndEmail() = SecretStorage.readPassAndEmail(context)
 }

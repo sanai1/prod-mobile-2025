@@ -6,11 +6,12 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface ClientGenerateQRService {
     @POST("offers/client/generateQr")
     fun getPayload(
-        @Body offerId: String,
-        @Header("Authorization") token: String
+        @Header("Authorization") token: String,
+        @Query("offerId") offerId: String,
     ): Call<Payload>
 }

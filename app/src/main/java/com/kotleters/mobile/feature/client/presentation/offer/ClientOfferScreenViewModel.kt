@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.client.presentation.offer
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
@@ -27,10 +28,12 @@ class ClientOfferScreenViewModel @Inject constructor(
             when(result){
                 is ResponseTemplate.Error -> {
                     _codeState.update {
+                        Log.d("ERROR", result.message)
                         CodeState.Error
                     }
                 }
                 is ResponseTemplate.Success -> {
+                    Log.d("RESULT", result.data)
                     _codeState.update {
                         val QRBitmap = generateQRCodeImage(result.data)
                         CodeState.Content(QRBitmap)
