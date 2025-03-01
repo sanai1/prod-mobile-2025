@@ -1,11 +1,10 @@
 package com.kotleters.mobile.feature.client.data
 
 import android.content.Context
+import com.kotleters.mobile.common.data.network.model.ResponseTemplate
+import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.CompanyMapper
-import com.kotleters.mobile.common.network.model.ResponseTemplate
-import com.kotleters.mobile.common.network.model.SecretStorage
-import com.kotleters.mobile.feature.auth.data.UserAuthRepositoryImpl
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.ClientRetrofitClient

@@ -28,5 +28,8 @@ class AppModule {
     fun provideClientRepository(
         @ApplicationContext context: Context
     ): ClientRepository
-     = ClientRepositoryImpl(context, provideUserAuthRepository(context))
+     = ClientRepositoryImpl(
+        context = context,
+        userAuthRepository = UserAuthRepositoryImpl(context)
+    )
 }
