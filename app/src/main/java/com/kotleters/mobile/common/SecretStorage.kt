@@ -51,4 +51,12 @@ object SecretStorage {
         )
     }
 
+    fun logOut(context: Context) {
+        getPrefs(context).edit().apply {
+            putString(EMAIL_FIELD, null)
+            putString(PASSWORD_FIELD, null)
+            putString(TOKEN_FIELD, null)
+            apply()
+        }
+    }
 }
