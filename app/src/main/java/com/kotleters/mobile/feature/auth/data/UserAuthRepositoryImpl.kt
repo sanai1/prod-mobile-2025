@@ -99,7 +99,7 @@ class UserAuthRepositoryImpl(
     }
 
     override suspend fun checkLogIn(): Boolean = SecretStorage.readPassAndEmail(context).let {
-        !(it.first == null && it.second == null)
+        (it.first == null && it.second == null).not()
     }
 
     override suspend fun logOut() = SecretStorage.logOut(context)
