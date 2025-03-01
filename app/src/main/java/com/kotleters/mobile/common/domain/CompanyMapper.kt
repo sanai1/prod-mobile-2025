@@ -12,6 +12,7 @@ object CompanyMapper {
                 name = offers.first().company_name,
                 offers = offers.map { offer ->
                     Company.Offer(
+                        id = offer.id,
                         title = offer.title,
                         description = offer.description,
                         discount = offer.discount.toLong(),
