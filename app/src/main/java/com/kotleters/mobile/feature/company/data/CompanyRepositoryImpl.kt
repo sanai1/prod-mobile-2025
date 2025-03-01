@@ -29,14 +29,7 @@ class CompanyRepositoryImpl(
             return ResponseTemplate.Success(data = true)
         } catch (http: HttpException) {
             if (http.code() == 403) {
-                val pair = SecretStorage.readPassAndEmail(context)
-                userAuthRepository.auth(
-                    userAuth = UserAuth.Company(
-                        name = null,
-                        email = pair.first!!,
-                        password = pair.second!!
-                    )
-                )
+                updateToken()
                 create(offerForCreate).also {
                     return if (it.code() == 200) {
                         ResponseTemplate.Success(data = true)
@@ -63,7 +56,7 @@ class CompanyRepositoryImpl(
             }
         } catch (http: HttpException) {
             if (http.code() == 403) {
-                // TODO: повторно логиниться
+                updateToken()
                 return getOffers().let { 
                     if (it.body() != null) {
                         ResponseTemplate.Success(
@@ -85,6 +78,19 @@ class CompanyRepositoryImpl(
     ).execute()
     
     private fun getOffers() = CompanyRetrofitClient.companyRetrofitService.getOffersByCompany(
-        token = "Bearer ${SecretStorage.readToken(context)}"
+        token = "Bearer ${SecretStorage.readToken(context)}",
+        limit = 1000,
+        offset = 0,
     ).execute()
+
+    private suspend fun updateToken() {
+        val triple = SecretStorage.readPassAndEmail(context)
+        userAuthRepository.auth(
+            userAuth = UserAuth.Company(
+                name = null,
+                email = triple.first!!,
+                password = triple.second!!
+            )
+        )
+    }
 }
