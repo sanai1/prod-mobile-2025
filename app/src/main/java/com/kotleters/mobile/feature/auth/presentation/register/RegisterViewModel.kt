@@ -3,10 +3,13 @@ package com.kotleters.mobile.feature.auth.presentation.register
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kotleters.mobile.R
+import com.kotleters.mobile.common.ResponseTemplate
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -22,24 +25,58 @@ class RegisterViewModel @Inject constructor(
     private val _state = MutableStateFlow<RegisterScreenState>(RegisterScreenState.Loading)
     val state = _state.asStateFlow()
 
-    private var userName = mutableStateOf("")
-    private var userSecondName = mutableStateOf("")
-    private var userEmail = mutableStateOf("")
-    private var userPassword = mutableStateOf("")
+    var userName = mutableStateOf("")
+    var userSecondName = mutableStateOf("")
+    var userEmail = mutableStateOf("")
+    var userPassword = mutableStateOf("")
 
-    private var companyName = mutableStateOf("")
-    private var companyEmail = mutableStateOf("")
-    private var companyPassword = mutableStateOf("")
+    var companyName = mutableStateOf("")
+    var companyEmail = mutableStateOf("")
+    var companyPassword = mutableStateOf("")
+
+    var isError = mutableStateOf(false)
 
     private var isClient = mutableStateOf(false)
 
+    fun changeUserSecondName(name: String){
+        userSecondName.value = name
+        updateState(isClient.value)
+    }
+
+    fun changeUserPassword(name: String){
+        userPassword.value = name
+        updateState(isClient.value)
+    }
+
+    fun changeUserEmail(name: String){
+        userEmail.value = name
+        updateState(isClient.value)
+    }
+
     fun changeUserName(name: String){
         userName.value = name
+        updateState(isClient.value)
     }
 
     fun setupRegister(isCL: Boolean) {
         isClient.value = isCL
         updateState(isClient.value)
+    }
+
+    fun onRegister(){
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = authRepository.register((_state.value as RegisterScreenState.Content).userAuth)
+            when(result){
+                is ResponseTemplate.Error -> {
+                    _state.update {
+                        RegisterScreenState.Error
+                    }
+                }
+                is ResponseTemplate.Success -> {
+
+                }
+            }
+        }
     }
 
     private fun updateState(isClient: Boolean) {

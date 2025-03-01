@@ -33,10 +33,10 @@ import com.kotleters.mobile.R
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 
 @Composable
-fun AuthOnBoardScreen(modifier: Modifier = Modifier) {
+fun AuthOnBoardScreen() {
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
             .systemBarsPadding()

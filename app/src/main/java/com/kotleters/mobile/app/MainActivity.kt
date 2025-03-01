@@ -18,7 +18,9 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(0)
         )
         setContent {
-            ClientRegisterScreen()
+            ClientRegisterScreen(
+                back = { }
+            )
         }
     }
 }
