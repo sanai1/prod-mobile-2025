@@ -78,7 +78,9 @@ class CompanyRepositoryImpl(
     ).execute()
     
     private fun getOffers() = CompanyRetrofitClient.companyRetrofitService.getOffersByCompany(
-        token = "Bearer ${SecretStorage.readToken(context)}"
+        token = "Bearer ${SecretStorage.readToken(context)}",
+        limit = 1000,
+        offset = 0,
     ).execute()
 
     private suspend fun updateToken() {
