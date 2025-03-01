@@ -11,9 +11,6 @@ import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 
 class PhotoRepositoryImpl(
     private val context: Context,
@@ -27,10 +24,12 @@ class PhotoRepositoryImpl(
                 updateToken()
                 val callAgain = getPhoto(companyId)
                 return if (callAgain.code() == 200) {
-                    ResponseTemplate.Success(call.body()!!)
+                    ResponseTemplate.Success(data = call.body()!!)
                 } else {
                     ResponseTemplate.Error(message = call.message())
                 }
+            } else if (call.code() == 200) {
+                ResponseTemplate.Success(data = call.body()!!)
             } else {
                 throw Exception()
             }
@@ -41,11 +40,16 @@ class PhotoRepositoryImpl(
 
     override suspend fun addCompanyPhoto(photo: Uri): ResponseTemplate<Boolean> {
         return try {
-            val res = PhotoRetrofitClient.photoRetrofitService.addCompanyPhoto(
-                token = getToken(),
-                photo = compressImage(context, photo)
-            ).execute()
-            return if (res.code() == 200) {
+            val call = addPhoto(photo)
+            if (call.code() == 401) {
+                updateToken()
+                val callAgain = addPhoto(photo)
+                return if (callAgain.code() == 200) {
+                    ResponseTemplate.Success(true)
+                } else {
+                    ResponseTemplate.Error(message = call.message())
+                }
+            } else if (call.code() == 200) {
                 ResponseTemplate.Success(true)
             } else {
                 throw Exception()
@@ -57,59 +61,18 @@ class PhotoRepositoryImpl(
 
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
-    private fun compressImage(context: Context, imageUri: Uri): ByteArray {
-        val quality = 40
+    private fun compressImage(imageUri: Uri, quality: Int = 40): ByteArray {
         val contentResolver = context.contentResolver
-        val inputStream: InputStream? = contentResolver.openInputStream(imageUri)
 
-        val options = BitmapFactory.Options().apply {
-            inJustDecodeBounds = true
-            BitmapFactory.decodeStream(inputStream, null, this)
-
-            val scale = calculateInSampleSize(this)
-            inSampleSize = scale
-            inJustDecodeBounds = false
+        val bitmap: Bitmap? = contentResolver.openInputStream(imageUri)?.use { inputStream ->
+            BitmapFactory.decodeStream(inputStream)
         }
 
-
-        val bitmap: Bitmap? =
-            BitmapFactory.decodeStream(contentResolver.openInputStream(imageUri), null, options)
-
-
-        val fileName = "compressed_image_${System.currentTimeMillis()}.jpg"
-        val file = File(context.filesDir, fileName)
-        val outputStream = FileOutputStream(file)
-
-        bitmap?.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-        outputStream.flush()
-        outputStream.close()
-
-        return bitmap.let {
+        return bitmap?.let { bmp ->
             val outputStream = ByteArrayOutputStream()
-            it?.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+            bmp.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
             outputStream.toByteArray()
-        }
-    }
-
-    private fun calculateInSampleSize(
-        options: BitmapFactory.Options
-        ): Int {
-        val reqWidth = 800
-        val reqHeight = 800
-        val height = options.outHeight
-        val width = options.outWidth
-        var inSampleSize = 1
-
-        if (height > reqHeight || width > reqWidth) {
-            val halfHeight = height / 2
-            val halfWidth = width / 2
-
-            while ((halfHeight / inSampleSize) > reqHeight && (halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-
-        return inSampleSize
+        } ?: ByteArray(0)
     }
 
     private suspend fun updateToken() {
@@ -122,6 +85,11 @@ class PhotoRepositoryImpl(
             )
         )
     }
+
+    private fun addPhoto(photo: Uri) = PhotoRetrofitClient.photoRetrofitService.addCompanyPhoto(
+        token = getToken(),
+        photo = compressImage(imageUri = photo)
+    ).execute()
 
     private fun getPhoto(companyId: String) =
         PhotoRetrofitClient.photoRetrofitService.getCompanyPhoto(
