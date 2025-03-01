@@ -59,7 +59,7 @@ fun BottomBar(
             )
             Spacer(Modifier.width(8.dp))
             Text(
-                screens.first { it.route == screen }.route,
+                screens.first { it.route == screen }.name,
                 fontSize = 14.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Medium

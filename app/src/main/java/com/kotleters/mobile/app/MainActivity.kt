@@ -38,29 +38,7 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(0)
         )
         setContent {
-            var screen by remember {
-                mutableStateOf("Главная")
-            }
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .background(backgroundColor)
-                    .statusBarsPadding()
-            ) {
-                TopScreenHeader(
-                    screen
-                )
-                Spacer(Modifier.weight(1f))
-                BottomBar(
-                    listOf(
-                        BottomBarScreen("Главная", R.drawable.home),
-                        BottomBarScreen("Оплата", R.drawable.pay)
-                    ),
-                    screen = screen
-                ) {
-                    screen = it.route
-                }
-            }
+
         }
     }
 }
