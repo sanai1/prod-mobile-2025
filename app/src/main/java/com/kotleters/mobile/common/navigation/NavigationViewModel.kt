@@ -28,11 +28,12 @@ class NavigationViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = authRepository.checkLogIn()
             _state.update {
-               when(result){
-                   UserLogIn.CLIENT ->  LoginState.AuthClient
-                   UserLogIn.COMPANY -> LoginState.AuthCompany
-                   else -> LoginState.NotAuth
-               }
+//               when(result){
+//                   UserLogIn.CLIENT ->  LoginState.AuthClient
+//                   UserLogIn.COMPANY -> LoginState.AuthCompany
+//                   else -> LoginState.NotAuth
+//               }
+                LoginState.NotAuth
             }
         }
     }
