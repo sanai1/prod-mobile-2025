@@ -11,9 +11,6 @@ import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 
 class PhotoRepositoryImpl(
     private val context: Context,
@@ -27,12 +24,12 @@ class PhotoRepositoryImpl(
                 updateToken()
                 val callAgain = getPhoto(companyId)
                 return if (callAgain.code() == 200) {
-                    ResponseTemplate.Success(call.body()!!)
+                    ResponseTemplate.Success(data = call.body()!!)
                 } else {
                     ResponseTemplate.Error(message = call.message())
                 }
-            } else if (call.code() != 200) {
-                ResponseTemplate.Success(call.body()!!)
+            } else if (call.code() == 200) {
+                ResponseTemplate.Success(data = call.body()!!)
             } else {
                 throw Exception()
             }
@@ -64,7 +61,7 @@ class PhotoRepositoryImpl(
 
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
-    private fun compressImage(context: Context, imageUri: Uri, quality: Int = 40): ByteArray {
+    private fun compressImage(imageUri: Uri, quality: Int = 40): ByteArray {
         val contentResolver = context.contentResolver
 
         val bitmap: Bitmap? = contentResolver.openInputStream(imageUri)?.use { inputStream ->
@@ -91,7 +88,7 @@ class PhotoRepositoryImpl(
 
     private fun addPhoto(photo: Uri) = PhotoRetrofitClient.photoRetrofitService.addCompanyPhoto(
         token = getToken(),
-        photo = compressImage(context, photo)
+        photo = compressImage(imageUri = photo)
     ).execute()
 
     private fun getPhoto(companyId: String) =
