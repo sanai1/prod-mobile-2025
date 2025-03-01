@@ -27,7 +27,7 @@ import com.kotleters.mobile.feature.client.presentation.main.states.ClientMainSc
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ClientMainScreen(
-    viewModel: ClientMainScreenViewModel = hiltViewModel()
+    viewModel: ClientMainScreenViewModel
 ) {
 
     val state by viewModel.state.collectAsState()

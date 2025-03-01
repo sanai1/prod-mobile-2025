@@ -30,7 +30,7 @@ class ClientMainScreenViewModel @Inject constructor(
         fetchCompanies()
     }
 
-    fun fetchCompanies(){
+    private fun fetchCompanies(){
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 ClientMainScreenState.Loading

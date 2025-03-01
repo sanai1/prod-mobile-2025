@@ -35,6 +35,7 @@ import com.kotleters.mobile.feature.client.presentation.CLIENT_MAIN
 import com.kotleters.mobile.feature.client.presentation.CLIENT_PROFILE
 import com.kotleters.mobile.feature.client.presentation.CLIENT_ROUTE
 import com.kotleters.mobile.feature.client.presentation.clientNavGraph
+import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreenViewModel
 import com.kotleters.mobile.feature.company.presentation.COMPANY_MAIN
 import com.kotleters.mobile.feature.company.presentation.COMPANY_PAY
 import com.kotleters.mobile.feature.company.presentation.COMPANY_ROUTE
@@ -50,6 +51,8 @@ fun AppNavigation(
     val loginState by viewModel.state.collectAsState()
 
     val currentRoute = CurrentRoute(navController)
+
+    val clientMainScreenViewModel = hiltViewModel<ClientMainScreenViewModel>()
 
     val clientBottomBarItems = listOf(
         BottomBarScreen(
@@ -101,7 +104,9 @@ fun AppNavigation(
                             }
                         }
                     },
-                    modifier = Modifier.fillMaxSize().background(backgroundColor)
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(backgroundColor)
                 ) { pd ->
                     NavHost(
                         navController,
@@ -134,7 +139,10 @@ fun AppNavigation(
                             }
                         )
 
-                        clientNavGraph(navController, currentRoute ?: "")
+                        clientNavGraph(
+                            navController, currentRoute ?: "",
+                            clientMainScreenViewModel
+                        )
 
                         companyNavGraph(navController)
                     }
