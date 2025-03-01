@@ -124,7 +124,9 @@ fun CompanyRegisterScreen(
                     }
 
                     RegisterScreenState.Success -> {
-                        success()
+                        LaunchedEffect(Unit) {
+                            success()
+                        }
                     }
                 }
             }

@@ -85,7 +85,9 @@ fun ClientRegisterScreen(
                     }
 
                     RegisterScreenState.Success -> {
-                        success()
+                        LaunchedEffect(Unit) {
+                            success()
+                        }
                     }
 
                     else -> {
