@@ -5,7 +5,7 @@ import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
-import com.kotleters.mobile.feature.client.data.network.ClientGenerateQRClient
+import com.kotleters.mobile.feature.client.data.network.client.ClientGenerateQRClient
 import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
 import retrofit2.HttpException
 
