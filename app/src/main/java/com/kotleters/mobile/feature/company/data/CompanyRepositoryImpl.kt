@@ -5,11 +5,14 @@ import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.CompanyMapper
+import com.kotleters.mobile.common.domain.Payload
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.company.data.network.CompanyRetrofitClient
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
+import com.kotleters.mobile.feature.company.data.network.model.ScanQrMapper
 import com.kotleters.mobile.feature.company.domain.CompanyRepository
+import com.kotleters.mobile.feature.company.domain.ScanQr
 import retrofit2.HttpException
 
 class CompanyRepositoryImpl(
@@ -72,16 +75,50 @@ class CompanyRepositoryImpl(
         }
     }
 
+    override suspend fun scanQr(payload: Payload): ResponseTemplate<ScanQr> {
+        try {
+            return scanQrRetrofit(payload).let {
+                if (it.body() != null) {
+                    ResponseTemplate.Success(
+                        data = ScanQrMapper.toScanQr(it.body()!!)
+                    )
+                } else {
+                    ResponseTemplate.Error(message = it.message())
+                }
+            }
+        } catch (http: HttpException) {
+            if (http.code() == 403) {
+                updateToken()
+                return scanQrRetrofit(payload).let {
+                    if (it.body() != null) {
+                        ResponseTemplate.Success(
+                            data = ScanQrMapper.toScanQr(it.body()!!)
+                        )
+                    } else {
+                        ResponseTemplate.Error(message = it.message())
+                    }
+                }
+            } else { throw Exception() }
+        } catch (e: Exception) {
+            return ResponseTemplate.Error(message = e.message.toString())
+        }
+    }
+
     private fun create(offer: OfferCompanyCreateModel) = CompanyRetrofitClient.companyRetrofitService.createOffer(
-        token = "Bearer ${SecretStorage.readToken(context)}",
+        token = getToken(),
         offer = offer
     ).execute()
     
     private fun getOffers() = CompanyRetrofitClient.companyRetrofitService.getOffersByCompany(
-        token = "Bearer ${SecretStorage.readToken(context)}",
-        limit = 1000,
-        offset = 0,
+        token = getToken()
     ).execute()
+
+    private fun scanQrRetrofit(payload: Payload) = CompanyRetrofitClient.companyRetrofitService.scanQr(
+        token = getToken(),
+        payload = payload
+    ).execute()
+
+    private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
     private suspend fun updateToken() {
         val triple = SecretStorage.readPassAndEmail(context)
