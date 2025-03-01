@@ -5,4 +5,6 @@ import com.kotleters.mobile.common.domain.Company
 
 interface ClientRepository {
     suspend fun getAllOffers(): ResponseTemplate<List<Company>>
+
+    suspend fun updateTarget(targetInfo: TargetInfo): ResponseTemplate<Boolean>
 }

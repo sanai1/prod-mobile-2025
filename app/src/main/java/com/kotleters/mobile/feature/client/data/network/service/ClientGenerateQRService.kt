@@ -1,6 +1,5 @@
-package com.kotleters.mobile.feature.client.data.network
+package com.kotleters.mobile.feature.client.data.network.service
 
-import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Payload
 import retrofit2.Call
 import retrofit2.http.Body
