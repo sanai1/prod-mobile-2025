@@ -6,6 +6,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.kotleters.mobile.feature.auth.presentation.onboard.AuthOnBoardScreen
+import com.kotleters.mobile.feature.auth.presentation.register.client.ClientRegisterScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,7 +18,7 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(0)
         )
         setContent {
-            AuthOnBoardScreen()
+            ClientRegisterScreen()
         }
     }
 }
