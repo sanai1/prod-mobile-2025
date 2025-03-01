@@ -8,7 +8,6 @@ import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.ClientGenerateQRClient
 import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
-import retrofit2.HttpException
 
 class ClientGenerateQRRepositoryImpl(
     private val context: Context,
