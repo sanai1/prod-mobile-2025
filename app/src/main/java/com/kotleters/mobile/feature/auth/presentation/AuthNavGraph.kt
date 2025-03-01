@@ -12,7 +12,9 @@ import com.kotleters.mobile.feature.auth.presentation.onboard.AuthOnBoardScreen
 import com.kotleters.mobile.feature.auth.presentation.register.client.ClientRegisterScreen
 import com.kotleters.mobile.feature.auth.presentation.register.company.CompanyRegisterScreen
 
-fun NavGraphBuilder.authNavGraph(navController: NavHostController, success: () -> Unit) {
+fun NavGraphBuilder.authNavGraph(navController: NavHostController,
+                                 clientSuccess: () -> Unit,
+                                 companySuccess: () -> Unit) {
 
     navigation(startDestination = AUTH_ON_BOARD, route = AUTH_ROUTE) {
 
@@ -26,7 +28,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, success: () -
         composable(USER_LOGIN) {
             LoginScreen(
                 isClient = true, goToReg = { navController.navigate(USER_REG) },
-                success = success,
+                success = clientSuccess,
                 back = { navController.popBackStack() }
             )
         }
@@ -34,7 +36,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, success: () -
             LoginScreen(
                 isClient = false,
                 goToReg = { navController.navigate(COMPANY_REG) },
-                success = success,
+                success = companySuccess,
                 back = { navController.popBackStack() }
             )
         }
@@ -42,13 +44,13 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController, success: () -
         composable(COMPANY_REG) {
             CompanyRegisterScreen(
                 back = { navController.popBackStack() },
-                success = success
+                success = companySuccess
             )
         }
         composable(USER_REG) {
             ClientRegisterScreen(
                 back = { navController.popBackStack() },
-                success = success
+                success = clientSuccess
             )
         }
     }
