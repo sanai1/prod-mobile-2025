@@ -7,7 +7,7 @@ import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
 class ClientGenerateQRRepositoryIpml(
     private val context: Context
 ): ClientGenerateQRRepository {
-    override suspend fun ClientGenerateQRRepository(): ResponseTemplate<String> {
+    override suspend fun clientGenerateQRRepository(): ResponseTemplate<String> {
 
     }
 }
