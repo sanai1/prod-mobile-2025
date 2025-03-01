@@ -1,4 +1,4 @@
-package com.kotleters.mobile.feature.client.data.network.model
+package com.kotleters.mobile.common.network.model
 
 
 data class ClientOffers(
