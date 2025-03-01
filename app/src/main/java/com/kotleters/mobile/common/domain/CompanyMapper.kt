@@ -14,7 +14,7 @@ object CompanyMapper {
                     Company.Offer(
                         title = offer.title,
                         description = offer.description,
-                        discount = offer.discount.toLong(),
+                        discount = offer.discount,
                         startDate = LocalDateTime.parse(offer.start_date, DateTimeFormatter.ISO_DATE_TIME),
                         endDate = LocalDateTime.parse(offer.end_date, DateTimeFormatter.ISO_DATE_TIME)
                     )

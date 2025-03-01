@@ -1,7 +1,12 @@
-package com.kotleters.mobile.feature.client.presentation.offer
+package com.kotleters.mobile.feature.client.presentation.company
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowColumn
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +15,9 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
@@ -28,12 +36,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.domain.Company
-import com.kotleters.mobile.common.ui.components.GrayButton
 import com.kotleters.mobile.common.ui.theme.backgroundColor
+import com.kotleters.mobile.feature.client.presentation.company.components.OfferCard
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ClientOfferScreen(
-    offer: Company.Offer,
+fun CompanyDetailScreen(
+    company: Company,
+    onOfferClick: (Int) -> Unit,
     back: () -> Unit
 ) {
 
@@ -48,7 +58,11 @@ fun ClientOfferScreen(
                 .fillMaxWidth()
                 .height(230.dp)
                 .clip(RoundedCornerShape(0.dp, 0.dp, 16.dp, 16.dp))
-                .background(Color(0xFF6DAAAE))
+                .paint(
+                    painterResource(R.drawable.placeholder),
+                    contentScale = ContentScale.FillBounds
+                )
+                .background(Color.Black.copy(alpha = 0.5f))
                 .statusBarsPadding()
                 .padding(16.dp)
         ) {
@@ -59,8 +73,27 @@ fun ClientOfferScreen(
                 )
             }
         }
-        Text(offer.title, fontSize = 24.sp, fontWeight = FontWeight.Medium,
-            color = Color.White, modifier = Modifier.padding(16.dp))
-        GrayButton("Использовать", true) { }
+        LazyColumn {
+            item {
+                Text(
+                    company.name, fontSize = 46.sp, color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            item {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    company.offers.forEach {
+                        OfferCard(it) {
+                            onOfferClick(company.offers.indexOf(it))
+                        }
+                    }
+                }
+            }
+        }
     }
+
 }

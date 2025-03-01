@@ -10,7 +10,7 @@ data class Company(
     data class Offer(
         val title: String,
         val description: String,
-        val discount: Long,
+        val discount: Double,
         val startDate: LocalDateTime,
         val endDate: LocalDateTime
     )

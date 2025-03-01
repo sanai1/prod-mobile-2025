@@ -43,7 +43,7 @@ fun GrayButton(
             contentAlignment = Alignment.Center
         ) {
 
-            Text(text, fontSize = 16.sp, color = Color.Black, fontWeight = FontWeight.Medium)
+            Text(text, fontSize = 16.sp, color = Color.White, fontWeight = FontWeight.Medium)
         }
     }
 

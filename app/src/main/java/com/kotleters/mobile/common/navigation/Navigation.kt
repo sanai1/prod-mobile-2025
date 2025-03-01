@@ -117,7 +117,6 @@ fun AppNavigation(
                             LoginState.NotAuth -> AUTH_ROUTE
                         },
                         modifier = Modifier
-                            .padding(bottom = pd.calculateBottomPadding())
                             .fillMaxSize()
                             .background(backgroundColor),
                     ) {
@@ -140,7 +139,7 @@ fun AppNavigation(
                         )
 
                         clientNavGraph(
-                            navController, currentRoute ?: "",
+                            navController,
                             clientMainScreenViewModel
                         )
 

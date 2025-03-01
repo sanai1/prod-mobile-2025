@@ -1,11 +1,14 @@
 package com.kotleters.mobile.feature.client.presentation.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,17 +20,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
 import com.kotleters.mobile.common.ui.theme.backgroundColor
+import com.kotleters.mobile.common.ui.theme.lightGray
 import com.kotleters.mobile.feature.client.presentation.main.components.CompanyCard
 import com.kotleters.mobile.feature.client.presentation.main.states.ClientMainScreenState
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ClientMainScreen(
-    viewModel: ClientMainScreenViewModel
+    viewModel: ClientMainScreenViewModel,
+    goToCompany: (Int) -> Unit
 ) {
 
     val state by viewModel.state.collectAsState()
@@ -44,9 +52,24 @@ fun ClientMainScreen(
             is ClientMainScreenState.Content -> {
                 LazyColumn {
                     item {
-                        FlowRow {
+                        Text(
+                            "Предложения от\n" +
+                                    "компаний", fontSize = 32.sp,
+                            fontWeight = FontWeight.Medium, color = lightGray,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
                             (state as ClientMainScreenState.Content).companies.forEach {
-                                CompanyCard(company = it)
+                                CompanyCard(company = it, onClick = {
+                                    goToCompany(
+                                        (state as ClientMainScreenState.Content).companies.indexOf(
+                                            it
+                                        )
+                                    )
+                                })
                             }
                         }
                     }
