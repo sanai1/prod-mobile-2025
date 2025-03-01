@@ -19,7 +19,7 @@ class ClientRepositoryImpl(
 
     override suspend fun getAllOffers(): ResponseTemplate<List<Company>> {
         return try {
-            ResponseTemplate.Success( CompanyMapper.map( ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken()!!)))
+            ResponseTemplate.Success( CompanyMapper.map( ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken())))
 
         } catch (h: HttpException) {
             if (h.code() == 403){
@@ -31,7 +31,7 @@ class ClientRepositoryImpl(
                     email = email!!,
                     password = pass!!
                 ))
-                return ResponseTemplate.Success(CompanyMapper.map(ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken()!!)))
+                return ResponseTemplate.Success(CompanyMapper.map(ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken())))
             }else {
                 return ResponseTemplate.Error(message = "Ошибка HTTP ${h.code()}: ${h.message()}")
             }
@@ -40,7 +40,7 @@ class ClientRepositoryImpl(
         }
     }
 
-    private fun getToken() = SecretStorage.readToken(context)
+    private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
     private fun getPassAndToken() = SecretStorage.readPassAndEmail(context)
 
