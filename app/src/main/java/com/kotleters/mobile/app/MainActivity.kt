@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
             navigationBarStyle = SystemBarStyle.dark(0)
         )
         setContent {
-
+            AppNavigation()
         }
     }
 }
