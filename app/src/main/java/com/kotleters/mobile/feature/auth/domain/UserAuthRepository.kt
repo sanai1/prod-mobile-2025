@@ -1,6 +1,6 @@
 package com.kotleters.mobile.feature.auth.domain
 
-import com.kotleters.mobile.common.network.model.ResponseTemplate
+import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 
 interface UserAuthRepository {
     suspend fun register(userAuth: UserAuth): ResponseTemplate<Boolean>
