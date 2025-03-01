@@ -1,6 +1,6 @@
 package com.kotleters.mobile.common.domain
 
-import com.kotleters.mobile.common.network.model.ClientOffers
+import com.kotleters.mobile.common.data.network.model.ClientOffers
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -14,7 +14,7 @@ object CompanyMapper {
                     Company.Offer(
                         title = offer.title,
                         description = offer.description,
-                        discount = offer.discount,
+                        discount = offer.discount.toLong(),
                         startDate = LocalDateTime.parse(offer.start_date, DateTimeFormatter.ISO_DATE_TIME),
                         endDate = LocalDateTime.parse(offer.end_date, DateTimeFormatter.ISO_DATE_TIME)
                     )

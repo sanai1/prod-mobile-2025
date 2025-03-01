@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.company.data.network
 
+import com.kotleters.mobile.common.data.network.model.ClientOffers
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
 import retrofit2.Call
 import retrofit2.http.Body
@@ -17,5 +18,5 @@ interface CompanyRetrofitService {
     @GET("offers/company")
     fun getOffersByCompany(
         @Header("Authorization") token: String
-    ): Call<List<String>> // TODO: изменить тип возвращаемого объекта
+    ): Call<List<ClientOffers>>
 }

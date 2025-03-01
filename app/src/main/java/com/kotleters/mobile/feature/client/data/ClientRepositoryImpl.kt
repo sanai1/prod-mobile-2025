@@ -5,32 +5,32 @@ import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.CompanyMapper
-import com.kotleters.mobile.feature.auth.data.UserAuthRepositoryImpl
 import com.kotleters.mobile.feature.auth.domain.UserAuth
+import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.ClientRetrofitClient
 import com.kotleters.mobile.feature.client.domain.ClientRepository
 import retrofit2.HttpException
 
 class ClientRepositoryImpl(
     private val context: Context,
-    private val userAuthRepositoryImpl: UserAuthRepositoryImpl
+    private val userAuthRepository: UserAuthRepository
 ) : ClientRepository {
 
     override suspend fun getAllOffers(): ResponseTemplate<List<Company>> {
         return try {
-            ResponseTemplate.Success( CompanyMapper.map( ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken()!!)))
+            ResponseTemplate.Success( CompanyMapper.map( ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken())))
 
         } catch (h: HttpException) {
             if (h.code() == 403){
                 val (pass, email) = getPassAndToken()
 
-                userAuthRepositoryImpl.auth(userAuth = UserAuth.Client(
+                userAuthRepository.auth(userAuth = UserAuth.Client(
                     firstName = null,
                     secondName = null,
                     email = email!!,
                     password = pass!!
                 ))
-                return ResponseTemplate.Success(CompanyMapper.map(ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken()!!)))
+                return ResponseTemplate.Success(CompanyMapper.map(ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken())))
             }else {
                 return ResponseTemplate.Error(message = "Ошибка HTTP ${h.code()}: ${h.message()}")
             }
@@ -39,7 +39,7 @@ class ClientRepositoryImpl(
         }
     }
 
-    private fun getToken() = SecretStorage.readToken(context)
+    private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
     private fun getPassAndToken() = SecretStorage.readPassAndEmail(context)
 

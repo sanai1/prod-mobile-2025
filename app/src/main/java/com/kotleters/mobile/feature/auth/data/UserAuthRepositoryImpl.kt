@@ -3,6 +3,7 @@ package com.kotleters.mobile.feature.auth.data
 import android.content.Context
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.network.model.SecretStorage
+import com.kotleters.mobile.common.domain.UserLogIn
 import com.kotleters.mobile.feature.auth.data.network.AuthRetrofitClient
 import com.kotleters.mobile.feature.auth.data.network.model.ClientAuthRegisterModel
 import com.kotleters.mobile.feature.auth.data.network.model.CompanyAuthRegisterModel
@@ -27,7 +28,7 @@ class UserAuthRepositoryImpl(
                     ).execute().body()?.token
                     return if (token?.isNotEmpty() == true) {
                         userAuth.apply {
-                            save(email, password, token)
+                            save(email, password, UserLogIn.CLIENT, token)
                         }
                         ResponseTemplate.Success(data = true)
                     } else {
@@ -44,7 +45,7 @@ class UserAuthRepositoryImpl(
                     ).execute().body()?.token
                     return if (token?.isNotEmpty() == true) {
                         userAuth.apply {
-                            save(email, password, token)
+                            save(email, password, UserLogIn.COMPANY, token)
                         }
                         ResponseTemplate.Success(data = true)
                     } else {
@@ -69,7 +70,7 @@ class UserAuthRepositoryImpl(
                     ).execute().body()?.token
                     return if (token?.isNotEmpty() == true) {
                         userAuth.apply {
-                            save(email, password, token)
+                            save(email, password, UserLogIn.CLIENT, token)
                         }
                         ResponseTemplate.Success(data = true)
                     } else {
@@ -85,7 +86,7 @@ class UserAuthRepositoryImpl(
                     ).execute().body()?.token
                     return if (token?.isNotEmpty() == true) {
                         userAuth.apply {
-                            save(email, password, token)
+                            save(email, password, UserLogIn.COMPANY, token)
                         }
                         ResponseTemplate.Success(data = true)
                     } else {
@@ -98,8 +99,12 @@ class UserAuthRepositoryImpl(
         }
     }
 
-    override suspend fun checkLogIn(): Boolean = SecretStorage.readPassAndEmail(context).let {
-        (it.first == null && it.second == null).not()
+    override suspend fun checkLogIn() = SecretStorage.readPassAndEmail(context).let {
+        if (it.first == null && it.second == null && it.third == null) {
+            UserLogIn.NOT_FOUND
+        } else {
+            it.third!!
+        }
     }
 
     override suspend fun logOut() = SecretStorage.logOut(context)
@@ -107,12 +112,14 @@ class UserAuthRepositoryImpl(
     private fun save(
         email: String,
         password: String,
+        userLogIn: UserLogIn,
         token: String
     ) = SecretStorage.apply {
         savePassAndEmail(
             context = context,
             email = email,
-            password = password
+            password = password,
+            companyOrUser = userLogIn,
         )
         saveToken(
             context = context,
