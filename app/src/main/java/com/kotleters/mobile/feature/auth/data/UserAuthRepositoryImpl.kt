@@ -18,17 +18,17 @@ class UserAuthRepositoryImpl(
         try {
             when (userAuth) {
                 is UserAuth.Client -> {
-                    val token = AuthRetrofitClient.authRetrofitService.registerClient(
+                    val call = AuthRetrofitClient.authRetrofitService.registerClient(
                         clientAuthRegisterModel = ClientAuthRegisterModel(
                             firstName = userAuth.firstName ?: "",
                             lastName = userAuth.secondName ?: "",
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body()?.token
-                    return if (token?.isNotEmpty() == true) {
+                    ).execute()
+                    return if (call.code() == 200) {
                         userAuth.apply {
-                            save(email, password, UserLogIn.CLIENT, token)
+                            save(email, password, UserLogIn.CLIENT, call.body()!!.token)
                         }
                         ResponseTemplate.Success(data = true)
                     } else {
@@ -36,16 +36,16 @@ class UserAuthRepositoryImpl(
                     }
                 }
                 is UserAuth.Company -> {
-                    val token = AuthRetrofitClient.authRetrofitService.registerCompany(
+                    val call = AuthRetrofitClient.authRetrofitService.registerCompany(
                         companyAuthRegisterModel = CompanyAuthRegisterModel(
                             name = userAuth.name ?: "",
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body()?.token
-                    return if (token?.isNotEmpty() == true) {
+                    ).execute()
+                    return if (call.code() == 200) {
                         userAuth.apply {
-                            save(email, password, UserLogIn.COMPANY, token)
+                            save(email, password, UserLogIn.COMPANY, call.body()!!.token)
                         }
                         ResponseTemplate.Success(data = true)
                     } else {
@@ -62,15 +62,15 @@ class UserAuthRepositoryImpl(
         try {
             when (userAuth) {
                 is UserAuth.Client -> {
-                    val token = AuthRetrofitClient.authRetrofitService.authClient(
+                    val call = AuthRetrofitClient.authRetrofitService.authClient(
                         userAuthLoginModel = UserAuthLoginModel(
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body()?.token
-                    return if (token?.isNotEmpty() == true) {
+                    ).execute()
+                    return if (call.code() == 200) {
                         userAuth.apply {
-                            save(email, password, UserLogIn.CLIENT, token)
+                            save(email, password, UserLogIn.CLIENT, call.body()!!.token)
                         }
                         ResponseTemplate.Success(data = true)
                     } else {
@@ -78,15 +78,15 @@ class UserAuthRepositoryImpl(
                     }
                 }
                 is UserAuth.Company -> {
-                    val token = AuthRetrofitClient.authRetrofitService.authCompany(
+                    val call = AuthRetrofitClient.authRetrofitService.authCompany(
                         userAuthLoginModel = UserAuthLoginModel(
                             email = userAuth.email,
                             password = userAuth.password
                         )
-                    ).execute().body()?.token
-                    return if (token?.isNotEmpty() == true) {
+                    ).execute()
+                    return if (call.code() == 200) {
                         userAuth.apply {
-                            save(email, password, UserLogIn.COMPANY, token)
+                            save(email, password, UserLogIn.COMPANY, call.body()!!.token)
                         }
                         ResponseTemplate.Success(data = true)
                     } else {
