@@ -33,14 +33,12 @@ class CompanyMainViewModel @Inject constructor(
 
     fun fetchOffers() {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("HUI", "f")
             _state.update {
                 CompanyMainScreenState.Loading
             }
             val result = companyRepository.getOffersByCompany()
             when (result) {
                 is ResponseTemplate.Error -> {
-                    Log.d("RESULT", result.toString())
                     _state.update {
                         CompanyMainScreenState.Error
                     }
@@ -48,7 +46,7 @@ class CompanyMainViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     offers.clear()
-                    offers.addAll(result.data.offers)
+                    result.data?.let { offers.addAll(it.offers) }
                     updateState()
                 }
             }

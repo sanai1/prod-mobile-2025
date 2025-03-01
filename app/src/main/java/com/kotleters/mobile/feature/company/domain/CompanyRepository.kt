@@ -7,7 +7,7 @@ import com.kotleters.mobile.common.domain.Payload
 interface CompanyRepository {
     suspend fun createOffer(offer: Company.Offer): ResponseTemplate<Boolean>
 
-    suspend fun getOffersByCompany(): ResponseTemplate<Company>
+    suspend fun getOffersByCompany(): ResponseTemplate<Company?>
 
     suspend fun scanQr(payload: Payload): ResponseTemplate<ScanQr>
 }

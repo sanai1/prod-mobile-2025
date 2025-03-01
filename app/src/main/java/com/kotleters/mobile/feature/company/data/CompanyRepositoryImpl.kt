@@ -47,14 +47,12 @@ class CompanyRepositoryImpl(
         }
     }
 
-    override suspend fun getOffersByCompany(): ResponseTemplate<Company> {
+    override suspend fun getOffersByCompany(): ResponseTemplate<Company?> {
         try {
-            Log.d("TOKEN", "${SecretStorage.readToken(context)}")
             val call = getOffers()
-            Log.d("CODE", call.code().toString())
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
-                    data = CompanyMapper.map(call.body()!!)[0]
+                    data = CompanyMapper.map(call.body()!!).firstOrNull()
                 )
             } else if (call.code() == 401) {
 
