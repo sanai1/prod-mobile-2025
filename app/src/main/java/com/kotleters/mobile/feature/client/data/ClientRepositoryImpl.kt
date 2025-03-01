@@ -1,6 +1,8 @@
 package com.kotleters.mobile.feature.client.data
 
 import android.content.Context
+import com.kotleters.mobile.common.domain.Company
+import com.kotleters.mobile.common.domain.CompanyMapper
 import com.kotleters.mobile.common.network.model.ClientOffers
 import com.kotleters.mobile.common.network.model.ResponseTemplate
 import com.kotleters.mobile.common.network.model.SecretStorage
@@ -11,10 +13,10 @@ class ClientRepositoryImpl(
     private val context: Context
 ) : ClientRepository {
 
-    override suspend fun getAllOffers(): ResponseTemplate<List<ClientOffers>> {
+    override suspend fun getAllOffers(): ResponseTemplate<List<Company>> {
         return try {
             ResponseTemplate.Success(
-                ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken().toString())
+                CompanyMapper.map(ClientRetrofitClient.clientRetrofitService.getAllOffers(getToken().toString()))
             )
         } catch (e: Exception) {
             ResponseTemplate.Error(message = e.message.toString())
