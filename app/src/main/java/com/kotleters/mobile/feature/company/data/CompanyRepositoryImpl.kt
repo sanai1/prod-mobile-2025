@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.company.data
 
 import android.content.Context
+import android.util.Log
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.common.domain.Company
@@ -48,12 +49,15 @@ class CompanyRepositoryImpl(
 
     override suspend fun getOffersByCompany(): ResponseTemplate<Company> {
         try {
+            Log.d("TOKEN", "${SecretStorage.readToken(context)}")
             val call = getOffers()
+            Log.d("CODE", call.code().toString())
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
                     data = CompanyMapper.map(call.body()!!)[0]
                 )
             } else if (call.code() == 401) {
+
                 updateToken()
                 val callAgain = getOffers()
                 return if (callAgain.code() == 200) {
@@ -61,12 +65,14 @@ class CompanyRepositoryImpl(
                         data = CompanyMapper.map(callAgain.body()!!)[0]
                     )
                 } else {
+
                     ResponseTemplate.Error(message = callAgain.message())
                 }
             } else {
                 throw Exception()
             }
         } catch (e: Exception) {
+            Log.d("SUCCESS", e.message.toString())
             return ResponseTemplate.Error(message = e.message.toString())
         }
     }
@@ -74,6 +80,7 @@ class CompanyRepositoryImpl(
     override suspend fun scanQr(payload: Payload): ResponseTemplate<ScanQr> {
         try {
             val call = scanQrRetrofit(payload)
+
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
                     data = ScanQrMapper.toScanQr(call.body()!!)

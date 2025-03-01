@@ -1,0 +1,107 @@
+package com.kotleters.mobile.feature.company.presentation.add_offer
+
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.kotleters.mobile.common.data.network.model.ResponseTemplate
+import com.kotleters.mobile.common.domain.Company
+import com.kotleters.mobile.feature.company.domain.CompanyRepository
+import com.kotleters.mobile.feature.company.presentation.add_offer.states.AddOfferScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import javax.inject.Inject
+
+@HiltViewModel
+class AddOfferScreenViewModel @Inject constructor(
+    private val companyRepository: CompanyRepository
+) : ViewModel() {
+
+    private val _state = MutableStateFlow<AddOfferScreenState>(
+        AddOfferScreenState.Content(
+            title = "",
+            description = "",
+            discount = 0.1,
+            startDate = "",
+            endDate = ""
+        )
+    )
+    val state = _state.asStateFlow()
+
+    private var title = mutableStateOf("")
+    private var description = mutableStateOf("")
+    private var discount = mutableStateOf("")
+    private var startDate = mutableStateOf("")
+    private var endDate = mutableStateOf("")
+
+    fun changeTitle(new: String) {
+        title.value = new
+        updateData()
+    }
+
+    fun changeDescription(new: String) {
+        description.value = new
+        updateData()
+    }
+
+    fun changeDiscount(new: String) {
+        discount.value = new
+        updateData()
+    }
+
+    fun changeStartDate(new: String) {
+        startDate.value = new
+        updateData()
+    }
+
+    fun changeEndDate(new: String) {
+        endDate.value = new
+        updateData()
+    }
+
+    fun createOffer() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result =
+                companyRepository.createOffer(
+                    offer = Company.Offer(
+                        title = title.value,
+                        description = description.value,
+                        discount = discount.value.toDouble(),
+                        startDate = LocalDateTime.now(),
+                        endDate = LocalDateTime.now(),
+                        id = ""
+                    )
+                )
+            when (result) {
+                is ResponseTemplate.Error -> {
+                    _state.update {
+                        AddOfferScreenState.Error
+                    }
+                }
+
+                is ResponseTemplate.Success -> {
+                    _state.update {
+                        AddOfferScreenState.Success
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun updateData() {
+        _state.update {
+            AddOfferScreenState.Content(
+                title = title.value,
+                description = description.value,
+                discount = discount.value.toDouble(),
+                startDate = startDate.value,
+                endDate = endDate.value
+            )
+        }
+    }
+}

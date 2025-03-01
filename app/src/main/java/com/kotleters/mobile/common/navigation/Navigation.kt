@@ -40,6 +40,7 @@ import com.kotleters.mobile.feature.company.presentation.COMPANY_MAIN
 import com.kotleters.mobile.feature.company.presentation.COMPANY_PAY
 import com.kotleters.mobile.feature.company.presentation.COMPANY_ROUTE
 import com.kotleters.mobile.feature.company.presentation.companyNavGraph
+import com.kotleters.mobile.feature.company.presentation.main.CompanyMainViewModel
 
 @Composable
 fun AppNavigation(
@@ -53,6 +54,7 @@ fun AppNavigation(
     val currentRoute = CurrentRoute(navController)
 
     val clientMainScreenViewModel = hiltViewModel<ClientMainScreenViewModel>()
+    val companyMainViewModel = hiltViewModel<CompanyMainViewModel>()
 
     val clientBottomBarItems = listOf(
         BottomBarScreen(
@@ -143,7 +145,7 @@ fun AppNavigation(
                             clientMainScreenViewModel
                         )
 
-                        companyNavGraph(navController)
+                        companyNavGraph(navController, companyMainViewModel)
                     }
                 }
             }
