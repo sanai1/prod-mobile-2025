@@ -4,8 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kotleters.mobile.R
-import com.kotleters.mobile.common.ResponseTemplate
+import com.kotleters.mobile.common.network.model.ResponseTemplate
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterScreenState
