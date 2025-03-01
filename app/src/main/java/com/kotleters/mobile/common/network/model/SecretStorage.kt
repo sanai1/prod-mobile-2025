@@ -1,4 +1,4 @@
-package com.kotleters.mobile.common
+package com.kotleters.mobile.common.network.model
 
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences

@@ -1,9 +1,8 @@
 package com.kotleters.mobile.feature.auth.data
 
 import android.content.Context
-import android.util.Log
-import com.kotleters.mobile.common.ResponseTemplate
-import com.kotleters.mobile.common.SecretStorage
+import com.kotleters.mobile.common.network.model.ResponseTemplate
+import com.kotleters.mobile.common.network.model.SecretStorage
 import com.kotleters.mobile.feature.auth.data.network.AuthRetrofitClient
 import com.kotleters.mobile.feature.auth.data.network.model.ClientAuthRegisterModel
 import com.kotleters.mobile.feature.auth.data.network.model.CompanyAuthRegisterModel
@@ -100,7 +99,7 @@ class UserAuthRepositoryImpl(
     }
 
     override suspend fun checkLogIn(): Boolean = SecretStorage.readPassAndEmail(context).let {
-        !(it.first == null && it.second == null)
+        (it.first == null && it.second == null).not()
     }
 
     override suspend fun logOut() = SecretStorage.logOut(context)

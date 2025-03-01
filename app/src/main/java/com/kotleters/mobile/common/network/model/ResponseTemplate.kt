@@ -1,4 +1,4 @@
-package com.kotleters.mobile.common
+package com.kotleters.mobile.common.network.model
 
 sealed class ResponseTemplate<T> {
     data class Success<T>(
