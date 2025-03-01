@@ -9,3 +9,5 @@ sealed class ResponseTemplate<T> {
         val message: String
     ) : ResponseTemplate<T>()
 }
+
+

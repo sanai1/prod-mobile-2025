@@ -29,3 +29,4 @@ interface AuthRetrofitService {
         @Body userAuthLoginModel: UserAuthLoginModel
     ): Call<AuthResponse>
 }
+
