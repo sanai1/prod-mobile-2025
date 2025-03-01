@@ -11,7 +11,6 @@ import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.ClientRetrofitClient
 import com.kotleters.mobile.feature.client.domain.ClientRepository
 import retrofit2.HttpException
-import javax.inject.Inject
 
 class ClientRepositoryImpl(
     private val context: Context,

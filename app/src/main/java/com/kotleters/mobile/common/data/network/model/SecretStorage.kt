@@ -36,9 +36,9 @@ object SecretStorage {
         getPrefs(context).edit().apply {
             putString(EMAIL_FIELD, email)
             putString(PASSWORD_FIELD, password)
-            putBoolean(
+            putString(
                 COMPANY_OR_USER,
-                companyOrUser == UserLogIn.CLIENT
+                companyOrUser.name
             )
             apply()
         }
@@ -59,7 +59,15 @@ object SecretStorage {
         return Triple(
             getPrefs(context).getString(EMAIL_FIELD, null),
             getPrefs(context).getString(PASSWORD_FIELD, null),
-            if (getPrefs(context).getBoolean(COMPANY_OR_USER,false)) UserLogIn.CLIENT else UserLogIn.COMPANY
+            if (getPrefs(context).getString(
+                    COMPANY_OR_USER,
+                    null
+                ) == UserLogIn.CLIENT.name
+            ) UserLogIn.CLIENT else if (getPrefs(context).getString(
+                    COMPANY_OR_USER,
+                    null
+                ) == UserLogIn.COMPANY.name
+            ) UserLogIn.COMPANY else UserLogIn.NOT_FOUND
         )
     }
 
