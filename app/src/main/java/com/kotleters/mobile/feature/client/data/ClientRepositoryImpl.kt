@@ -7,13 +7,15 @@ import com.kotleters.mobile.common.network.model.ResponseTemplate
 import com.kotleters.mobile.common.network.model.SecretStorage
 import com.kotleters.mobile.feature.auth.data.UserAuthRepositoryImpl
 import com.kotleters.mobile.feature.auth.domain.UserAuth
+import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.ClientRetrofitClient
 import com.kotleters.mobile.feature.client.domain.ClientRepository
 import retrofit2.HttpException
+import javax.inject.Inject
 
 class ClientRepositoryImpl(
     private val context: Context,
-    private val userAuthRepositoryImpl: UserAuthRepositoryImpl
+    private val userAuthRepository: UserAuthRepository
 ) : ClientRepository {
 
     override suspend fun getAllOffers(): ResponseTemplate<List<Company>> {
@@ -24,7 +26,7 @@ class ClientRepositoryImpl(
             if (h.code() == 403){
                 val (pass, email) = getPassAndToken()
 
-                userAuthRepositoryImpl.auth(userAuth = UserAuth.Client(
+                userAuthRepository.auth(userAuth = UserAuth.Client(
                     firstName = null,
                     secondName = null,
                     email = email!!,

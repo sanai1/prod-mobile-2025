@@ -25,6 +25,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideClientRepository(): ClientRepository
-     = ClientRepositoryImpl()
+    fun provideClientRepository(
+        @ApplicationContext context: Context
+    ): ClientRepository
+     = ClientRepositoryImpl(context, provideUserAuthRepository(context))
 }

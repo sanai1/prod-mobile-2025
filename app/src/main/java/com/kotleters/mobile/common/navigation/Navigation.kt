@@ -56,7 +56,7 @@ fun AppNavigation(
             else -> {
                 NavHost(
                     navController,
-                    startDestination = if (loginState is LoginState.Auth) COMPANY_MAIN else AUTH_ROUTE,
+                    startDestination = if (loginState is LoginState.Auth) CLIENT_ROUTE else AUTH_ROUTE,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(backgroundColor),
