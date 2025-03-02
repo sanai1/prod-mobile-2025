@@ -10,7 +10,9 @@ import com.kotleters.mobile.feature.client.data.ClientRepositoryImpl
 import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
 import com.kotleters.mobile.feature.client.domain.ClientRepository
 import com.kotleters.mobile.feature.company.data.repository.CompanyRepositoryImpl
+import com.kotleters.mobile.feature.company.data.repository.StatisticRepositoryImpl
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
+import com.kotleters.mobile.feature.company.domain.repository.StatisticRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,6 +56,16 @@ class AppModule {
         @ApplicationContext context: Context
     ): ClientGenerateQRRepository =
         ClientGenerateQRRepositoryImpl(
+            context = context,
+            userAuthRepository = UserAuthRepositoryImpl(context)
+        )
+
+    @Provides
+    @Singleton
+    fun provideStatisticsRepository(
+        @ApplicationContext context: Context
+    ): StatisticRepository =
+        StatisticRepositoryImpl(
             context = context,
             userAuthRepository = UserAuthRepositoryImpl(context)
         )

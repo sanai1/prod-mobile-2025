@@ -40,7 +40,7 @@ object StatisticModelMapper {
     fun toStatisticByMonthList(statisticByMonthList: List<StatisticByMonthModel>): List<StatisticByMonth> {
         return statisticByMonthList.map { 
             StatisticByMonth(
-                date = LocalDate.of(it.year.toInt(), it.month.toInt(), 0),
+                date = LocalDate.of(it.year.toInt(), it.month.toInt(), 1),
                 allAmount = it.operations_amount,
                 maleAmount = it.male_operations_amount,
                 femaleAmount = it.female_operations_amount
