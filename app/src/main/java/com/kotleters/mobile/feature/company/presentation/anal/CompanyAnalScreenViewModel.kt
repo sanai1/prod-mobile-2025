@@ -4,9 +4,13 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kotleters.mobile.common.ai.data.network.model.Message
+import com.kotleters.mobile.common.ai.domain.AIRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.feature.company.domain.entity.StatisticByMonth
 import com.kotleters.mobile.feature.company.domain.repository.StatisticRepository
+import com.kotleters.mobile.feature.company.presentation.anal.states.AIState
+import com.kotleters.mobile.feature.company.presentation.anal.states.AnalListState
 import com.kotleters.mobile.feature.company.presentation.anal.states.CompanyAnalyticsScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,31 +22,60 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CompanyAnalScreenViewModel @Inject constructor(
-    private val statisticRepository: StatisticRepository
+    private val statisticRepository: StatisticRepository,
+    private val aiRepository: AIRepository
 ) : ViewModel() {
 
     private val _state =
-        MutableStateFlow<CompanyAnalyticsScreenState>(CompanyAnalyticsScreenState.Loading)
+        MutableStateFlow<CompanyAnalyticsScreenState>(
+            CompanyAnalyticsScreenState.Content(
+                analListState = AnalListState.Loading,
+                aiState = AIState.Loading
+            )
+        )
     val state = _state.asStateFlow()
 
-    val analList = mutableStateListOf<StatisticByMonth>()
+    private var currentAIState: AIState = AIState.Loading
+    private var currentAnalState: AnalListState = AnalListState.Loading
 
     init {
         fetchAnal()
+        sendMessage()
     }
 
-    fun fetchAnal() {
+    fun openDetailMessage() {
+        _state.update {
+            CompanyAnalyticsScreenState.DetailMessage(
+                (currentAIState as AIState.Content).message
+            )
+        }
+    }
+
+    private fun sendMessage() {
         viewModelScope.launch(Dispatchers.IO) {
+            currentAIState = AIState.Loading
+            updateState()
+            val result = aiRepository.ChatResponce(Message("user", "привет! ты долбоеб"))
+            currentAIState =
+                AIState.Content(result.toString().removePrefix("Success(").removeSuffix(")"))
+            updateState()
+        }
+    }
+
+    private fun fetchAnal() {
+        viewModelScope.launch(Dispatchers.IO) {
+            currentAnalState = AnalListState.Loading
+            updateState()
             val result = statisticRepository.getStatisticByMonth()
             when (result) {
                 is ResponseTemplate.Error -> {
                     Log.d("ERROR", result.message)
+                    currentAnalState = AnalListState.Error
+                    updateState()
                 }
 
                 is ResponseTemplate.Success -> {
-                    Log.d("RESULT", result.data.toString())
-                    analList.clear()
-                    analList.addAll(result.data)
+                    currentAnalState = AnalListState.Content(result.data)
                     updateState()
                 }
             }
@@ -52,7 +85,8 @@ class CompanyAnalScreenViewModel @Inject constructor(
     private fun updateState() {
         _state.update {
             CompanyAnalyticsScreenState.Content(
-                analList = analList
+                analListState = currentAnalState,
+                aiState = currentAIState
             )
         }
     }
