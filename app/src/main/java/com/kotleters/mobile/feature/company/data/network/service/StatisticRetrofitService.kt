@@ -7,7 +7,7 @@ import retrofit2.http.Header
 
 interface StatisticRetrofitService {
 
-    @GET("") // TODO: указать путь после `/api/`
+    @GET("companies/stats/byDate")
     fun getAllStatistic(
         @Header("Authorization") token: String,
     ): Call<List<StatisticModel>>
