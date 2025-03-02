@@ -1,4 +1,4 @@
-package com.kotleters.mobile.feature.company.data.network
+package com.kotleters.mobile.feature.company.data.network.service
 
 import com.kotleters.mobile.common.data.network.model.ClientOffers
 import com.kotleters.mobile.common.domain.Payload

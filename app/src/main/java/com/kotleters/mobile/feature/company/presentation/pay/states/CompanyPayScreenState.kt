@@ -1,6 +1,6 @@
 package com.kotleters.mobile.feature.company.presentation.pay.states
 
-import com.kotleters.mobile.feature.company.domain.ScanQr
+import com.kotleters.mobile.feature.company.domain.entity.ScanQr
 
 sealed class CompanyPayScreenState {
 

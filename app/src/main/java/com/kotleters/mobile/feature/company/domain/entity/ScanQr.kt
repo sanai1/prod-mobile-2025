@@ -1,4 +1,4 @@
-package com.kotleters.mobile.feature.company.domain
+package com.kotleters.mobile.feature.company.domain.entity
 
 data class ScanQr(
     val firstName: String,

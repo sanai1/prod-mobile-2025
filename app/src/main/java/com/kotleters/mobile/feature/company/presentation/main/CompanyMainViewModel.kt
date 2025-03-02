@@ -8,11 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.photo.domain.PhotoRepository
-import com.kotleters.mobile.feature.company.domain.CompanyRepository
+import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import com.kotleters.mobile.feature.company.presentation.main.states.CompanyMainScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

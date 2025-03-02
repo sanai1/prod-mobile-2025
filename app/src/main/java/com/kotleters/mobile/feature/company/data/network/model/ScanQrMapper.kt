@@ -1,6 +1,6 @@
 package com.kotleters.mobile.feature.company.data.network.model
 
-import com.kotleters.mobile.feature.company.domain.ScanQr
+import com.kotleters.mobile.feature.company.domain.entity.ScanQr
 
 object ScanQrMapper {
     fun toScanQr(scanQrModel: ScanQrModel): ScanQr {

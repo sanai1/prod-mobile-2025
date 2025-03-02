@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
-import com.kotleters.mobile.feature.company.domain.CompanyRepository
+import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import com.kotleters.mobile.feature.company.presentation.add_offer.states.AddOfferScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
