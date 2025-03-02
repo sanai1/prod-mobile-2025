@@ -4,6 +4,7 @@ import com.kotleters.mobile.common.data.network.model.ClientOffers
 import com.kotleters.mobile.common.domain.Payload
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
 import com.kotleters.mobile.feature.company.data.network.model.ScanQrModel
+import com.kotleters.mobile.feature.company.data.network.model.StatisticByMonthModel
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -31,4 +32,9 @@ interface CompanyRetrofitService {
         @Header("Authorization") token: String,
         @Body payload: Payload
     ): Call<ScanQrModel>
+
+    @GET("companies/stats/byMonth")
+    fun getStatisticByMonth(
+        @Header("Authorization") token: String,
+    ): Call<List<StatisticByMonthModel>>
 }
