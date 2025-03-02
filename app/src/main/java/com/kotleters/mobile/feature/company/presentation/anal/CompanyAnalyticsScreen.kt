@@ -46,7 +46,7 @@ import kotlin.math.atan
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompanyAnalyticsScreen(
-    viewModel: CompanyAnalScreenViewModel = hiltViewModel()
+    viewModel: CompanyAnalScreenViewModel
 ) {
 
     val state by viewModel.state.collectAsState()

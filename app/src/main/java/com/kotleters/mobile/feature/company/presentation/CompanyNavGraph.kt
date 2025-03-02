@@ -10,11 +10,15 @@ import androidx.navigation.navigation
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.navigation.BottomBarScreen
 import com.kotleters.mobile.feature.auth.presentation.AUTH_ROUTE
+import com.kotleters.mobile.feature.client.presentation.CLIENT_ROUTE
+import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreenViewModel
 import com.kotleters.mobile.feature.company.presentation.add_offer.AddOfferScreen
+import com.kotleters.mobile.feature.company.presentation.anal.CompanyAnalScreenViewModel
 import com.kotleters.mobile.feature.company.presentation.anal.CompanyAnalyticsScreen
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainScreen
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainViewModel
 import com.kotleters.mobile.feature.company.presentation.pay.CompanyPayScreen
+import com.kotleters.mobile.feature.company.presentation.pay.CompanyPayScreenViewModel
 
 fun NavGraphBuilder.companyNavGraph(
     navController: NavHostController,
@@ -55,10 +59,20 @@ fun NavGraphBuilder.companyNavGraph(
             )
         }
         composable(COMPANY_PAY) {
-            CompanyPayScreen()
+            val viewModelStoreOwner = remember {
+                navController.getBackStackEntry(COMPANY_ROUTE)
+            }
+            val companyPayScreenViewModel: CompanyPayScreenViewModel =
+                hiltViewModel(viewModelStoreOwner)
+            CompanyPayScreen(companyPayScreenViewModel)
         }
         composable(COMPANY_ANAL) {
-            CompanyAnalyticsScreen()
+            val viewModelStoreOwner = remember {
+                navController.getBackStackEntry(COMPANY_ROUTE)
+            }
+            val companyAnalScreenViewModel: CompanyAnalScreenViewModel =
+                hiltViewModel(viewModelStoreOwner)
+            CompanyAnalyticsScreen(companyAnalScreenViewModel)
         }
     }
 }

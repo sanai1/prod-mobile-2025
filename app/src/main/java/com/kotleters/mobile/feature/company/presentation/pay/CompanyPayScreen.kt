@@ -36,7 +36,7 @@ import com.kotleters.mobile.feature.company.presentation.pay.states.CompanyPaySc
 
 @Composable
 fun CompanyPayScreen(
-    viewModel: CompanyPayScreenViewModel = hiltViewModel()
+    viewModel: CompanyPayScreenViewModel
 ) {
 
     var scannedData by remember { mutableStateOf("") }
