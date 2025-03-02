@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.feature.company.presentation.pay.states.CompanyPayScreenState
@@ -49,23 +50,37 @@ fun CompanyPayScreen(
                 .systemBarsPadding()
         ) {
             TopScreenHeader("Касса")
-            when(state){
+            when (state) {
                 CompanyPayScreenState.Error -> {
                     Text("Error", color = Color.White)
                 }
+
                 CompanyPayScreenState.NotScanned -> {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        QRScannerScreen {
-                            scannedData = it
-                            viewModel.scanQR(it)
+                        if (scannedData == ""){
+                            QRScannerScreen {
+                                scannedData = it
+                                viewModel.scanQR(it)
+
+                            }
                         }
                     }
                 }
+
                 is CompanyPayScreenState.Scanned -> {
-                    Text((state as CompanyPayScreenState.Scanned).scanQr.toString(), color = Color.White)
+                    Text(
+                        (state as CompanyPayScreenState.Scanned).scanQr.toString(),
+                        color = Color.White
+                    )
+                }
+
+                CompanyPayScreenState.Loading -> {
+                    ShimmerEffectCard(
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
 

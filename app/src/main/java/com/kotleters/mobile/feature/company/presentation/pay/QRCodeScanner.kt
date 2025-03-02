@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,41 +30,53 @@ import com.google.mlkit.vision.common.InputImage
 fun QRScannerScreen(onResult: (String) -> Unit) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
+    val cameraProviderFuture = ProcessCameraProvider.getInstance(context) // Убрал remember
+
+    val previewView = remember { PreviewView(context).apply {
+        implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+    } }
+
+    DisposableEffect(lifecycleOwner) {
+        val cameraProvider = cameraProviderFuture.get()
+
+        val preview = Preview.Builder().build().also {
+            it.setSurfaceProvider(previewView.surfaceProvider)
+        }
+
+        val imageAnalyzer = ImageAnalysis.Builder()
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build()
+            .also {
+                it.setAnalyzer(ContextCompat.getMainExecutor(context), QRCodeAnalyzer { qrResult ->
+                    onResult(qrResult)
+                })
+            }
+
+        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+        try {
+            cameraProvider.unbindAll()
+            val camera = cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageAnalyzer)
+
+            onDispose {
+                cameraProvider.unbindAll() // Освобождаем камеру при выходе
+                camera.cameraControl.enableTorch(false) // Отключаем вспышку (если она включалась)
+            }
+        } catch (exc: Exception) {
+            Log.e("QRScanner", "Use case binding failed", exc)
+        }
+
+        onDispose {
+            cameraProvider.unbindAll() // Освобождаем камеру при выходе
+        }
+    }
 
     AndroidView(
-        factory = { ctx ->
-            PreviewView(ctx).apply {
-                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-            }
-        },
-        modifier = Modifier.padding(16.dp).size(300.dp).clip(RoundedCornerShape(16.dp)),
-        update = { previewView ->
-            val cameraProvider = cameraProviderFuture.get()
-            val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
-            }
-
-            val imageAnalyzer = ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-                .also {
-                    it.setAnalyzer(ContextCompat.getMainExecutor(context), QRCodeAnalyzer { qrResult ->
-                        onResult(qrResult)
-                    })
-                }
-
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageAnalyzer)
-            } catch (exc: Exception) {
-                Log.e("QRScanner", "Use case binding failed", exc)
-            }
-        }
+        factory = { previewView },
+        modifier = Modifier.padding(16.dp).size(300.dp).clip(RoundedCornerShape(16.dp))
     )
 }
+
 
 class QRCodeAnalyzer(private val onQRCodeScanned: (String) -> Unit) : ImageAnalysis.Analyzer {
     private val scanner = BarcodeScanning.getClient()

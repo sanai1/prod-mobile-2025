@@ -11,4 +11,6 @@ sealed class CompanyPayScreenState {
     ) : CompanyPayScreenState()
 
     data object Error : CompanyPayScreenState()
+
+    data object Loading : CompanyPayScreenState()
 }

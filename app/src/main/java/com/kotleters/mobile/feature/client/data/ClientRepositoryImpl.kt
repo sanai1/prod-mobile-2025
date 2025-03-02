@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.client.data
 
 import android.content.Context
+import android.util.Log
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.common.domain.Company
@@ -19,7 +20,9 @@ class ClientRepositoryImpl(
 
     override suspend fun getAllOffers(): ResponseTemplate<List<Company>> {
         try {
+            Log.d("TOKEN", getToken())
             val call = getOffers()
+            Log.d("CODE", call.code().toString())
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
                     data = CompanyMapper.map(call.body()!!)

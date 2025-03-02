@@ -13,6 +13,7 @@ import androidx.navigation.navigation
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.navigation.BottomBarScreen
 import com.kotleters.mobile.common.navigation.CurrentRoute
+import com.kotleters.mobile.feature.auth.presentation.AUTH_ROUTE
 import com.kotleters.mobile.feature.client.presentation.company.CompanyDetailScreen
 import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreen
 import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreenViewModel
@@ -31,14 +32,20 @@ fun NavGraphBuilder.clientNavGraph(
         composable(CLIENT_MAIN) {
 
             ClientMainScreen(
-                clientMainScreenViewModel,
+                hiltViewModel<ClientMainScreenViewModel>(),
                 goToCompany = {
                     navController.navigate("${CLIENT_COMPANY_DETAIL}/$it")
                 }
             )
         }
         composable(CLIENT_PROFILE) {
-            ClientProfileScreen()
+            ClientProfileScreen({
+                navController.navigate(AUTH_ROUTE) {
+                    popUpTo(CLIENT_ROUTE) {
+                        inclusive = true
+                    }
+                }
+            })
         }
         composable("${CLIENT_COMPANY_DETAIL}/{companyIndex}",
             arguments = listOf(

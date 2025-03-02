@@ -53,6 +53,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ClientProfileScreen(
+    back: () -> Unit,
     viewModel: ClientProfileScreenViewModel = hiltViewModel()
 ) {
 
@@ -73,9 +74,10 @@ fun ClientProfileScreen(
             Icon(Icons.AutoMirrored.Rounded.ExitToApp, "",
                 tint = Color.White,
                 modifier = Modifier
-                    .size(70.dp)
+                    .size(45.dp)
                     .noRippleClickable {
                         viewModel.onLogOut()
+                        back()
                     })
         })
         LazyColumn {

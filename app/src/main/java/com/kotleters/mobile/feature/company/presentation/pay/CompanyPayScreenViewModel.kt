@@ -24,6 +24,9 @@ class CompanyPayScreenViewModel @Inject constructor(
 
     fun scanQR(payload: String) {
         viewModelScope.launch(Dispatchers.IO) {
+            _state.update {
+                CompanyPayScreenState.Loading
+            }
             val result = companyRepository.scanQr(Payload(payload))
 
             when (result) {
