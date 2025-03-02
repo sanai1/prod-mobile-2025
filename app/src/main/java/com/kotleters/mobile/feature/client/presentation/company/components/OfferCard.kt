@@ -34,7 +34,7 @@ fun OfferCard(
             .padding(16.dp)
     ){
         Spacer(Modifier.weight(1f))
-        Text("Скидка ${offer.discount}")
+        Text("Скидка ${(offer.discount*10).toInt()}%", color = Color.White)
         Text(offer.title, fontSize = 16.sp, color = Color.White,
             fontWeight = FontWeight.Medium)
     }
