@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.client.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -21,18 +22,22 @@ import com.kotleters.mobile.feature.client.presentation.main.states.ClientMainSc
 import com.kotleters.mobile.feature.client.presentation.offer.ClientOfferScreen
 import com.kotleters.mobile.feature.client.presentation.offer.ClientOfferScreenViewModel
 import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreen
+import com.kotleters.mobile.feature.company.presentation.COMPANY_ROUTE
+import com.kotleters.mobile.feature.company.presentation.main.CompanyMainViewModel
 
 fun NavGraphBuilder.clientNavGraph(
     navController: NavHostController,
-    clientMainScreenViewModel: ClientMainScreenViewModel
 ) {
 
     navigation(startDestination = CLIENT_MAIN, route = CLIENT_ROUTE) {
 
         composable(CLIENT_MAIN) {
-
+            val viewModelStoreOwner = remember {
+                navController.getBackStackEntry(COMPANY_ROUTE)
+            }
+            val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
             ClientMainScreen(
-                hiltViewModel<ClientMainScreenViewModel>(),
+                clientMainScreenViewModel,
                 goToCompany = {
                     navController.navigate("${CLIENT_COMPANY_DETAIL}/$it")
                 }
@@ -54,9 +59,16 @@ fun NavGraphBuilder.clientNavGraph(
                 }
             )
         ) { backStackEntry ->
+
+            val viewModelStoreOwner = remember {
+                navController.getBackStackEntry(COMPANY_ROUTE)
+            }
+            val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
             val companyIndex = backStackEntry.arguments?.getInt("companyIndex") ?: 0
             val companies =
                 (clientMainScreenViewModel.state.value as ClientMainScreenState.Content).companies
+
+
 
             CompanyDetailScreen(
                 companies[companyIndex],
@@ -75,6 +87,10 @@ fun NavGraphBuilder.clientNavGraph(
                     type = NavType.IntType
                 }
             )) {
+            val viewModelStoreOwner = remember {
+                navController.getBackStackEntry(COMPANY_ROUTE)
+            }
+            val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
             val offerIndex = it.arguments?.getInt("offerIndex") ?: 0
             val companyIndex = it.arguments?.getInt("companyIndex") ?: 0
             val offer =

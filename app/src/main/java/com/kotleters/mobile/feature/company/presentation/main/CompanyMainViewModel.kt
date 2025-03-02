@@ -11,6 +11,7 @@ import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.auth.presentation.onboard.AuthViewModel
+import com.kotleters.mobile.feature.client.presentation.company.components.offersColors
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import com.kotleters.mobile.feature.company.presentation.main.states.CompanyMainScreenState
 import com.kotleters.mobile.feature.company.presentation.main.states.InfoState
@@ -18,6 +19,7 @@ import com.kotleters.mobile.feature.company.presentation.main.states.OffersState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -93,11 +95,16 @@ class CompanyMainViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     offers.clear()
+                    result.data?.offers?.let { offers1 ->
+                        val offersToAdd = offers1.map { it.copy(color = offersColors.random()) }
+                        offers.addAll(offersToAdd)
+                        offers.removeAll(offers1)
+                    }
                     result.data?.let { offers.addAll(it.offers) }
                     companyId.value = result.data?.id ?: ""
                     companyName.value = result.data?.name ?: ""
                     offerState = OffersState.Content(
-                        offers = result.data?.offers ?: listOf()
+                        offers = offers
                     )
                     updateState()
                     fetchPhoto()

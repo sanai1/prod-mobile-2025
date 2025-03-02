@@ -56,7 +56,6 @@ fun AppNavigation(
     val currentRoute = CurrentRoute(navController)
 
     val clientMainScreenViewModel = hiltViewModel<ClientMainScreenViewModel>()
-    val companyMainViewModel = hiltViewModel<CompanyMainViewModel>()
 
     val clientBottomBarItems = listOf(
         BottomBarScreen(
@@ -149,11 +148,10 @@ fun AppNavigation(
                         )
 
                         clientNavGraph(
-                            navController,
-                            clientMainScreenViewModel
+                            navController
                         )
 
-                        companyNavGraph(navController, companyMainViewModel)
+                        companyNavGraph(navController)
                     }
                 }
             }

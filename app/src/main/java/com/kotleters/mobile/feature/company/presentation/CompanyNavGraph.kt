@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.company.presentation
 
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -17,16 +18,17 @@ import com.kotleters.mobile.feature.company.presentation.pay.CompanyPayScreen
 
 fun NavGraphBuilder.companyNavGraph(
     navController: NavHostController,
-    companyMainViewModel: CompanyMainViewModel
 ) {
 
     navigation(startDestination = COMPANY_MAIN, route = COMPANY_ROUTE) {
         composable(COMPANY_MAIN) {
-
-            val viewModel = hiltViewModel<CompanyMainViewModel>()
+            val viewModelStoreOwner = remember {
+                navController.getBackStackEntry(COMPANY_ROUTE)
+            }
+            val companyMainViewModel: CompanyMainViewModel = hiltViewModel(viewModelStoreOwner)
 
             CompanyMainScreen(
-                companyMainViewModel = viewModel,
+                companyMainViewModel = companyMainViewModel,
                 goToAdd = { navController.navigate(COMPANY_ADD_OFFER) },
                 back = {
                     navController.navigate(AUTH_ROUTE) {
@@ -38,6 +40,10 @@ fun NavGraphBuilder.companyNavGraph(
             )
         }
         composable(COMPANY_ADD_OFFER) {
+            val viewModelStoreOwner = remember {
+                navController.getBackStackEntry(COMPANY_ROUTE)
+            }
+            val companyMainViewModel: CompanyMainViewModel = hiltViewModel(viewModelStoreOwner)
             AddOfferScreen(
                 back = {
                     navController.popBackStack()
