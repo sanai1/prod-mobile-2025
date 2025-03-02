@@ -76,6 +76,7 @@ object SecretStorage {
             putString(EMAIL_FIELD, null)
             putString(PASSWORD_FIELD, null)
             putString(TOKEN_FIELD, null)
+            putString(COMPANY_OR_USER, null)
             apply()
         }
     }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
+import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.domain.ClientRepository
 import com.kotleters.mobile.feature.client.domain.TargetInfo
 import com.kotleters.mobile.feature.client.presentation.profile.states.ClientProfileScreenState
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClientProfileScreenViewModel @Inject constructor(
-    private val clientRepository: ClientRepository
+    private val clientRepository: ClientRepository,
+    private val authRepository: UserAuthRepository
 ) : ViewModel() {
 
     private val _state =
@@ -54,18 +56,26 @@ class ClientProfileScreenViewModel @Inject constructor(
                     targetInfo = it
                 )
             }
-            when(result){
+            when (result) {
                 is ResponseTemplate.Error -> {
                     Log.d("PENIS", result.message)
                     age.value = 62
                 }
+
                 is ResponseTemplate.Success -> {
                     age.value = 52
                 }
+
                 null -> {
 
                 }
             }
+        }
+    }
+
+    fun onLogOut() {
+        viewModelScope.launch(Dispatchers.IO) {
+            authRepository.logOut()
         }
     }
 
