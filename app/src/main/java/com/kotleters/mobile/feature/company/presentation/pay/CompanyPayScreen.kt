@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
 import com.kotleters.mobile.common.ui.theme.backgroundColor
+import com.kotleters.mobile.feature.company.presentation.pay.component.SuccessPay
 import com.kotleters.mobile.feature.company.presentation.pay.states.CompanyPayScreenState
 
 @Composable
@@ -91,10 +92,10 @@ fun CompanyPayScreen(
                 }
 
                 is CompanyPayScreenState.Scanned -> {
-                    Text(
-                        (state as CompanyPayScreenState.Scanned).scanQr.toString(),
-                        color = Color.White
-                    )
+                    SuccessPay((state as CompanyPayScreenState.Scanned).scanQr) {
+                        viewModel.backToScan()
+                        scannedData = ""
+                    }
                 }
 
                 CompanyPayScreenState.Loading -> {

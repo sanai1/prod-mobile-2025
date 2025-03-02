@@ -39,8 +39,9 @@ fun BottomBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Black)
+            .background(backgroundColor)
             .clip(RoundedCornerShape(16.dp, 16.dp, 0.dp, 0.dp))
+            .background(Color.Black)
             .navigationBarsPadding()
             .padding(vertical = 16.dp, horizontal = 25.dp),
         horizontalArrangement = Arrangement.SpaceAround,
