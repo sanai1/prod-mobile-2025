@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,8 +43,17 @@ class CompanyAnalScreenViewModel @Inject constructor(
                     Log.d("RESULT", result.data.toString())
                     analList.clear()
                     analList.addAll(result.data)
+                    updateState()
                 }
             }
+        }
+    }
+
+    private fun updateState() {
+        _state.update {
+            CompanyAnalyticsScreenState.Content(
+                analList = analList
+            )
         }
     }
 }
