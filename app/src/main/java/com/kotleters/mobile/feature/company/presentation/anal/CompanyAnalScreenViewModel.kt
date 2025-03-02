@@ -40,15 +40,7 @@ class CompanyAnalScreenViewModel @Inject constructor(
 
     init {
         fetchAnal()
-        sendMessage()
-    }
-
-    fun openDetailMessage() {
-        _state.update {
-            CompanyAnalyticsScreenState.DetailMessage(
-                (currentAIState as AIState.Content).message
-            )
-        }
+//        sendMessage()
     }
 
     private fun sendMessage() {
