@@ -8,7 +8,7 @@ data class MistralRequest(
 )
 
 data class Message(
-    val role: String,  // "system", "user" или "assistant"
+    val role: String,
     val content: String
 )
 

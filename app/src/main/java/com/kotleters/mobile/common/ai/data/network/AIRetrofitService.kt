@@ -9,7 +9,7 @@ import retrofit2.http.POST
 
 interface AIRetrofitService {
     @Headers(
-        "Authorization: Bearer YOUR_API_KEY",
+        "Authorization: Bearer S7nRSapsiO5d7YUT5OpsIw1Uh0sdYfAs",
         "Content-Type: application/json"
     )
     @POST("v1/chat/completions")
