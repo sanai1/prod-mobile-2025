@@ -36,7 +36,6 @@ import com.kotleters.mobile.common.ui.components.TopScreenHeader
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.secondaryGray
-import com.kotleters.mobile.feature.company.domain.entity.StatisticByMonth
 import com.kotleters.mobile.feature.company.presentation.anal.components.AnimatedBarChart
 import com.kotleters.mobile.feature.company.presentation.anal.states.AIState
 import com.kotleters.mobile.feature.company.presentation.anal.states.AnalListState
@@ -86,16 +85,16 @@ fun CompanyAnalyticsScreen(
                 }
                 when ((state as CompanyAnalyticsScreenState.Content).analListState) {
                     is AnalListState.Content -> {
-                        AnimatedBarChart(
-                            data = ((state
-                                    as CompanyAnalyticsScreenState.Content).analListState
-                                    as AnalListState.Content).list,
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth()
-                                .height(300.dp)
-                                .padding(16.dp)
-                        )
+//                        AnimatedBarChart(
+//                            data = ((state
+//                                    as CompanyAnalyticsScreenState.Content).analListState
+//                                    as AnalListState.Content).list,
+//                            modifier = Modifier
+//                                .padding(16.dp)
+//                                .fillMaxWidth()
+//                                .height(300.dp)
+//                                .padding(16.dp)
+//                        )
                     }
 
                     AnalListState.Error -> {

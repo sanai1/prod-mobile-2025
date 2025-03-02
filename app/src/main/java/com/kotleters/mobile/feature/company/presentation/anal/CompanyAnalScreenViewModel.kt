@@ -7,8 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.ai.data.network.model.Message
 import com.kotleters.mobile.common.ai.domain.AIRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
-import com.kotleters.mobile.feature.company.domain.entity.StatisticByMonth
-import com.kotleters.mobile.feature.company.domain.repository.StatisticRepository
+import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import com.kotleters.mobile.feature.company.presentation.anal.states.AIState
 import com.kotleters.mobile.feature.company.presentation.anal.states.AnalListState
 import com.kotleters.mobile.feature.company.presentation.anal.states.CompanyAnalyticsScreenState
@@ -22,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CompanyAnalScreenViewModel @Inject constructor(
-    private val statisticRepository: StatisticRepository,
+    private val companyRepository: CompanyRepository,
     private val aiRepository: AIRepository
 ) : ViewModel() {
 
@@ -39,7 +38,7 @@ class CompanyAnalScreenViewModel @Inject constructor(
     private var currentAnalState: AnalListState = AnalListState.Loading
 
     init {
-        fetchAnal()
+//        fetchAnal()
 //        sendMessage()
     }
 
@@ -58,7 +57,7 @@ class CompanyAnalScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             currentAnalState = AnalListState.Loading
             updateState()
-            val result = statisticRepository.getStatisticByMonth()
+            val result = companyRepository.getStatistic()
             when (result) {
                 is ResponseTemplate.Error -> {
                     Log.d("ERROR", result.message)

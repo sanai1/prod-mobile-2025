@@ -12,7 +12,6 @@ import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.auth.presentation.onboard.AuthViewModel
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
-import com.kotleters.mobile.feature.company.domain.repository.StatisticRepository
 import com.kotleters.mobile.feature.company.presentation.main.states.CompanyMainScreenState
 import com.kotleters.mobile.feature.company.presentation.main.states.InfoState
 import com.kotleters.mobile.feature.company.presentation.main.states.OffersState

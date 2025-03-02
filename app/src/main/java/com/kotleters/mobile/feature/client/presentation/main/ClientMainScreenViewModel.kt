@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.feature.client.domain.ClientRepository
+import com.kotleters.mobile.feature.client.presentation.company.components.offersColors
 import com.kotleters.mobile.feature.client.presentation.main.states.ClientMainScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -31,28 +32,35 @@ class ClientMainScreenViewModel @Inject constructor(
         fetchCompanies()
     }
 
-    private fun fetchCompanies(){
+    private fun fetchCompanies() {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 ClientMainScreenState.Loading
             }
             val result = clientRepository.getAllOffers()
-            when(result){
+            when (result) {
                 is ResponseTemplate.Error -> {
                     _state.update {
                         ClientMainScreenState.Error(result.message)
                     }
                 }
+
                 is ResponseTemplate.Success -> {
                     companies.clear()
-                    companies.addAll(result.data)
+                    companies.addAll(result.data.map {
+                        it.copy(offers = it.offers.map {
+                            it.copy(
+                                color = offersColors.random()
+                            )
+                        })
+                    })
                     updateState()
                 }
             }
         }
     }
 
-    private fun updateState(){
+    private fun updateState() {
         _state.update {
             ClientMainScreenState.Content(
                 companies = companies

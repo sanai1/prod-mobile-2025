@@ -1,5 +1,6 @@
 package com.kotleters.mobile.common.domain
 
+import androidx.compose.ui.graphics.Color
 import java.time.LocalDateTime
 
 data class Company(
@@ -13,6 +14,7 @@ data class Company(
         val description: String,
         val discount: Double,
         val startDate: LocalDateTime,
-        val endDate: LocalDateTime
+        val endDate: LocalDateTime,
+        var color: Color? = null,
     )
 }

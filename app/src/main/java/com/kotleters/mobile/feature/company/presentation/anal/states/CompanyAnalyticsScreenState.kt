@@ -1,6 +1,6 @@
 package com.kotleters.mobile.feature.company.presentation.anal.states
 
-import com.kotleters.mobile.feature.company.domain.entity.StatisticByMonth
+import com.kotleters.mobile.feature.company.domain.entity.Statistic
 
 sealed class CompanyAnalyticsScreenState {
 
@@ -32,6 +32,6 @@ sealed class AnalListState {
     data object Loading : AnalListState()
 
     data class Content(
-        val list: List<StatisticByMonth>,
+        val analytics: Statistic,
     ) : AnalListState()
 }

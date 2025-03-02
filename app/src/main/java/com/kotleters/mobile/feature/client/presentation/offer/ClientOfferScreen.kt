@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
@@ -43,6 +45,7 @@ import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.ui.components.GrayButton
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.theme.backgroundColor
+import com.kotleters.mobile.common.ui.theme.lightGray
 import com.kotleters.mobile.feature.client.presentation.offer.states.CodeState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +81,7 @@ fun ClientOfferScreen(
                 .fillMaxWidth()
                 .height(230.dp)
                 .clip(RoundedCornerShape(0.dp, 0.dp, 16.dp, 16.dp))
-                .background(Color(0xFF6DAAAE))
+                .background(offer.color ?: Color.Black)
                 .statusBarsPadding()
                 .padding(16.dp)
         ) {
@@ -88,9 +91,21 @@ fun ClientOfferScreen(
                     tint = Color.White, modifier = Modifier.size(70.dp)
                 )
             }
+            Spacer(Modifier.weight(1f))
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                Spacer(Modifier.weight(1f))
+                Text(offer.title, fontSize = 24.sp, fontWeight = FontWeight.Medium,
+                    color = Color.White)
+                Text("${(offer.discount*10).toInt()}%", fontSize = 64.sp, fontWeight = FontWeight.Medium,
+                    color = Color.White)
+            }
         }
+        Text("Действует до ${offer.endDate.dayOfMonth}.${offer.endDate.month.value}.${offer.endDate.year}",
+            color = lightGray, modifier = Modifier.padding(16.dp))
         Text(
-            offer.title, fontSize = 24.sp, fontWeight = FontWeight.Medium,
+            offer.description, fontSize = 16.sp, fontWeight = FontWeight.Normal,
             color = Color.White, modifier = Modifier.padding(16.dp)
         )
         GrayButton("Использовать", true) {
@@ -119,7 +134,9 @@ fun ClientOfferScreen(
                         (codeState as CodeState.Content).bitmap?.let {
                             Image(
                                 it, "",
-                                Modifier.size(300.dp).clip(RoundedCornerShape(16.dp))
+                                Modifier
+                                    .size(300.dp)
+                                    .clip(RoundedCornerShape(16.dp))
                             )
                         }
                     }

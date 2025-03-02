@@ -2,6 +2,7 @@ package com.kotleters.mobile.feature.client.presentation.company.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,6 +17,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
+import com.kotleters.mobile.common.ui.theme.lightGray
+
+val offersColors = listOf(
+    Color(0xFF6D7EAE),
+    Color(0xFF6DAAAE),
+    Color(0xFF8C6DAE),
+    Color(0xFF8CAE6D),
+    Color(0xFFAE6D7E),
+    Color(0xFFAE8C6D)
+)
 
 @Composable
 fun OfferCard(
@@ -24,18 +35,26 @@ fun OfferCard(
 ) {
 
 
-    Column (
+    Column(
         Modifier
             .padding(16.dp)
             .size(150.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFF6DAAAE))
+            .background(offer.color ?: Color.Black)
             .noRippleClickable { onClick() }
             .padding(16.dp)
-    ){
+    ) {
+        Text(
+            offer.title, fontSize = 22.sp, color = lightGray,
+            fontWeight = FontWeight.Medium
+        )
         Spacer(Modifier.weight(1f))
-        Text("Скидка ${(offer.discount*10).toInt()}%", color = Color.White)
-        Text(offer.title, fontSize = 16.sp, color = Color.White,
-            fontWeight = FontWeight.Medium)
+        Row {
+            Spacer(Modifier.weight(1f))
+            Text(
+                "${(offer.discount * 10).toInt()}%", color = Color.White, fontSize = 46.sp,
+                fontWeight = FontWeight.Medium
+            )
+        }
     }
 }
