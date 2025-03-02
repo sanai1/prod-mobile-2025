@@ -1,5 +1,7 @@
 package com.kotleters.mobile.feature.company.presentation.main
 
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,9 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +46,9 @@ fun CompanyMainScreen(
 ) {
 
     val state by companyMainViewModel.state.collectAsState()
+    val bitmap = remember(companyMainViewModel.photo.value) {
+        BitmapFactory.decodeByteArray(companyMainViewModel.photo.value, 0, companyMainViewModel.photo.value.size)
+    }
 
     Column(
         modifier = Modifier
@@ -63,6 +71,13 @@ fun CompanyMainScreen(
                             Spacer(Modifier.weight(1f))
                             Text("+", fontSize = 32.sp, fontWeight = FontWeight.Medium, color = lightGray,
                                 modifier = Modifier.noRippleClickable { goToAdd() })
+                        }
+                        bitmap?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = "Loaded Image",
+                                modifier = Modifier.fillMaxWidth().height(300.dp)
+                            )
                         }
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),

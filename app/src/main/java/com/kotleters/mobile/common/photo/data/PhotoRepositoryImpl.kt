@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.common.photo.data.network.PhotoRetrofitClient
@@ -20,6 +21,7 @@ class PhotoRepositoryImpl(
     override suspend fun getCompanyPhoto(companyId: String): ResponseTemplate<ByteArray> {
         return try {
             val call = getPhoto(companyId)
+            Log.d("CODE", call.code().toString())
             if (call.code() == 401) {
                 updateToken()
                 val callAgain = getPhoto(companyId)
@@ -61,7 +63,7 @@ class PhotoRepositoryImpl(
 
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
-    private fun compressImage(imageUri: Uri, quality: Int = 40): ByteArray {
+    private fun compressImage(imageUri: Uri, quality: Int = 100): ByteArray {
         val contentResolver = context.contentResolver
 
         val bitmap: Bitmap? = contentResolver.openInputStream(imageUri)?.use { inputStream ->
