@@ -12,8 +12,10 @@ import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.company.data.network.client.CompanyRetrofitClient
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
 import com.kotleters.mobile.feature.company.data.network.mapper.ScanQrMapper
+import com.kotleters.mobile.feature.company.data.network.mapper.StatisticModelMapper
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import com.kotleters.mobile.feature.company.domain.entity.ScanQr
+import com.kotleters.mobile.feature.company.domain.entity.Statistic
 
 class CompanyRepositoryImpl(
     private val context: Context,
@@ -23,7 +25,7 @@ class CompanyRepositoryImpl(
         val offerForCreate = OfferCompanyCreateModel(
             title = offer.title,
             description = offer.description,
-            discount = offer.discount.toDouble(),
+            discount = offer.discount,
             startDate = offer.startDate.toString(),
             endDate = offer.endDate.toString()
         )
@@ -101,6 +103,43 @@ class CompanyRepositoryImpl(
         }
     }
 
+    override suspend fun getStatistic(): ResponseTemplate<Statistic> {
+        try {
+            val call = getStatisticByMonthRetrofit()
+            if (call.code() == 200) {
+                StatisticModelMapper.toStatistic(call.body()!!).also {
+                    return if (it == null) {
+                        ResponseTemplate.Error(message = "no data available for analytics")
+                    } else {
+                        ResponseTemplate.Success(
+                            data = it
+                        )
+                    }
+                }
+            } else if (call.code() == 401) {
+                updateToken()
+                val callAgain = getStatisticByMonthRetrofit()
+                return if (callAgain.code() == 200) {
+                    StatisticModelMapper.toStatistic(callAgain.body()!!).let {
+                        if (it == null) {
+                            ResponseTemplate.Error(message = "no data available for analytics")
+                        } else {
+                            ResponseTemplate.Success(
+                                data = it
+                            )
+                        }
+                    }
+                } else {
+                    ResponseTemplate.Error(message = callAgain.message())
+                }
+            } else {
+                throw Exception()
+            }
+        } catch (e: Exception) {
+            return ResponseTemplate.Error(message = e.message.toString())
+        }
+    }
+
     private fun create(offer: OfferCompanyCreateModel) = CompanyRetrofitClient.companyRetrofitService.createOffer(
         token = getToken(),
         offer = offer
@@ -113,6 +152,10 @@ class CompanyRepositoryImpl(
     private fun scanQrRetrofit(payload: Payload) = CompanyRetrofitClient.companyRetrofitService.scanQr(
         token = getToken(),
         payload = payload
+    ).execute()
+
+    private fun getStatisticByMonthRetrofit() = CompanyRetrofitClient.companyRetrofitService.getStatisticByMonth(
+        token = getToken()
     ).execute()
 
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
