@@ -2,6 +2,7 @@ package com.kotleters.mobile.feature.client.data.network.service
 
 import com.kotleters.mobile.common.data.network.model.ClientOffers
 import com.kotleters.mobile.feature.client.data.network.model.TargetInfoModel
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -21,5 +22,5 @@ interface ClientRetrofitService {
     fun updateTarget(
         @Header("Authorization") token: String,
         @Body targetInfoModel: TargetInfoModel
-    ): Call<String>
+    ): Call<ResponseBody>
 }
