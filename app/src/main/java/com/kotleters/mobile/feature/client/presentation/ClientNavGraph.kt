@@ -33,7 +33,7 @@ fun NavGraphBuilder.clientNavGraph(
 
         composable(CLIENT_MAIN) {
             val viewModelStoreOwner = remember {
-                navController.getBackStackEntry(COMPANY_ROUTE)
+                navController.getBackStackEntry(CLIENT_ROUTE)
             }
             val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
             ClientMainScreen(
@@ -61,7 +61,7 @@ fun NavGraphBuilder.clientNavGraph(
         ) { backStackEntry ->
 
             val viewModelStoreOwner = remember {
-                navController.getBackStackEntry(COMPANY_ROUTE)
+                navController.getBackStackEntry(CLIENT_ROUTE)
             }
             val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
             val companyIndex = backStackEntry.arguments?.getInt("companyIndex") ?: 0
@@ -88,7 +88,7 @@ fun NavGraphBuilder.clientNavGraph(
                 }
             )) {
             val viewModelStoreOwner = remember {
-                navController.getBackStackEntry(COMPANY_ROUTE)
+                navController.getBackStackEntry(CLIENT_ROUTE)
             }
             val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
             val offerIndex = it.arguments?.getInt("offerIndex") ?: 0
