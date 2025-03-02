@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.navigation.BottomBarScreen
 import com.kotleters.mobile.feature.company.presentation.add_offer.AddOfferScreen
+import com.kotleters.mobile.feature.company.presentation.anal.CompanyAnalyticsScreen
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainScreen
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainViewModel
 import com.kotleters.mobile.feature.company.presentation.pay.CompanyPayScreen
@@ -37,6 +38,9 @@ fun NavGraphBuilder.companyNavGraph(
         }
         composable(COMPANY_PAY) {
             CompanyPayScreen()
+        }
+        composable(COMPANY_ANAL) {
+            CompanyAnalyticsScreen()
         }
     }
 }

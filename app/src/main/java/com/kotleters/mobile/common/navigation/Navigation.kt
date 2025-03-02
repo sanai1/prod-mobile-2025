@@ -37,6 +37,7 @@ import com.kotleters.mobile.feature.client.presentation.CLIENT_PROFILE
 import com.kotleters.mobile.feature.client.presentation.CLIENT_ROUTE
 import com.kotleters.mobile.feature.client.presentation.clientNavGraph
 import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreenViewModel
+import com.kotleters.mobile.feature.company.presentation.COMPANY_ANAL
 import com.kotleters.mobile.feature.company.presentation.COMPANY_MAIN
 import com.kotleters.mobile.feature.company.presentation.COMPANY_PAY
 import com.kotleters.mobile.feature.company.presentation.COMPANY_ROUTE
@@ -80,6 +81,11 @@ fun AppNavigation(
             route = COMPANY_PAY,
             icon = R.drawable.pay,
             name = "Касса"
+        ),
+        BottomBarScreen(
+            name = "Аналитика",
+            route = COMPANY_ANAL,
+            icon = R.drawable.anal
         )
     )
 
