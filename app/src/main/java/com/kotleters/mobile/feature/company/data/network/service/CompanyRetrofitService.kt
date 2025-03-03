@@ -1,10 +1,10 @@
 package com.kotleters.mobile.feature.company.data.network.service
 
 import com.kotleters.mobile.common.data.network.model.ClientOfferModel
-import com.kotleters.mobile.common.domain.Payload
-import com.kotleters.mobile.feature.company.data.network.model.CompanyProfileModel
 import com.kotleters.mobile.common.domain.LacunaModel
+import com.kotleters.mobile.feature.company.data.network.model.CompanyProfileModel
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
+import com.kotleters.mobile.feature.company.data.network.model.PayloadCompany
 import com.kotleters.mobile.feature.company.data.network.model.ScanQrModel
 import com.kotleters.mobile.feature.company.data.network.model.StatisticByMonthModel
 import okhttp3.ResponseBody
@@ -37,7 +37,7 @@ interface CompanyRetrofitService {
     @POST("offers/company/scanQr")
     fun scanQr(
         @Header("Authorization") token: String,
-        @Body payload: Payload
+        @Body payload: PayloadCompany
     ): Call<ScanQrModel>
 
     @GET("companies/stats/byMonth")
