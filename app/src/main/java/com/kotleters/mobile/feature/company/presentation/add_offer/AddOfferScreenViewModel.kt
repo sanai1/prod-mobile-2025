@@ -76,7 +76,6 @@ class AddOfferScreenViewModel @Inject constructor(
                         endDate = LocalDateTime.now(),
                         id = ""
                     ),
-                    categoryId = 0,
                     bonus = Company.Bonus(
                         id = "0",
                         title = "TODO()",
