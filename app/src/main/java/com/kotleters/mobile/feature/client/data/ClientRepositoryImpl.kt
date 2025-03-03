@@ -5,6 +5,7 @@ import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.CompanyMapper
+import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.client.ClientRetrofitClient
@@ -91,7 +92,61 @@ class ClientRepositoryImpl(
     }
 
     override suspend fun createLacuna(lacunaCreate: LacunaCreate): ResponseTemplate<Boolean> {
-        TODO("Not yet implemented")
+        try {
+            val call = getLacunaCreateRetrofit()
+            if (call.code() == 200) {
+                return ResponseTemplate.Success(data = true)
+            } else if (call.code() == 401) {
+                updateToken()
+                val callAgain = getProfileRetrofit()
+                return if (callAgain.code() == 200) {
+                    ResponseTemplate.Success(
+                        data = true
+                    )
+                } else {
+                    ResponseTemplate.Error(message = callAgain.message())
+                }
+            } else {
+                throw Exception()
+            }
+        } catch (e: Exception) {
+            return ResponseTemplate.Error(message = e.message.toString())
+        }
+    }
+
+    override suspend fun getLacuna(): ResponseTemplate<List<Lacuna>> {
+        try {
+            val call = getLacunaRetrofit()
+            if (call.code() == 200) {
+                return ResponseTemplate.Success(
+                    data = call.body()!!.map {
+                        Lacuna(
+                            averageSpent = it.averageSpent,
+                            text = it.text
+                        )
+                    }
+                )
+            } else if (call.code() == 401) {
+                updateToken()
+                val callAgain = getLacunaRetrofit()
+                return if (callAgain.code() == 200) {
+                    ResponseTemplate.Success(
+                        data = callAgain.body()!!.map {
+                            Lacuna(
+                                averageSpent = it.averageSpent,
+                                text = it.text
+                            )
+                        }
+                    )
+                } else {
+                    ResponseTemplate.Error(message = callAgain.message())
+                }
+            } else {
+                throw Exception()
+            }
+        } catch (e: Exception) {
+            return ResponseTemplate.Error(message = e.message.toString())
+        }
     }
 
     private fun getProfileRetrofit() = ClientRetrofitClient.clientRetrofitService.getProfile(
@@ -99,6 +154,14 @@ class ClientRepositoryImpl(
     ).execute()
 
     private fun getOffers() = ClientRetrofitClient.clientRetrofitService.getAllOffers(
+        token = getToken()
+    ).execute()
+
+    private fun getLacunaCreateRetrofit() = ClientRetrofitClient.clientRetrofitService.createLacuna(
+        token = getToken()
+    ).execute()
+
+    private fun getLacunaRetrofit() = ClientRetrofitClient.clientRetrofitService.getLacuna(
         token = getToken()
     ).execute()
 

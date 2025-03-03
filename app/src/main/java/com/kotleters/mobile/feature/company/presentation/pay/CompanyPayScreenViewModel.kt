@@ -3,8 +3,7 @@ package com.kotleters.mobile.feature.company.presentation.pay
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
-import com.kotleters.mobile.common.domain.Payload
-import com.kotleters.mobile.feature.company.domain.entity.ScanQr
+import com.kotleters.mobile.feature.client.data.network.model.PayloadClient
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import com.kotleters.mobile.feature.company.presentation.pay.states.CompanyPayScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel

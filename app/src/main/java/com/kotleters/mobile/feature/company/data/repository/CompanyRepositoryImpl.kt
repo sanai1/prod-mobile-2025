@@ -5,7 +5,7 @@ import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.CompanyMapper
-import com.kotleters.mobile.common.domain.Payload
+import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.company.data.network.client.CompanyRetrofitClient
@@ -14,8 +14,8 @@ import com.kotleters.mobile.feature.company.data.network.mapper.OfferMapper
 import com.kotleters.mobile.feature.company.data.network.mapper.ScanQrMapper
 import com.kotleters.mobile.feature.company.data.network.mapper.StatisticModelMapper
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
+import com.kotleters.mobile.feature.company.data.network.model.PayloadCompany
 import com.kotleters.mobile.feature.company.domain.entity.CompanyProfile
-import com.kotleters.mobile.feature.company.domain.entity.Lacuna
 import com.kotleters.mobile.feature.company.domain.entity.ScanQr
 import com.kotleters.mobile.feature.company.domain.entity.Statistic
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
@@ -105,17 +105,16 @@ class CompanyRepositoryImpl(
         }
     }
 
-    override suspend fun scanQr(payload: Payload): ResponseTemplate<ScanQr> {
+    override suspend fun scanQr(payload: PayloadCompany): ResponseTemplate<ScanQr> {
         try {
-            val call = scanQrRetrofit(payload)
-
+            val call = scanQrRetrofit(payload.copy(cost = payload.cost / 6.0))
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
                     data = ScanQrMapper.toScanQr(call.body()!!)
                 )
             } else if (call.code() == 401) {
                 updateToken()
-                val callAgain = scanQrRetrofit(payload)
+                val callAgain = scanQrRetrofit(payload.copy(cost = payload.cost / 6.0))
                 return if (callAgain.code() == 200) {
                     ResponseTemplate.Success(
                         data = ScanQrMapper.toScanQr(call.body()!!)
@@ -216,7 +215,8 @@ class CompanyRepositoryImpl(
         token = getToken()
     ).execute()
 
-    private fun scanQrRetrofit(payload: Payload) = CompanyRetrofitClient.companyRetrofitService.scanQr(
+    private fun scanQrRetrofit(payload: PayloadCompany) =
+        CompanyRetrofitClient.companyRetrofitService.scanQr(
         token = getToken(),
         payload = payload
     ).execute()

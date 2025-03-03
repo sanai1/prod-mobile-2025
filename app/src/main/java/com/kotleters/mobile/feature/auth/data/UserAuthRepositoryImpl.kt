@@ -20,8 +20,8 @@ class UserAuthRepositoryImpl(
                 is UserAuth.Client -> {
                     val call = AuthRetrofitClient.authRetrofitService.registerClient(
                         clientAuthRegisterModel = ClientAuthRegisterModel(
-                            firstName = userAuth.firstName ?: "",
-                            lastName = userAuth.secondName ?: "",
+                            firstName = userAuth.firstName!!,
+                            lastName = userAuth.secondName!!,
                             email = userAuth.email,
                             password = userAuth.password
                         )
