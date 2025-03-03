@@ -5,14 +5,19 @@ import com.kotleters.mobile.feature.company.domain.entity.Statistic
 sealed class CompanyAnalyticsScreenState {
 
     data class Content(
-        val analListState: AnalListState,
-        val aiState: AIState,
+        val currentState: AnalState,
+        val statsState: StatsState,
     ) : CompanyAnalyticsScreenState()
 
     data class DetailMessage(
         val message: String,
     ) : CompanyAnalyticsScreenState()
 }
+
+data class StatsState(
+    val analListState: AnalListState,
+    val aiState: AIState,
+)
 
 sealed class AIState {
 

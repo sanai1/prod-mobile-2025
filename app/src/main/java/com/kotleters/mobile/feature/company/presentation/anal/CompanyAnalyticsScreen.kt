@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kotleters.mobile.common.ui.components.CustomSlider
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.Slider
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
@@ -42,16 +43,26 @@ import com.kotleters.mobile.common.ui.theme.secondaryGray
 import com.kotleters.mobile.feature.company.presentation.anal.components.AIShimmer
 import com.kotleters.mobile.feature.company.presentation.anal.components.AnalSlider
 import com.kotleters.mobile.feature.company.presentation.anal.components.AnimatedBarChart
+import com.kotleters.mobile.feature.company.presentation.anal.components.ImproveScreen
+import com.kotleters.mobile.feature.company.presentation.anal.components.StatsScreen
 import com.kotleters.mobile.feature.company.presentation.anal.states.AIState
 import com.kotleters.mobile.feature.company.presentation.anal.states.AnalListState
+import com.kotleters.mobile.feature.company.presentation.anal.states.AnalState
 import com.kotleters.mobile.feature.company.presentation.anal.states.CompanyAnalyticsScreenState
+import com.kotleters.mobile.feature.company.presentation.anal.states.StatsState
 import java.time.LocalDate
 import kotlin.math.atan
 
 val axisTypes = listOf(Pair("gender", "Пол"), Pair("age", "Возраст"))
-val periods = listOf(Pair("month", "Месяц"),
+val periods = listOf(
+    Pair("month", "Месяц"),
     Pair("quarter", "Квартал"),
-    Pair("year", "Год"))
+    Pair("year", "Год")
+)
+val analStates = listOf(
+    Pair(AnalState.STATS, "Статистика"),
+    Pair(AnalState.IMPROVE, "Улучшения")
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,12 +71,6 @@ fun CompanyAnalyticsScreen(
 ) {
 
     val state by viewModel.state.collectAsState()
-    var isExpanded by remember {
-        mutableStateOf(false)
-    }
-
-    var yAxisType by remember { mutableStateOf("gender") } // "gender" или "age"
-    var period by remember { mutableStateOf("month") } // "month", "quarter", "year"
 
     Column(
         Modifier
@@ -74,147 +79,19 @@ fun CompanyAnalyticsScreen(
             .systemBarsPadding()
     ) {
         TopScreenHeader("Аналитика")
-        LazyColumn {
-            item {
-
-                when ((state as CompanyAnalyticsScreenState.Content).aiState) {
-                    is AIState.Content -> {
-                        AIMessageBox(((state as CompanyAnalyticsScreenState.Content).aiState
-                                as AIState.Content).message, more = {
-                            isExpanded = true
-                        })
-                    }
-
-                    AIState.Error -> {
-
-                    }
-
-                    AIState.Loading -> {
-                       AIShimmer()
-                    }
-                }
-            }
-            item {
-                AnalSlider(axisTypes, yAxisType) {
-                    yAxisType = it
-                }
-                AnalSlider(periods, period) {
-                    period = it
-                }
-                AnimatedBarChart(
-                    data = testData,
-                    yAxisType = yAxisType,
-                    period = period,
-                    modifier = Modifier.fillMaxWidth().height(500.dp).padding(24.dp)
-                )
-            }
-//            item{
-//                when ((state as CompanyAnalyticsScreenState.Content).analListState) {
-//                    is AnalListState.Content -> {
-////                        AnimatedBarChart(
-////                            data = ((state
-////                                    as CompanyAnalyticsScreenState.Content).analListState
-////                                    as AnalListState.Content).list,
-////                            modifier = Modifier
-////                                .padding(16.dp)
-////                                .fillMaxWidth()
-////                                .height(300.dp)
-////                                .padding(16.dp)
-////                        )
-//                    }
-//
-//                    AnalListState.Error -> {
-//
-//                    }
-//
-//                    AnalListState.Loading -> {
-//                        ShimmerEffectCard(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(300.dp)
-//                        )
-//                    }
-//                }
-//            }
+        CustomSlider(analStates, (state as CompanyAnalyticsScreenState.Content).currentState) {
+            viewModel.changeState(it as AnalState)
         }
-    }
+        when ((state as CompanyAnalyticsScreenState.Content).currentState) {
+            AnalState.STATS -> {
+                StatsScreen(state, viewModel)
+            }
 
-    if (isExpanded){
-        ModalBottomSheet(
-            {
-                isExpanded = false
-            },
-            containerColor = backgroundColor,
-            shape = RoundedCornerShape(16.dp)
-        ){
-            LazyColumn(
-                Modifier.padding(16.dp)
-            ) {
-                item {
-                    Text(
-                        "ИИ сгенерировал", fontSize = 22.sp, color = Color.White.copy(0.7f),
-                        fontWeight = FontWeight.Medium
-                    )
-                    Spacer(Modifier.height(10.dp))
-
-                    Text(
-                        text = ((state as CompanyAnalyticsScreenState.Content).aiState
-                                as AIState.Content).message,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White,
-                    )
-                }
+            AnalState.IMPROVE -> {
+                ImproveScreen(state, viewModel)
             }
         }
     }
 
 }
 
-@Composable
-fun AIMessageBox(message: String, more: () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-
-    val textStyle = TextStyle(
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Medium,
-        color = Color.White
-    )
-
-    val maxLines = if (expanded) Int.MAX_VALUE else 3 // Ограничение строк
-
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(secondaryGray)
-            .padding(16.dp)
-    ) {
-        Text(
-            "ИИ сгенерировал", fontSize = 16.sp, color = Color.White.copy(0.7f),
-            fontWeight = FontWeight.Medium
-        )
-        Spacer(Modifier.height(10.dp))
-
-        Text(
-            text = message,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.White,
-            maxLines = maxLines,
-            overflow = TextOverflow.Ellipsis
-        )
-
-        if (!expanded) {
-            Spacer(Modifier.height(8.dp))
-            Text(
-                "Еще...",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF2F4ECB),
-                modifier = Modifier.noRippleClickable { more() }
-            )
-        }
-    }
-}
