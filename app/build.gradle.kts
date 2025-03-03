@@ -88,5 +88,8 @@ dependencies {
     // Animated nav
     implementation(libs.accompanist.navigation.animation)
 
+    // PullToRefresh
+    implementation (libs.accompanist.swiperefresh)
+
 
 }

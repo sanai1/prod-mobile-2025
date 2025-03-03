@@ -52,6 +52,10 @@ class CompanyMainViewModel @Inject constructor(
         fetchData()
     }
 
+    fun onRefresh(){
+        fetchData()
+    }
+
     fun onLogOut() {
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.logOut()
