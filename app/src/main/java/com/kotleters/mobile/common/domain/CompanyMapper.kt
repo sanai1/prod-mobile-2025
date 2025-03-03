@@ -10,6 +10,7 @@ object CompanyMapper {
             Company(
                 id = companyId,
                 name = offers.first().company_name,
+                photoUrl = "http://prod-team-10-avk8n3cp.final.prodcontest.ru/api/company/${companyId}/image",
                 discountList = offers.filter { OfferType.valueOf(it.type) == OfferType.DISCOUNT }.map {
                     Company.Discount(
                         id = it.id,
