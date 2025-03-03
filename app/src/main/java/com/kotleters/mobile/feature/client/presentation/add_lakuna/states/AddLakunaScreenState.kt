@@ -128,11 +128,10 @@ fun AddLakunaScreen() {
                         onValueChange = {  },
                         modifier = Modifier
                             .fillMaxWidth(),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = secondaryGray,
+                        colors = TextFieldDefaults.colors(
+                            unfocusedContainerColor = secondaryGray,
+                            focusedContainerColor = secondaryGray,
                             cursorColor = Color.White,
-                            focusedBorderColor = Color.White.copy(0f),
-                            unfocusedBorderColor = Color.White.copy(0f),
                         ),
                         placeholder = {
                             Text("Описание", color = Color(0xFFBABABA), fontSize = 16.sp)

@@ -70,73 +70,87 @@ fun CompanyMainScreen(
                 && (state as CompanyMainScreenState.Content).offersState is OffersState.Loading,
         onRefresh = {
             companyMainViewModel.onRefresh()
-        }
+        },
     ) {
-        TopScreenHeader("Компания", label = {
-            Icon(Icons.AutoMirrored.Rounded.ExitToApp, "",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(35.dp)
-                    .noRippleClickable {
-                        companyMainViewModel.onLogOut()
-                        back()
-                    })
-        })
-        when (state) {
-            is CompanyMainScreenState.Content -> {
-                LazyColumn {
-                    item {
-                        when ((state as CompanyMainScreenState.Content).infoState) {
-                            is InfoState.Content -> {
-                                val bitmap =
-                                    remember(((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image) {
-                                        ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image?.size?.let {
-                                            BitmapFactory.decodeByteArray(
-                                                ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image,
-                                                0,
-                                                it
-                                            )
+        Column {
+            TopScreenHeader("Компания", label = {
+                Icon(Icons.AutoMirrored.Rounded.ExitToApp, "",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(35.dp)
+                        .noRippleClickable {
+                            companyMainViewModel.onLogOut()
+                            back()
+                        })
+            })
+            when (state) {
+                is CompanyMainScreenState.Content -> {
+                    LazyColumn {
+                        item {
+                            when ((state as CompanyMainScreenState.Content).infoState) {
+                                is InfoState.Content -> {
+                                    val bitmap =
+                                        remember(((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image) {
+                                            ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image?.size?.let {
+                                                BitmapFactory.decodeByteArray(
+                                                    ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image,
+                                                    0,
+                                                    it
+                                                )
+                                            }
                                         }
-                                    }
-                                bitmap?.let {
-                                    Box() {
-                                        Image(
-                                            bitmap = it.asImageBitmap(),
-                                            contentDescription = "Loaded Image",
-                                            modifier = Modifier
-                                                .padding(16.dp)
-                                                .fillMaxWidth()
-                                                .height(220.dp)
-                                                .clip(RoundedCornerShape(16.dp)),
-                                            contentScale = ContentScale.Crop
-                                        )
-                                        Box(
-                                            modifier = Modifier
-                                                .padding(16.dp)
-                                                .fillMaxWidth()
-                                                .height(220.dp)
-                                                .clip(RoundedCornerShape(16.dp))
-                                                .background(
-                                                    Brush.verticalGradient(
-                                                        listOf(
-                                                            Color.Black.copy(alpha = 0f),
-                                                            Color.Black.copy(alpha = 1f)
+                                    bitmap?.let {
+                                        Box() {
+                                            Image(
+                                                bitmap = it.asImageBitmap(),
+                                                contentDescription = "Loaded Image",
+                                                modifier = Modifier
+                                                    .padding(16.dp)
+                                                    .fillMaxWidth()
+                                                    .height(220.dp)
+                                                    .clip(RoundedCornerShape(16.dp)),
+                                                contentScale = ContentScale.Crop
+                                            )
+                                            Box(
+                                                modifier = Modifier
+                                                    .padding(16.dp)
+                                                    .fillMaxWidth()
+                                                    .height(220.dp)
+                                                    .clip(RoundedCornerShape(16.dp))
+                                                    .background(
+                                                        Brush.verticalGradient(
+                                                            listOf(
+                                                                Color.Black.copy(alpha = 0f),
+                                                                Color.Black.copy(alpha = 1f)
+                                                            )
                                                         )
                                                     )
+                                                    .padding(16.dp),
+                                                contentAlignment = Alignment.BottomStart
+                                            ) {
+                                                Text(
+                                                    ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).name,
+                                                    fontSize = 32.sp,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    color = Color.White
                                                 )
-                                                .padding(16.dp),
-                                            contentAlignment = Alignment.BottomStart
-                                        ) {
-                                            Text(
-                                                ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).name,
-                                                fontSize = 32.sp,
-                                                fontWeight = FontWeight.SemiBold,
-                                                color = Color.White
-                                            )
+                                            }
                                         }
                                     }
+                                    if (bitmap == null) {
+                                        ShimmerEffectCard(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(220.dp)
+                                        )
+                                    }
                                 }
-                                if (bitmap == null) {
+
+                                InfoState.Error -> {
+
+                                }
+
+                                InfoState.Loading -> {
                                     ShimmerEffectCard(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -145,65 +159,53 @@ fun CompanyMainScreen(
                                 }
                             }
 
-                            InfoState.Error -> {
+                            when ((state as CompanyMainScreenState.Content).offersState) {
+                                is OffersState.Content -> {
+                                    Row(
+                                        modifier = Modifier
+                                            .padding(20.dp)
+                                            .fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            "Предложения",
+                                            fontSize = 26.sp,
+                                            fontWeight = FontWeight.Normal,
+                                            color = lightGray
+                                        )
+                                        Spacer(Modifier.weight(1f))
+                                        Text("+",
+                                            fontSize = 32.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            color = lightGray,
+                                            modifier = Modifier.noRippleClickable { goToAdd() })
+                                    }
 
-                            }
-
-                            InfoState.Loading -> {
-                                ShimmerEffectCard(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(220.dp)
-                                )
-                            }
-                        }
-
-                        when ((state as CompanyMainScreenState.Content).offersState) {
-                            is OffersState.Content -> {
-                                Row(
-                                    modifier = Modifier
-                                        .padding(20.dp)
-                                        .fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        "Предложения",
-                                        fontSize = 26.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        color = lightGray
-                                    )
-                                    Spacer(Modifier.weight(1f))
-                                    Text("+",
-                                        fontSize = 32.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = lightGray,
-                                        modifier = Modifier.noRippleClickable { goToAdd() })
-                                }
-
-                                FlowRow(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    ((state as CompanyMainScreenState.Content).offersState as OffersState.Content).offers.forEach {
-                                        OfferCard(it) { }
+                                    FlowRow(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        ((state as CompanyMainScreenState.Content).offersState as OffersState.Content).offers.forEach {
+                                            OfferCard(it) { }
+                                        }
                                     }
                                 }
-                            }
 
-                            OffersState.Error -> {
-                                ErrorState()
-                            }
+                                OffersState.Error -> {
+                                    ErrorState()
+                                }
 
-                            OffersState.Loading -> {
-                                ShimmerEffectCard(
-                                    modifier = Modifier.height(300.dp)
-                                )
+                                OffersState.Loading -> {
+                                    ShimmerEffectCard(
+                                        modifier = Modifier.height(300.dp)
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
 
+            }
         }
     }
 

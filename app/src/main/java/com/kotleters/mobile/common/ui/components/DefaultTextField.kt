@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -39,11 +40,10 @@ fun DefaultTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp, horizontal = 32.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = secondaryGray,
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = secondaryGray,
             cursorColor = Color.White,
-            focusedBorderColor = Color.White,
-            unfocusedBorderColor = Color.White.copy(0f)
+            unfocusedContainerColor = secondaryGray
         ),
         placeholder = {
             Text(placeholder, color = Color(0xFFBABABA), fontSize = 16.sp)
