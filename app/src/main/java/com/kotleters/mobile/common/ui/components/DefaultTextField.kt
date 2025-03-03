@@ -42,7 +42,8 @@ fun DefaultTextField(
         colors = TextFieldDefaults.outlinedTextFieldColors(
             containerColor = secondaryGray,
             cursorColor = Color.White,
-            focusedBorderColor = Color.White
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = Color.White.copy(0f)
         ),
         placeholder = {
             Text(placeholder, color = Color(0xFFBABABA), fontSize = 16.sp)

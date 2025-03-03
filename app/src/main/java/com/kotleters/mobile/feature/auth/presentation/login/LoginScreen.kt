@@ -71,12 +71,12 @@ fun LoginScreen(
                         Icon(
                             Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
                             tint = Color.White,
-                            modifier = Modifier.size(70.dp)
+                            modifier = Modifier.size(44.dp)
                         )
                     }
                     Text(
                         "Вход", color = Color.White,
-                        fontSize = 46.sp, fontWeight = FontWeight.SemiBold,
+                        fontSize = 32.sp, fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(16.dp)
                     )
 

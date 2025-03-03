@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -45,11 +47,27 @@ import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
+import com.kotleters.mobile.common.ui.theme.lightGray
 import com.kotleters.mobile.common.ui.theme.secondaryGray
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.presentation.register.RegisterViewModel
+import com.kotleters.mobile.feature.auth.presentation.register.company.components.RegStep1
+import com.kotleters.mobile.feature.auth.presentation.register.company.components.RegStep2
+import com.kotleters.mobile.feature.auth.presentation.register.company.components.RegStep3
+import com.kotleters.mobile.feature.auth.presentation.register.company.components.RegStep4
 import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterScreenState
 import kotlinx.coroutines.launch
+
+val regSteps = listOf(
+    "Заполните информацию \n" +
+            "о компании",
+    "Заполните информацию \n" +
+            "о компании",
+    "Создайте первое\n" +
+            "предложение",
+    "Финальный шаг до \n" +
+            "получения прибыли"
+)
 
 @Composable
 fun CompanyRegisterScreen(
@@ -60,25 +78,6 @@ fun CompanyRegisterScreen(
 
     val state by viewModel.state.collectAsState()
 
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-//    var byteArray by remember { mutableStateOf<ByteArray?>(null) }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            imageUri = it
-            viewModel.changePhoto(imageUri!!)
-//            coroutineScope.launch {
-////                byteArray = context.contentResolver.openInputStream(it)?.use { inputStream ->
-////                    inputStream.readBytes()
-////                }
-////                byteArray?.let { it1 -> viewModel.changePhoto(it1) }
-//            }
-        }
-    }
 
     LaunchedEffect(Unit) {
         viewModel.setupRegister(isCL = false)
@@ -94,22 +93,6 @@ fun CompanyRegisterScreen(
 
         LazyColumn {
             item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(back) {
-                        Icon(
-                            Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
-                            tint = Color.White,
-                            modifier = Modifier.size(70.dp)
-                        )
-                    }
-                    Text(
-                        "Регистрация", color = Color.White,
-                        fontSize = 46.sp, fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
                 when (state) {
                     is RegisterScreenState.Content -> {
                         when ((state as RegisterScreenState.Content).userAuth) {
@@ -117,70 +100,42 @@ fun CompanyRegisterScreen(
                             }
 
                             is UserAuth.Company -> {
-                                if (imageUri == null) {
-                                    Box(
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .fillMaxWidth()
-                                            .height(200.dp)
-                                            .clip(RoundedCornerShape(16.dp))
-                                            .background(secondaryGray)
-                                            .noRippleClickable {
-                                                launcher.launch("image/*")
-                                            },
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            "+",
-                                            fontSize = 32.sp,
-                                            color = Color.White,
-                                            fontWeight = FontWeight.Medium
-                                        )
-                                    }
-                                } else {
-                                    Image(
-                                        rememberAsyncImagePainter(imageUri), "",
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .fillMaxWidth()
-                                            .height(200.dp)
-                                            .clip(RoundedCornerShape(16.dp)),
-                                        contentScale = ContentScale.Crop
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        regSteps[(state as RegisterScreenState.Content).currentRegisterStep],
+                                        color = Color.White,
+                                        fontSize = 46.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        modifier = Modifier.padding(16.dp)
                                     )
                                 }
-                                DefaultTextField(
-                                    "Имя компании",
-                                    text = viewModel.companyName.value,
-                                    isError = (state as RegisterScreenState.Content).isError,
-                                ) {
-                                    viewModel.changeCompanyName(it)
-                                }
-                                DefaultTextField(
-                                    "Email",
-                                    text = viewModel.companyEmail.value,
-                                    isError = (state as RegisterScreenState.Content).isError,
-                                ) {
-                                    viewModel.changeCompanyEmail(it)
-                                }
-                                DefaultTextField(
-                                    "Пароль",
-                                    text = viewModel.companyPassword.value,
-                                    isError = (state as RegisterScreenState.Content).isError,
-                                    isPassword = true
-                                ) {
-                                    viewModel.changeCompanyPassword(it)
-                                }
-                                WhiteButton(
-                                    "Продолжить",
-                                    isEnabled = viewModel.companyName.value.isNotEmpty()
-                                            && viewModel.companyEmail.value.isNotEmpty()
-                                            && viewModel.companyPassword.value.isNotEmpty()
-                                ) {
-                                    if (viewModel.companyName.value.isNotEmpty()
-                                        && viewModel.companyEmail.value.isNotEmpty()
-                                        && viewModel.companyPassword.value.isNotEmpty()
-                                    ) {
-                                        viewModel.onRegister()
+                                LinearProgressIndicator(
+                                    progress = (state as RegisterScreenState.Content).currentRegisterStep / 4f,
+                                    strokeCap = StrokeCap.Round,
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth()
+                                        .height(16.dp),
+                                    color = Color(0xFF55D667),
+                                    trackColor = Color(0xFF6C6C6C)
+                                )
+                                when ((state as RegisterScreenState.Content).currentRegisterStep) {
+                                    0 -> {
+                                        RegStep1(viewModel, state)
+                                    }
+
+                                    1 -> {
+                                        RegStep2(viewModel, state)
+                                    }
+
+                                    2 -> {
+                                        RegStep3(viewModel,state)
+                                    }
+
+                                    3 -> {
+                                        RegStep4(viewModel, state)
                                     }
                                 }
                             }
@@ -193,9 +148,7 @@ fun CompanyRegisterScreen(
                     }
 
                     RegisterScreenState.Success -> {
-                        LaunchedEffect(Unit) {
-                            success()
-                        }
+
                     }
                 }
             }

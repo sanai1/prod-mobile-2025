@@ -84,11 +84,11 @@ fun ClientRegisterScreen(
                         ShimmerEffectCard(modifier = Modifier.fillMaxSize())
                     }
 
-                    RegisterScreenState.Success -> {
-                        LaunchedEffect(Unit) {
-                            success()
-                        }
-                    }
+//                    RegisterScreenState.Success -> {
+//                        LaunchedEffect(Unit) {
+//                            success()
+//                        }
+//                    }
 
                     else -> {
                         when ((state as RegisterScreenState.Content).userAuth) {
