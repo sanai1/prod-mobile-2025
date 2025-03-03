@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
+import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.feature.company.presentation.pay.component.SuccessPay
 import com.kotleters.mobile.feature.company.presentation.pay.states.CompanyPayScreenState
@@ -58,7 +59,7 @@ fun CompanyPayScreen(
             TopScreenHeader("Касса")
             when (state) {
                 CompanyPayScreenState.Error -> {
-                    Text("Error", color = Color.White)
+                    ErrorState()
                 }
 
                 CompanyPayScreenState.NotScanned -> {

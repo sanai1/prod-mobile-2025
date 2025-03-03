@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
+import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreenViewModel
 import com.kotleters.mobile.feature.client.presentation.profile.components.ClientLakunaCard
 import com.kotleters.mobile.feature.client.presentation.profile.states.LakunaSectionState
@@ -23,20 +24,22 @@ fun ClientProfileLakunaSection(
 
     when (state) {
         LakunaSectionState.Error -> {
-
+            ErrorState()
         }
 
         LakunaSectionState.Loading -> {
             ShimmerEffectCard(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(500.dp)
             )
         }
 
         is LakunaSectionState.Content -> {
-            Text("Добавить лакуну", fontSize = 20.sp,
+            Text(
+                "Добавить лакуну", fontSize = 20.sp,
                 fontWeight = FontWeight.Medium, color =
-            Color(0xFF2F4ECB),
+                Color(0xFF2F4ECB),
                 modifier = Modifier.padding(16.dp)
             )
             repeat(10) {

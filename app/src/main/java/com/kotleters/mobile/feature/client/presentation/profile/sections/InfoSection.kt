@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.Slider
 import com.kotleters.mobile.common.ui.components.WhiteButton
+import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.secondaryGray
 import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
@@ -146,6 +147,7 @@ fun ClientProfileInfoSection(
         }
 
         InfoSectionState.Error -> {
+            ErrorState()
         }
 
         InfoSectionState.Loading -> {

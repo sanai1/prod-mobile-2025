@@ -45,6 +45,7 @@ import com.kotleters.mobile.R
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.ui.components.GrayButton
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
+import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.lightGray
 import com.kotleters.mobile.feature.client.presentation.offer.components.QRShimmerEffect
@@ -144,7 +145,7 @@ fun ClientOfferScreen(
                     }
 
                     CodeState.Error -> {
-                        Text("Error", color = Color.White)
+                        ErrorState()
                     }
 
                     CodeState.Lading -> {

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
+import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.lightGray
 import com.kotleters.mobile.feature.client.presentation.main.components.CompanyCard
@@ -77,7 +78,7 @@ fun ClientMainScreen(
             }
 
             is ClientMainScreenState.Error -> {
-                Text((state as ClientMainScreenState.Error).message, color = Color.White)
+                ErrorState()
             }
 
             ClientMainScreenState.Loading -> {

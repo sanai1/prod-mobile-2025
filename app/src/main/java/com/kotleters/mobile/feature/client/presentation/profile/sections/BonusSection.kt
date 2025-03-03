@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
+import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.theme.secondaryGray
 import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreenViewModel
 import com.kotleters.mobile.feature.client.presentation.profile.states.BonusSectionState
@@ -65,7 +66,7 @@ fun ClientProfileBonusSection(
         }
 
         BonusSectionState.Error -> {
-
+            ErrorState()
         }
 
         BonusSectionState.Loading -> {
