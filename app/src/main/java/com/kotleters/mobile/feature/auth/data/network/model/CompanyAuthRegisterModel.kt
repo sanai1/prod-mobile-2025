@@ -4,5 +4,6 @@ data class CompanyAuthRegisterModel(
     val name: String,
     val email: String,
     val password: String,
-    val categoryId: Int
+    val category: String,
+    val subcategory: String
 )

@@ -11,7 +11,8 @@ sealed class UserAuth {
     data class Company(
         val email: String,
         val password: String,
+        val category: String? = null,
+        val subcategory: String? = null,
         val name: String? = null,
-        val categoryId: Int? = null,
     ) : UserAuth()
 }
