@@ -75,6 +75,16 @@ class AddOfferScreenViewModel @Inject constructor(
                         startDate = LocalDateTime.now(),
                         endDate = LocalDateTime.now(),
                         id = ""
+                    ),
+                    categoryId = 0,
+                    bonus = Company.Bonus(
+                        id = "0",
+                        title = "TODO()",
+                        description = "TODO()",
+                        startDate = LocalDateTime.now(),
+                        endDate = LocalDateTime.now(),
+                        bonusFromPurchase = 0.2,
+                        bonusPaymentPercent = 9.5
                     )
                 )
             when (result) {
