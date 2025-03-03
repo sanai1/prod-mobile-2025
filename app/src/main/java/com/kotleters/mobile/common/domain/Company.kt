@@ -7,7 +7,7 @@ data class Company(
     val name: String,
     val photoUrl: String,
     val discountList: List<Discount>,
-    val bonus: Bonus
+    val bonus: Bonus?
 ) {
     data class Discount(
         val id: String,

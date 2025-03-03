@@ -3,6 +3,8 @@ package com.kotleters.mobile.di
 import android.content.Context
 import com.kotleters.mobile.common.ai.data.AIRepositoryImpl
 import com.kotleters.mobile.common.ai.domain.AIRepository
+import com.kotleters.mobile.common.category.data.CategoryInfoRepositoryImpl
+import com.kotleters.mobile.common.category.domain.CategoryInfoRepository
 import com.kotleters.mobile.common.photo.data.PhotoRepositoryImpl
 import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.data.UserAuthRepositoryImpl
@@ -75,4 +77,8 @@ class AppModule {
             context = context,
             userAuthRepository = UserAuthRepositoryImpl(context)
         )
+
+    @Provides
+    @Singleton
+    fun provideCategoryInfoRepository(): CategoryInfoRepository = CategoryInfoRepositoryImpl()
 }

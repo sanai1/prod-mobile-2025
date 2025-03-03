@@ -1,7 +1,6 @@
 package com.kotleters.mobile.feature.company.data.repository
 
 import android.content.Context
-import android.util.Log
 import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
@@ -50,10 +49,12 @@ class CompanyRepositoryImpl(
     }
     
     override suspend fun createOffer(
+        categoryId: Int,
         discount: Company.Discount?,
         bonus: Company.Bonus?
     ): ResponseTemplate<Boolean> {
         val offerForCreate = OfferMapper.toOfferCompanyCreateModel(
+            categoryId = categoryId,
             discount = discount,
             bonus = bonus
         )
@@ -84,10 +85,9 @@ class CompanyRepositoryImpl(
             val call = getOffers()
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
-                    data = CompanyMapper.map(call.body()!!).firstOrNull()
+                    data = CompanyMapper.map(call.body()!!)[0]
                 )
             } else if (call.code() == 401) {
-
                 updateToken()
                 val callAgain = getOffers()
                 return if (callAgain.code() == 200) {
@@ -95,14 +95,12 @@ class CompanyRepositoryImpl(
                         data = CompanyMapper.map(callAgain.body()!!)[0]
                     )
                 } else {
-
                     ResponseTemplate.Error(message = callAgain.message())
                 }
             } else {
                 throw Exception()
             }
         } catch (e: Exception) {
-            Log.d("SUCCESS", e.message.toString())
             return ResponseTemplate.Error(message = e.message.toString())
         }
     }
@@ -198,7 +196,6 @@ class CompanyRepositoryImpl(
         val triple = SecretStorage.readPassAndEmail(context)
         userAuthRepository.auth(
             userAuth = UserAuth.Company(
-                name = null,
                 email = triple.first!!,
                 password = triple.second!!
             )

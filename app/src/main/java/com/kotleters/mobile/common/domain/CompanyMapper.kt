@@ -27,22 +27,26 @@ object CompanyMapper {
                         discount = it.discount!!
                     )
                 },
-                bonus = offers.first { OfferType.valueOf(it.type) == OfferType.ACCUM }.let {
-                    Company.Bonus(
-                        id = it.id,
-                        title = it.title,
-                        description = it.description,
-                        startDate = LocalDateTime.parse(
-                            it.start_date,
-                            DateTimeFormatter.ISO_DATE_TIME
-                        ),
-                        endDate = LocalDateTime.parse(
-                            it.end_date,
-                            DateTimeFormatter.ISO_DATE_TIME
-                        ),
-                        bonusFromPurchase = it.bonus_from_purchase!!,
-                        bonusPaymentPercent = it.bonus_payment_percent!!
-                    )
+                bonus = offers.firstOrNull { OfferType.valueOf(it.type) == OfferType.ACCUM }.let {
+                    if (it == null) {
+                        null
+                    } else {
+                        Company.Bonus(
+                            id = it.id,
+                            title = it.title,
+                            description = it.description,
+                            startDate = LocalDateTime.parse(
+                                it.start_date,
+                                DateTimeFormatter.ISO_DATE_TIME
+                            ),
+                            endDate = LocalDateTime.parse(
+                                it.end_date,
+                                DateTimeFormatter.ISO_DATE_TIME
+                            ),
+                            bonusFromPurchase = it.bonus_from_purchase!!,
+                            bonusPaymentPercent = it.bonus_payment_percent!!
+                        )
+                    }
                 }
             )
         }
