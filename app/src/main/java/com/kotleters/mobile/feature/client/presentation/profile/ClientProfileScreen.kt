@@ -64,6 +64,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ClientProfileScreen(
     back: () -> Unit,
+    addLakuna: () -> Unit,
     viewModel: ClientProfileScreenViewModel
 ) {
 
@@ -122,8 +123,9 @@ fun ClientProfileScreen(
                             when ((state as ClientProfileScreenState.Content).currentState) {
                                 ProfileSections.LAKUNS -> {
                                     ClientProfileLakunaSection(
+                                        addLakuna,
                                         (state as ClientProfileScreenState.Content).lakunaSectionState,
-                                        viewModel
+                                        viewModel,
                                     )
                                 }
 

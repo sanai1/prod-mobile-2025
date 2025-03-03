@@ -69,12 +69,12 @@ fun ClientRegisterScreen(
                         Icon(
                             Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
                             tint = Color.White,
-                            modifier = Modifier.size(70.dp)
+                            modifier = Modifier.size(45.dp)
                         )
                     }
                     Text(
                         "Регистрация", color = Color.White,
-                        fontSize = 46.sp, fontWeight = FontWeight.SemiBold,
+                        fontSize = 32.sp, fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(16.dp)
                     )
                 }

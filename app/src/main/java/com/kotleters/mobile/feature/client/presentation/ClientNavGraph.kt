@@ -16,6 +16,7 @@ import com.kotleters.mobile.R
 import com.kotleters.mobile.common.navigation.BottomBarScreen
 import com.kotleters.mobile.common.navigation.CurrentRoute
 import com.kotleters.mobile.feature.auth.presentation.AUTH_ROUTE
+import com.kotleters.mobile.feature.client.presentation.add_lakuna.AddLakunaScreen
 import com.kotleters.mobile.feature.client.presentation.company.CompanyDetailScreen
 import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreen
 import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreenViewModel
@@ -47,6 +48,9 @@ fun NavGraphBuilder.clientNavGraph(
                 }
             )
         }
+        composable(ADD_LAKUNA) {
+            AddLakunaScreen({ navController.popBackStack() })
+        }
         composable(CLIENT_PROFILE) {
 
             val viewModelStoreOwner = remember {
@@ -62,6 +66,9 @@ fun NavGraphBuilder.clientNavGraph(
                             inclusive = true
                         }
                     }
+                },
+                {
+                    navController.navigate(ADD_LAKUNA)
                 },
                 viewModel = clientProfileScreenViewModel,
             )

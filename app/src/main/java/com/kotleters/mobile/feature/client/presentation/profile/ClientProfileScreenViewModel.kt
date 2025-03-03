@@ -92,9 +92,17 @@ class ClientProfileScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             lakunaSectionState = LakunaSectionState.Loading
             updateState()
-            delay(1000)
-            lakunaSectionState = LakunaSectionState.Content("")
-            updateState()
+            val result = clientRepository.getLacuna()
+            when(result){
+                is ResponseTemplate.Error -> {
+                    lakunaSectionState = LakunaSectionState.Error
+                }
+                is ResponseTemplate.Success -> {
+                    lakunaSectionState = LakunaSectionState.Content(
+                        lacunas = result.data
+                    )
+                }
+            }
             isRefreshing.value = false
         }
     }

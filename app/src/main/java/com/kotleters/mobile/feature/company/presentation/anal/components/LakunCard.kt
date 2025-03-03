@@ -21,9 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.secondaryGray
+import com.kotleters.mobile.feature.company.presentation.anal.model.LacunaUI
 
 @Composable
-fun LakunCard() {
+fun LakunCard(
+    lacunaUI: LacunaUI
+) {
 
     Column(
         modifier = Modifier
@@ -35,8 +38,7 @@ fun LakunCard() {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            "Хуевое качество котлет для \n" +
-                    "бургеров в фастфуде",
+            lacunaUI.headline,
             fontSize = 20.sp,
             fontWeight = FontWeight.Medium,
             color = Color.White
@@ -46,7 +48,7 @@ fun LakunCard() {
         ) {
             Text("Может принести: ", fontSize = 16.sp, color = Color.White)
             Text(
-                "≈154 754 ₽",
+                "≈${lacunaUI.income} ₽",
                 fontSize = 16.sp,
                 color = Color(0xFF2F8A25),
                 fontWeight = FontWeight.Bold
@@ -54,23 +56,19 @@ fun LakunCard() {
         }
         Text(
             buildAnnotatedString {
-                withStyle(SpanStyle(
-                    color = Color.White.copy(0.8f),
-                    fontSize = 14.sp
-                )){
-                    append("Многие клиенты считают, что в крупных сетях\n" +
-                            "фаст-фуда качество котлет полное ")
-                }
-                withStyle(SpanStyle(
-                    color = Color(0xFF2F4ECB),
-                    fontSize = 14.sp
-                )){
-                    append("еще...")
+                withStyle(
+                    SpanStyle(
+                        color = Color.White.copy(0.8f),
+                        fontSize = 14.sp,
+                    )
+                ) {
+                    append(lacunaUI.description)
                 }
             },
             modifier = Modifier.noRippleClickable {
 
-            }
+            },
+            maxLines = 3
         )
     }
 

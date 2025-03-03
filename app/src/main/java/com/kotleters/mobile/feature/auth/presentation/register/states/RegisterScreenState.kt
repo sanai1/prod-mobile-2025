@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.auth.presentation.register.states
 
+import com.kotleters.mobile.common.category.domain.CategoryInfo
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import java.time.LocalDateTime
 
@@ -17,6 +18,7 @@ sealed class RegisterScreenState {
         val registerStep4: RegisterStep4,
         val isError: Boolean,
         val userAuth: UserAuth,
+        val categories: List<CategoryInfo>
     ) : RegisterScreenState()
 }
 

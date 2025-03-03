@@ -72,16 +72,16 @@ class AddOfferScreenViewModel @Inject constructor(
                         title = title.value,
                         description = description.value,
                         discount = discount.value.toDouble(),
-                        startDate = LocalDateTime.now(),
-                        endDate = LocalDateTime.now(),
+                        startDate = LocalDateTime.now().minusDays(1),
+                        endDate = LocalDateTime.now().plusDays(5),
                         id = ""
                     ),
                     bonus = Company.Bonus(
                         id = "0",
                         title = "TODO()",
                         description = "TODO()",
-                        startDate = LocalDateTime.now(),
-                        endDate = LocalDateTime.now(),
+                        startDate = LocalDateTime.now().minusDays(1),
+                        endDate = LocalDateTime.now().plusDays(5),
                         bonusFromPurchase = 0.2,
                         bonusPaymentPercent = 9.5
                     )

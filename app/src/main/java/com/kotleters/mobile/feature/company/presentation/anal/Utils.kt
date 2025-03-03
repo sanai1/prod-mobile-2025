@@ -1,6 +1,42 @@
 package com.kotleters.mobile.feature.company.presentation.anal
 
+import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.company.domain.entity.Statistic
+import com.kotleters.mobile.feature.company.presentation.anal.model.LacunaUI
+import kotlinx.serialization.json.Json
+
+fun parseResponse(responseText: String): List<LacunaUI> {
+    return Json.decodeFromString(responseText)
+}
+
+fun buildPrompt(lacunas: List<Lacuna>): String {
+    val problems = lacunas.joinToString("\n") {
+        "- Проблема: ${it.text}, средние траты: ${it.averageSpent} руб."
+    }
+    return """
+            У меня есть список проблем пользователей с их средними ежемесячными тратами. 
+            Нужно сгруппировать похожие проблемы, создать их краткое описание и определить средний доход для группы.
+            
+            Вот список проблем:
+            $problems
+
+            Верни JSON массив объектов с полями:
+            - headline (кратко как можно это использовать в своем бизнесе чтоб закрыть эту дыру потребительскую)
+            - description (краткое описание)
+            - income (сумма средних трат всех пользователей с этой проблемой).
+            
+            Пример JSON-ответа:
+            [
+                {
+                    "headline": "Сделать цены пониже",
+                    "description": "Пользователи жалуются, что у них уходит слишком много денег на питание.",
+                    "income": 15000.0
+                }
+            ]
+            ПИШИ СРАЗУ ОБЪЕКТ JSON
+            НАЧИНАЙ С [ ЗАКАНЧИВАЙ НА ]
+        """.trimIndent()
+}
 
 fun generateStatisticsPrompt(statistics: List<Statistic>): String {
     if (statistics.isEmpty()) return "Нет данных для анализа."

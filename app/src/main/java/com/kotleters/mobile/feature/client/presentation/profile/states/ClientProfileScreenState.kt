@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.client.presentation.profile.states
 
+import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
 
 
@@ -24,7 +25,7 @@ sealed class LakunaSectionState {
     data object Loading : LakunaSectionState()
 
     data class Content(
-        val her: String,
+        val lacunas: List<Lacuna>
     ) : LakunaSectionState()
 }
 

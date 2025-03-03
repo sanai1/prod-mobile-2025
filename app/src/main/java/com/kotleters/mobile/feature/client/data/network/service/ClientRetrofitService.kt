@@ -41,5 +41,6 @@ interface ClientRetrofitService {
     @GET("gap/client")
     fun getLacuna(
         @Header("Authorization") token: String,
+        @Query("limit") limit: Int = 1000,
     ): Call<List<Lacuna>>
 }

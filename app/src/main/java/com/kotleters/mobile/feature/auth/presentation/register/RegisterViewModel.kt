@@ -2,9 +2,12 @@ package com.kotleters.mobile.feature.auth.presentation.register
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kotleters.mobile.common.category.domain.CategoryInfo
+import com.kotleters.mobile.common.category.domain.CategoryInfoRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.photo.data.PhotoRepositoryImpl
 import com.kotleters.mobile.common.photo.domain.PhotoRepository
@@ -27,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authRepository: UserAuthRepository,
-    private val photoRepository: PhotoRepository
+    private val photoRepository: PhotoRepository,
+    private val categoryInfoRepository: CategoryInfoRepository
 ) : ViewModel() {
 
 
@@ -61,12 +65,35 @@ class RegisterViewModel @Inject constructor(
         password = "",
         passwordAgain = ""
     )
+    private var categories = mutableStateListOf<CategoryInfo>()
 
     var photoUri = mutableStateOf<Uri>(Uri.parse(""))
 
     var isError = mutableStateOf(false)
 
     private var isClient = mutableStateOf(false)
+
+    init {
+        getCategories()
+    }
+
+    private fun getCategories() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = categoryInfoRepository.getCategories()
+            when (result) {
+                is ResponseTemplate.Error -> {
+                    isError.value = true
+                    updateState(isClient.value)
+                }
+
+                is ResponseTemplate.Success -> {
+                    categories.clear()
+                    categories.addAll(categories)
+                    updateState(isClient.value)
+                }
+            }
+        }
+    }
 
     fun changePhoto(new: Uri) {
         photoUri.value = new
@@ -164,7 +191,9 @@ class RegisterViewModel @Inject constructor(
                 RegisterScreenState.Loading
             }
             val result = authRepository.register(authState)
-            val photoResult = photoRepository.addCompanyPhoto(photoUri.value)
+            if (!isClient.value){
+                val photoResult = photoRepository.addCompanyPhoto(photoUri.value)
+            }
             when (result) {
                 is ResponseTemplate.Error -> {
                     isError.value = true
@@ -183,11 +212,23 @@ class RegisterViewModel @Inject constructor(
     private fun updateState(isClient: Boolean) {
         viewModelScope.launch {
             if (isClient) {
-//                _state.update {
-//                    RegisterScreenState.Content(
-//
-//                    )
-//                }
+                _state.update {
+                    RegisterScreenState.Content(
+                        currentRegisterStep = currentRegisterStep.value,
+                        registerStep1 = registerStep1,
+                        registerStep2 = registerStep2,
+                        registerStep3 = registerStep3,
+                        registerStep4 = registerStep4,
+                        isError = isError.value,
+                        userAuth = UserAuth.Client(
+                            firstName = userName.value,
+                            secondName = userSecondName.value,
+                            email = userEmail.value,
+                            password = userPassword.value
+                        ),
+                        categories = categories
+                    )
+                }
             } else {
                 _state.update {
                     RegisterScreenState.Content(
@@ -198,10 +239,11 @@ class RegisterViewModel @Inject constructor(
                         registerStep4 = registerStep4,
                         isError = isError.value,
                         userAuth = UserAuth.Company(
-                            name = "",
-                            email = "",
-                            password = ""
-                        )
+                            name = registerStep1.title,
+                            email = registerStep4.email,
+                            password = registerStep4.password
+                        ),
+                        categories = categories
                     )
                 }
             }

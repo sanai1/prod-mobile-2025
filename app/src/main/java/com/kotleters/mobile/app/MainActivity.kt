@@ -20,14 +20,6 @@ import androidx.compose.ui.Modifier
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.navigation.AppNavigation
 import com.kotleters.mobile.common.navigation.BottomBarScreen
-import com.kotleters.mobile.common.ui.components.BottomBar
-import com.kotleters.mobile.common.ui.components.TopScreenHeader
-import com.kotleters.mobile.common.ui.theme.backgroundColor
-import com.kotleters.mobile.feature.auth.presentation.login.LoginScreen
-import com.kotleters.mobile.feature.auth.presentation.onboard.AuthOnBoardScreen
-import com.kotleters.mobile.feature.auth.presentation.register.client.ClientRegisterScreen
-import com.kotleters.mobile.feature.auth.presentation.register.company.CompanyRegisterScreen
-import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.AddLakunaScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -13,6 +13,7 @@ import com.kotleters.mobile.feature.company.presentation.anal.states.AIState
 import com.kotleters.mobile.feature.company.presentation.anal.states.AnalListState
 import com.kotleters.mobile.feature.company.presentation.anal.states.AnalState
 import com.kotleters.mobile.feature.company.presentation.anal.states.CompanyAnalyticsScreenState
+import com.kotleters.mobile.feature.company.presentation.anal.states.LacunasState
 import com.kotleters.mobile.feature.company.presentation.anal.states.StatsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +36,8 @@ class CompanyAnalScreenViewModel @Inject constructor(
                     analListState = AnalListState.Loading,
                     aiState = AIState.Loading
                 ),
-                currentState = AnalState.STATS
+                currentState = AnalState.STATS,
+                lacunasState = LacunasState.Loading
             )
         )
     val state = _state.asStateFlow()
@@ -44,10 +46,49 @@ class CompanyAnalScreenViewModel @Inject constructor(
 
     private var currentAIState: AIState = AIState.Loading
     private var currentAnalState: AnalListState = AnalListState.Loading
+    private var lacunasState: LacunasState = LacunasState.Loading
 
     init {
 //        fetchAnal()
-//        sendMessage()
+        sendMessage()
+        getLacunas()
+        generateLacunas()
+    }
+
+    fun generateLacunas(){
+        viewModelScope.launch {
+            try {
+                val result = aiRepository.ChatResponce(
+                    Message(
+                        "user",
+                        buildPrompt(lacunaData)
+                    )
+                )
+                val lacunas = parseResponse(result.toString().removePrefix("Success(").removeSuffix(")"))
+                lacunasState = LacunasState.Content(
+                    lacunas = lacunas
+                )
+                updateState()
+            }catch (e: Exception){
+                lacunasState = LacunasState.Error
+                updateState()
+            }
+        }
+    }
+
+    fun getLacunas() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = companyRepository.getLacunas()
+            when (result) {
+                is ResponseTemplate.Error -> {
+                    Log.d("RES", result.message)
+                }
+
+                is ResponseTemplate.Success -> {
+                    Log.d("RES", result.data.toString())
+                }
+            }
+        }
     }
 
     fun changeState(new: AnalState) {
@@ -98,7 +139,8 @@ class CompanyAnalScreenViewModel @Inject constructor(
                     analListState = currentAnalState,
                     aiState = currentAIState
                 ),
-                currentState = analState.value
+                currentState = analState.value,
+                lacunasState = lacunasState
             )
         }
     }
