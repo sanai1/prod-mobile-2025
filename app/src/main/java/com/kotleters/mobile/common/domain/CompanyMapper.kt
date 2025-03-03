@@ -10,24 +10,53 @@ object CompanyMapper {
             Company(
                 id = companyId,
                 name = offers.first().company_name,
-                offers = offers.map { offer ->
-                    Company.Offer(
-                        id = offer.id,
-                        type = OfferType.valueOf(offer.type),
-                        title = offer.title,
-                        description = offer.description,
+                discountList = offers.filter { OfferType.valueOf(it.type) == OfferType.DISCOUNT }.map {
+                    Company.Discount(
+                        id = it.id,
+                        title = it.title,
+                        description = it.description,
                         startDate = LocalDateTime.parse(
-                            offer.start_date,
+                            it.start_date,
                             DateTimeFormatter.ISO_DATE_TIME
                         ),
                         endDate = LocalDateTime.parse(
-                            offer.end_date,
+                            it.end_date,
                             DateTimeFormatter.ISO_DATE_TIME
                         ),
-                        discount = offer.discount,
-                        freeEvery = offer.free_every,
-                        bonusFromPurchase = offer.bonus_from_purchase,
-                        bonusPaymentPercent = offer.bonus_payment_percent,
+                        discount = it.discount!!
+                    )
+                },
+                freeEveryList = offers.filter { OfferType.valueOf(it.type) == OfferType.STAMP }.map {
+                    Company.FreeEvery(
+                        id = it.id,
+                        title = it.title,
+                        description = it.description,
+                        startDate = LocalDateTime.parse(
+                            it.start_date,
+                            DateTimeFormatter.ISO_DATE_TIME
+                        ),
+                        endDate = LocalDateTime.parse(
+                            it.end_date,
+                            DateTimeFormatter.ISO_DATE_TIME
+                        ),
+                        freeEvery = it.free_every!!
+                    )
+                },
+                bonus = offers.first { OfferType.valueOf(it.type) == OfferType.ACCUM }.let {
+                    Company.Bonus(
+                        id = it.id,
+                        title = it.title,
+                        description = it.description,
+                        startDate = LocalDateTime.parse(
+                            it.start_date,
+                            DateTimeFormatter.ISO_DATE_TIME
+                        ),
+                        endDate = LocalDateTime.parse(
+                            it.end_date,
+                            DateTimeFormatter.ISO_DATE_TIME
+                        ),
+                        bonusFromPurchase = it.bonus_from_purchase!!,
+                        bonusPaymentPercent = it.bonus_payment_percent!!
                     )
                 }
             )

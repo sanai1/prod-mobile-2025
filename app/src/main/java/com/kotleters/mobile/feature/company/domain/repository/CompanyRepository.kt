@@ -7,7 +7,11 @@ import com.kotleters.mobile.feature.company.domain.entity.ScanQr
 import com.kotleters.mobile.feature.company.domain.entity.Statistic
 
 interface CompanyRepository {
-    suspend fun createOffer(offer: Company.Offer): ResponseTemplate<Boolean>
+    suspend fun createOffer(
+        discount: Company.Discount? = null,
+        freeEvery: Company.FreeEvery? = null,
+        bonus: Company.Bonus? = null
+    ): ResponseTemplate<Boolean>
 
     suspend fun getOffersByCompany(): ResponseTemplate<Company?>
 

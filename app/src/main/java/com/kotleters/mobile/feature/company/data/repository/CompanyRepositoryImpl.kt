@@ -22,8 +22,19 @@ class CompanyRepositoryImpl(
     private val context: Context,
     private val userAuthRepository: UserAuthRepository
 ) : CompanyRepository {
-    override suspend fun createOffer(offer: Company.Offer): ResponseTemplate<Boolean> {
-        val offerForCreate = OfferMapper.toOfferCompanyCreateModel(offer)
+    override suspend fun createOffer(
+        discount: Company.Discount?,
+        freeEvery: Company.FreeEvery?,
+        bonus: Company.Bonus?
+    ): ResponseTemplate<Boolean> {
+        val offerForCreate = OfferMapper.toOfferCompanyCreateModel(
+            discount = discount,
+            freeEvery = freeEvery,
+            bonus = bonus
+        )
+        if (offerForCreate == null) {
+            return ResponseTemplate.Error(message = "all data is null")
+        }
         try {
             val call = create(offerForCreate)
             if (call.code() == 201) {
@@ -43,7 +54,6 @@ class CompanyRepositoryImpl(
             return ResponseTemplate.Error(message = e.message.toString())
         }
     }
-
     override suspend fun getOffersByCompany(): ResponseTemplate<Company?> {
         try {
             val call = getOffers()
