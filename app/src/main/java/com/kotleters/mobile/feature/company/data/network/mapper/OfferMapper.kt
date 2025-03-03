@@ -6,7 +6,6 @@ import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreat
 
 object OfferMapper {
     fun toOfferCompanyCreateModel(
-        categoryId: Int,
         discount: Company.Discount? = null,
         bonus: Company.Bonus? = null
     ): OfferCompanyCreateModel? {
@@ -17,7 +16,6 @@ object OfferMapper {
                 description = discount.description,
                 start_date = discount.startDate.toString(),
                 end_date = discount.endDate.toString(),
-                category_id = categoryId,
                 discount = discount.discount,
             )
         } else if (bonus != null) {
@@ -27,7 +25,6 @@ object OfferMapper {
                 description = bonus.description,
                 start_date = bonus.startDate.toString(),
                 end_date = bonus.endDate.toString(),
-                category_id = categoryId,
                 bonus_from_purchase = bonus.bonusFromPurchase,
                 bonus_payment_percent = bonus.bonusPaymentPercent
             )
