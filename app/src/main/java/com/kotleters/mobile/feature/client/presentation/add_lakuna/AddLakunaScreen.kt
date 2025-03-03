@@ -72,7 +72,7 @@ fun AddLakunaScreen(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton({back()}) {
+            IconButton({ back() }) {
                 Icon(
                     Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "",
                     tint = Color.White,
@@ -128,8 +128,9 @@ fun AddLakunaScreen(
                                     "Сумма всех трат по категории за\n" +
                                             "последние пол года ", ""
                                 ) { }
-                                Row (
-                                    modifier = Modifier.padding(16.dp)
+                                Row(
+                                    modifier = Modifier
+                                        .padding(16.dp)
                                         .fillMaxWidth()
                                         .clip(RoundedCornerShape(16.dp))
                                         .background(secondaryGray)
@@ -137,21 +138,23 @@ fun AddLakunaScreen(
                                             isCategoryMenu = true
                                         }
                                         .padding(16.dp)
-                                ){
+                                ) {
                                 }
                                 Row(
                                     Modifier.padding(horizontal = 16.dp)
                                 ) {
-                                    DropdownMenu(isCategoryMenu, {
-                                        isCategoryMenu = false
-                                    },
+                                    DropdownMenu(
+                                        isCategoryMenu, {
+                                            isCategoryMenu = false
+                                        },
                                         modifier = Modifier.height(300.dp),
-                                        containerColor = secondaryGray) {
+                                        containerColor = secondaryGray
+                                    ) {
                                         ((state as AddLakunaScreenState.Content).categoryState as CategoryState.Content).categories.forEach {
                                             DropdownMenuItem({
-                                                Text(it.first, color = Color.White)
+                                                Text(it.category, color = Color.White)
                                             }, {
-                                                addLakunaScreenViewModel.changeCategory(it)
+                                                addLakunaScreenViewModel.changeCategory(it.id)
                                                 isCategoryMenu = false
                                             })
                                         }

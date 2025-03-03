@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kotleters.mobile.common.category.domain.CategoryInfo
 import com.kotleters.mobile.common.category.domain.CategoryInfoRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.feature.client.domain.repository.ClientRepository
 import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.AddLakunaScreenState
 import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.CategoryState
+import com.kotleters.mobile.feature.company.presentation.add_offer.states.CategoryUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,15 +30,15 @@ class AddLakunaScreenViewModel @Inject constructor(
         AddLakunaScreenState.Content(
             amount = 0.0,
             text = "",
-            category = Pair("0", 0L),
-            subCategory = Pair("0", 0L),
+            category = null,
+            subCategory = null,
             categoryState = CategoryState.Loading
         )
     )
     private var amount = mutableStateOf("")
     private var text = mutableStateOf("")
-    private var category = mutableStateOf<Pair<String, Long>>(Pair("0", 0L))
-    private var subCategory = mutableStateOf<Pair<String, Long>>(Pair("0", 0L))
+    private var category = mutableStateOf<Long?>(null)
+    private var subCategory = mutableStateOf<String?>(null)
     private var categoryState: CategoryState = CategoryState.Loading
 
     val state = _state.asStateFlow()
@@ -50,7 +52,7 @@ class AddLakunaScreenViewModel @Inject constructor(
         updateState()
     }
 
-    fun changeCategory(new: Pair<String, Long>) {
+    fun changeCategory(new: Long) {
         category.value = new
         updateState()
     }
@@ -71,7 +73,13 @@ class AddLakunaScreenViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     categoryState = CategoryState.Content(
-                        categories = result.data.map { Pair(it.category, it.id) }.toSet().toList()
+                        categories = result.data.groupBy { it.category }.map { (category, categoryInfo)->
+                            CategoryUI(
+                                id = categoryInfo.first().id,
+                                category = category,
+                                subCategory = categoryInfo.map { it.subcategory }
+                            )
+                        }
                     )
                     updateState()
                 }
@@ -82,7 +90,7 @@ class AddLakunaScreenViewModel @Inject constructor(
     private fun updateState() {
         _state.update {
             AddLakunaScreenState.Content(
-                amount = amount.value.takeIf { it.isDigitsOnly() }?.toDouble() ?: 0.0,
+                amount = if(amount.value.isEmpty()) 0.0 else amount.value.toDouble(),
                 text = text.value,
                 category = category.value,
                 subCategory = subCategory.value,

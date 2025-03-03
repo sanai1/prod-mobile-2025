@@ -14,3 +14,9 @@ sealed class AddOfferScreenState {
 
     data object Success : AddOfferScreenState()
 }
+
+data class CategoryUI(
+    val category: String,
+    val subCategory: List<String>,
+    val id: Long,
+)

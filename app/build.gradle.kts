@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -90,6 +91,9 @@ dependencies {
 
     // PullToRefresh
     implementation (libs.accompanist.swiperefresh)
+
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
 
 }

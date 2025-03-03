@@ -28,8 +28,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kotleters.mobile.common.ui.components.DefaultTextField
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
+import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.feature.company.presentation.pay.component.SuccessPay
@@ -42,6 +44,9 @@ fun CompanyPayScreen(
 
     var scannedData by remember { mutableStateOf("") }
     var isGranted by remember { mutableStateOf(false) }
+
+    var isSum by remember { mutableStateOf(false) }
+    var sm by remember { mutableStateOf("") }
 
     val state by viewModel.state.collectAsState()
 
@@ -63,30 +68,39 @@ fun CompanyPayScreen(
                 }
 
                 CompanyPayScreenState.NotScanned -> {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            "Сканируйте QR-код клиента для\n" +
-                                    "применения акции",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.White,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        if (scannedData == "") {
-                            QRScannerScreen {
-                                scannedData = it
-                                viewModel.scanQR(it)
+                    if (!isSum) {
+                        DefaultTextField("Введите сумму покупки", sm) {
+                            sm = it
+                        }
+                        WhiteButton("Продолжить", isEnabled = true) {
+                            isSum = true
+                        }
+                    } else {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                "Сканируйте QR-код клиента для\n" +
+                                        "применения акции",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color.White,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            if (scannedData == "") {
+                                QRScannerScreen {
+                                    scannedData = it
+                                    viewModel.scanQR(it, sm.toDouble())
 
+                                }
                             }
                         }
                     }

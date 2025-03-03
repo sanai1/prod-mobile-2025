@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,49 +42,54 @@ fun ClientMainScreen(
     val state by viewModel.state.collectAsState()
     val refreshState = rememberPullToRefreshState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backgroundColor)
-            .systemBarsPadding()
+    PullToRefreshBox(
+        isRefreshing = state is ClientMainScreenState.Loading,
+        onRefresh = { viewModel.fetchCompanies() },
     ) {
-        TopScreenHeader("Главная")
-        when (state) {
-            is ClientMainScreenState.Content -> {
-                LazyColumn {
-                    item {
-                        Text(
-                            "Предложения от\n" +
-                                    "компаний", fontSize = 26.sp,
-                            fontWeight = FontWeight.Medium, color = lightGray,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        FlowRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            (state as ClientMainScreenState.Content).companies.forEach {
-                                CompanyCard(company = it, onClick = {
-                                    goToCompany(
-                                        (state as ClientMainScreenState.Content).companies.indexOf(
-                                            it
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(backgroundColor)
+                .systemBarsPadding()
+        ) {
+            TopScreenHeader("Главная")
+            when (state) {
+                is ClientMainScreenState.Content -> {
+                    LazyColumn {
+                        item {
+                            Text(
+                                "Предложения от\n" +
+                                        "компаний", fontSize = 26.sp,
+                                fontWeight = FontWeight.Medium, color = lightGray,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                            FlowRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                (state as ClientMainScreenState.Content).companies.forEach {
+                                    CompanyCard(company = it, onClick = {
+                                        goToCompany(
+                                            (state as ClientMainScreenState.Content).companies.indexOf(
+                                                it
+                                            )
                                         )
-                                    )
-                                })
+                                    })
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            is ClientMainScreenState.Error -> {
-                ErrorState()
-            }
+                is ClientMainScreenState.Error -> {
+                    ErrorState()
+                }
 
-            ClientMainScreenState.Loading -> {
-                ShimmerEffectCard(
-                    modifier = Modifier.fillMaxSize()
-                )
+                ClientMainScreenState.Loading -> {
+                    ShimmerEffectCard(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
     }
