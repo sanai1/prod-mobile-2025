@@ -115,8 +115,8 @@ class ClientProfileScreenViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     infoSectionState = InfoSectionState.Content(
-                        gender = TargetInfo.Gender.valueOf(result.data.gender ?: ""),
-                        age = result.data.age,
+                        gender = result.data.targetInfo?.gender,
+                        age = result.data.targetInfo?.age,
                         name = result.data.firstName
                     )
                     bonusSectionState = BonusSectionState.Content(
