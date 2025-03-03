@@ -17,7 +17,7 @@ sealed class InfoState {
     data object Loading : InfoState()
 
     data class Content(
-        val image: ByteArray?,
+        val image: String?,
         val name: String
     ) : InfoState()
 }

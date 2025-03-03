@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
 import com.kotleters.mobile.common.ui.components.states.ErrorState
@@ -89,60 +90,41 @@ fun CompanyMainScreen(
                         item {
                             when ((state as CompanyMainScreenState.Content).infoState) {
                                 is InfoState.Content -> {
-                                    val bitmap =
-                                        remember(((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image) {
-                                            ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image?.size?.let {
-                                                BitmapFactory.decodeByteArray(
-                                                    ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image,
-                                                    0,
-                                                    it
-                                                )
-                                            }
-                                        }
-                                    bitmap?.let {
-                                        Box() {
-                                            Image(
-                                                bitmap = it.asImageBitmap(),
-                                                contentDescription = "Loaded Image",
-                                                modifier = Modifier
-                                                    .padding(16.dp)
-                                                    .fillMaxWidth()
-                                                    .height(220.dp)
-                                                    .clip(RoundedCornerShape(16.dp)),
-                                                contentScale = ContentScale.Crop
-                                            )
-                                            Box(
-                                                modifier = Modifier
-                                                    .padding(16.dp)
-                                                    .fillMaxWidth()
-                                                    .height(220.dp)
-                                                    .clip(RoundedCornerShape(16.dp))
-                                                    .background(
-                                                        Brush.verticalGradient(
-                                                            listOf(
-                                                                Color.Black.copy(alpha = 0f),
-                                                                Color.Black.copy(alpha = 1f)
-                                                            )
-                                                        )
-                                                    )
-                                                    .padding(16.dp),
-                                                contentAlignment = Alignment.BottomStart
-                                            ) {
-                                                Text(
-                                                    ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).name,
-                                                    fontSize = 32.sp,
-                                                    fontWeight = FontWeight.SemiBold,
-                                                    color = Color.White
-                                                )
-                                            }
-                                        }
-                                    }
-                                    if (bitmap == null) {
-                                        ShimmerEffectCard(
+                                    Box() {
+                                        Image(
+                                            painter = rememberImagePainter(((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image),
+                                            contentDescription = "Loaded Image",
                                             modifier = Modifier
+                                                .padding(16.dp)
                                                 .fillMaxWidth()
                                                 .height(220.dp)
+                                                .clip(RoundedCornerShape(16.dp)),
+                                            contentScale = ContentScale.Crop
                                         )
+                                        Box(
+                                            modifier = Modifier
+                                                .padding(16.dp)
+                                                .fillMaxWidth()
+                                                .height(220.dp)
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .background(
+                                                    Brush.verticalGradient(
+                                                        listOf(
+                                                            Color.Black.copy(alpha = 0f),
+                                                            Color.Black.copy(alpha = 1f)
+                                                        )
+                                                    )
+                                                )
+                                                .padding(16.dp),
+                                            contentAlignment = Alignment.BottomStart
+                                        ) {
+                                            Text(
+                                                ((state as CompanyMainScreenState.Content).infoState as InfoState.Content).name,
+                                                fontSize = 32.sp,
+                                                fontWeight = FontWeight.SemiBold,
+                                                color = Color.White
+                                            )
+                                        }
                                     }
                                 }
 

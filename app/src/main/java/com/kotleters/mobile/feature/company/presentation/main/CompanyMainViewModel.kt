@@ -52,35 +52,13 @@ class CompanyMainViewModel @Inject constructor(
         fetchData()
     }
 
-    fun onRefresh(){
+    fun onRefresh() {
         fetchData()
     }
 
     fun onLogOut() {
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.logOut()
-        }
-    }
-
-    private fun fetchPhoto() {
-        viewModelScope.launch(Dispatchers.IO) {
-            infoState = InfoState.Loading
-            updateState()
-            val result = photoRepository.getCompanyPhoto(companyId.value)
-            when (result) {
-                is ResponseTemplate.Error -> {
-                    infoState = InfoState.Error
-                    updateState()
-                }
-
-                is ResponseTemplate.Success -> {
-                    infoState = InfoState.Content(
-                        image = result.data,
-                        name = companyName.value
-                    )
-                    updateState()
-                }
-            }
         }
     }
 
@@ -92,6 +70,7 @@ class CompanyMainViewModel @Inject constructor(
             val result = companyRepository.getOffersByCompany()
             when (result) {
                 is ResponseTemplate.Error -> {
+                    Log.d("ERROR", result.message)
                     offerState = OffersState.Error
                     infoState = InfoState.Error
                     updateState()
@@ -110,8 +89,11 @@ class CompanyMainViewModel @Inject constructor(
                     offerState = OffersState.Content(
                         offers = offers
                     )
+                    infoState = InfoState.Content(
+                        image = result.data?.photoUrl,
+                        name = result.data?.name ?: ""
+                    )
                     updateState()
-                    fetchPhoto()
                 }
             }
         }
