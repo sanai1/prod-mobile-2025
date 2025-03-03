@@ -40,7 +40,7 @@ class CompanyMainViewModel @Inject constructor(
     )
     val state = _state.asStateFlow()
 
-    private val offers = mutableStateListOf<Company.Offer>()
+    private val offers = mutableStateListOf<Company.Discount>()
     private val companyId = mutableStateOf("")
 
     private val companyName = mutableStateOf("")
@@ -95,12 +95,12 @@ class CompanyMainViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     offers.clear()
-                    result.data?.offers?.let { offers1 ->
-                        val offersToAdd = offers1.map { it.copy(color = offersColors.random()) }
+                    result.data?.discountList?.let { offers1 ->
+                        val offersToAdd = offers1.map { it }
                         offers.addAll(offersToAdd)
                         offers.removeAll(offers1)
                     }
-                    result.data?.let { offers.addAll(it.offers) }
+                    result.data?.let { offers.addAll(it.discountList) }
                     companyId.value = result.data?.id ?: ""
                     companyName.value = result.data?.name ?: ""
                     offerState = OffersState.Content(

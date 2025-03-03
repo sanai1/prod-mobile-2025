@@ -86,9 +86,9 @@ fun CompanyDetailScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    company.offers.forEach {
+                    company.discountList.forEach {
                         OfferCard(it) {
-                            onOfferClick(company.offers.indexOf(it))
+                            onOfferClick(company.discountList.indexOf(it))
                         }
                     }
                 }

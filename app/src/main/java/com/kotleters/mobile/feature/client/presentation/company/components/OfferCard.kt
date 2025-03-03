@@ -30,7 +30,7 @@ val offersColors = listOf(
 
 @Composable
 fun OfferCard(
-    offer: Company.Offer,
+    offer: Company.Discount,
     onClick: () -> Unit
 ) {
 
@@ -40,7 +40,7 @@ fun OfferCard(
             .padding(16.dp)
             .size(150.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(offer.color ?: Color.Black)
+            .background(Color.Black)
             .noRippleClickable { onClick() }
             .padding(16.dp)
     ) {

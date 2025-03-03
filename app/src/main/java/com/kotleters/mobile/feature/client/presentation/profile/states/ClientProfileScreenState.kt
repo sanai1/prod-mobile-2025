@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.client.presentation.profile.states
 
-import com.kotleters.mobile.feature.client.domain.TargetInfo
+import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
+
 
 enum class ProfileSections {
     LAKUNS, BONUSES, INFO

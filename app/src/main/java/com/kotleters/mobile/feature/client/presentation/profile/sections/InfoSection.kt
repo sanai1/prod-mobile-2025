@@ -28,7 +28,7 @@ import com.kotleters.mobile.common.ui.components.Slider
 import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.secondaryGray
-import com.kotleters.mobile.feature.client.domain.TargetInfo
+import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
 import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreenViewModel
 import com.kotleters.mobile.feature.client.presentation.profile.states.ClientProfileScreenState
 import com.kotleters.mobile.feature.client.presentation.profile.states.InfoSectionState

@@ -53,7 +53,7 @@ import com.kotleters.mobile.feature.client.presentation.offer.states.CodeState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClientOfferScreen(
-    offer: Company.Offer,
+    offer: Company.Discount,
     viewModel: ClientOfferScreenViewModel,
     back: () -> Unit
 ) {
@@ -83,7 +83,7 @@ fun ClientOfferScreen(
                 .fillMaxWidth()
                 .height(230.dp)
                 .clip(RoundedCornerShape(0.dp, 0.dp, 16.dp, 16.dp))
-                .background(offer.color ?: Color.Black)
+                .background(Color.Black)
                 .statusBarsPadding()
                 .padding(16.dp)
         ) {

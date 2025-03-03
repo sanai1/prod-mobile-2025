@@ -50,8 +50,6 @@ import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.lightGray
-import com.kotleters.mobile.common.ui.theme.secondaryGray
-import com.kotleters.mobile.feature.client.domain.TargetInfo
 import com.kotleters.mobile.feature.client.presentation.profile.sections.ClientProfileBonusSection
 import com.kotleters.mobile.feature.client.presentation.profile.sections.ClientProfileInfoSection
 import com.kotleters.mobile.feature.client.presentation.profile.states.ClientProfileScreenState

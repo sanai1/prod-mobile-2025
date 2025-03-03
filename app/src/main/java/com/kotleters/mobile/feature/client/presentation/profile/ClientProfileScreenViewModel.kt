@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
-import com.kotleters.mobile.feature.client.domain.ClientRepository
-import com.kotleters.mobile.feature.client.domain.TargetInfo
+import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
+import com.kotleters.mobile.feature.client.domain.repository.ClientRepository
 import com.kotleters.mobile.feature.client.presentation.profile.states.BonusSectionState
 import com.kotleters.mobile.feature.client.presentation.profile.states.ClientProfileScreenState
 import com.kotleters.mobile.feature.client.presentation.profile.states.InfoSectionState

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.lightGray
 import com.kotleters.mobile.common.ui.theme.secondaryGray
-import com.kotleters.mobile.feature.client.domain.TargetInfo
+import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
 
 @Composable
 fun Slider(

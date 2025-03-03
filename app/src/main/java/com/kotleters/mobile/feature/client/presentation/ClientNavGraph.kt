@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.client.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +27,7 @@ import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScr
 import com.kotleters.mobile.feature.company.presentation.COMPANY_ROUTE
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 fun NavGraphBuilder.clientNavGraph(
     navController: NavHostController,
 ) {
@@ -108,7 +110,7 @@ fun NavGraphBuilder.clientNavGraph(
             val offerIndex = it.arguments?.getInt("offerIndex") ?: 0
             val companyIndex = it.arguments?.getInt("companyIndex") ?: 0
             val offer =
-                (clientMainScreenViewModel.state.value as ClientMainScreenState.Content).companies[companyIndex].offers[offerIndex]
+                (clientMainScreenViewModel.state.value as ClientMainScreenState.Content).companies[companyIndex].discountList[offerIndex]
 
             val viewModel = hiltViewModel<ClientOfferScreenViewModel>()
 

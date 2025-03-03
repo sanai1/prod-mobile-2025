@@ -29,6 +29,6 @@ sealed class OffersState {
     data object Loading : OffersState()
 
     data class Content(
-        val offers: List<Company.Offer>,
+        val offers: List<Company.Discount>,
     ) : OffersState()
 }

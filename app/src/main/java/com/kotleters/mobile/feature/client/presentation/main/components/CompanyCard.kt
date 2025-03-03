@@ -52,7 +52,7 @@ fun CompanyCard(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("${company.offers.size} предложений", fontSize = 12.sp,
+            Text("${company.discountList.size} предложений", fontSize = 12.sp,
                 color = lightGray)
             Spacer(Modifier.weight(1f))
             Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, "",

@@ -68,7 +68,7 @@ class AddOfferScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result =
                 companyRepository.createOffer(
-                    offer = Company.Offer(
+                    discount = Company.Discount(
                         title = title.value,
                         description = description.value,
                         discount = discount.value.toDouble(),
