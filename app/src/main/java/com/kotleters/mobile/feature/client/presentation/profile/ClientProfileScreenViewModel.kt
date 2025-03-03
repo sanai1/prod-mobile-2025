@@ -90,8 +90,19 @@ class ClientProfileScreenViewModel @Inject constructor(
 
     private fun loadLakunsState() {
         viewModelScope.launch(Dispatchers.IO) {
-            lakunaSectionState = LakunaSectionState.Content("")
+            lakunaSectionState = LakunaSectionState.Loading
             updateState()
+            val result = clientRepository.getLacuna()
+            when(result){
+                is ResponseTemplate.Error -> {
+                    lakunaSectionState = LakunaSectionState.Error
+                }
+                is ResponseTemplate.Success -> {
+                    lakunaSectionState = LakunaSectionState.Content(
+                        lacunas = result.data
+                    )
+                }
+            }
             isRefreshing.value = false
         }
     }

@@ -4,17 +4,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,6 +65,7 @@ fun AddLakunaScreen(
     val state by addLakunaScreenViewModel.state.collectAsState()
 
     var isCategoryMenu by remember { mutableStateOf(false) }
+    var isSubMenu by remember { mutableStateOf(false) }
 
 
     Column(
@@ -126,19 +131,36 @@ fun AddLakunaScreen(
                                 }
                                 DefaultTextField(
                                     "Сумма всех трат по категории за\n" +
-                                            "последние пол года ", ""
-                                ) { }
+                                            "последние пол года ", (state as AddLakunaScreenState.Content).amount.toString()
+                                ) {
+                                    addLakunaScreenViewModel.changeAmount(it)
+                                }
                                 Row(
                                     modifier = Modifier
-                                        .padding(16.dp)
+                                        .padding(
+                                            vertical = 16.dp,
+                                            horizontal = 32.dp
+                                        )
                                         .fillMaxWidth()
                                         .clip(RoundedCornerShape(16.dp))
                                         .background(secondaryGray)
                                         .noRippleClickable {
                                             isCategoryMenu = true
                                         }
-                                        .padding(16.dp)
+                                        .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
+                                    Text(
+                                        if ((state as AddLakunaScreenState.Content).category != null) "${(state as AddLakunaScreenState.Content).category?.category}" else "Выбрать категорию",
+                                        fontSize = 16.sp, color = Color.White
+                                    )
+                                    Spacer(Modifier.weight(1f))
+                                    Icon(
+                                        if (!isCategoryMenu) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowUp,
+                                        "",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(24.dp)
+                                    )
                                 }
                                 Row(
                                     Modifier.padding(horizontal = 16.dp)
@@ -154,13 +176,61 @@ fun AddLakunaScreen(
                                             DropdownMenuItem({
                                                 Text(it.category, color = Color.White)
                                             }, {
-                                                addLakunaScreenViewModel.changeCategory(it.id)
+                                                addLakunaScreenViewModel.changeCategory(it)
                                                 isCategoryMenu = false
                                             })
                                         }
                                     }
                                 }
-                                DefaultTextField("Подкатегория", "") { }
+                                if ((state as AddLakunaScreenState.Content).category != null) {
+                                    Row(
+                                        modifier = Modifier
+                                            .padding(
+                                                vertical = 16.dp,
+                                                horizontal = 32.dp
+                                            )
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(16.dp))
+                                            .background(secondaryGray)
+                                            .noRippleClickable {
+                                                isSubMenu = true
+                                            }
+                                            .padding(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            if ((state as AddLakunaScreenState.Content).subCategory != null) "${(state as AddLakunaScreenState.Content).subCategory}" else "Выбрать подкатегорию",
+                                            fontSize = 16.sp, color = Color.White
+                                        )
+                                        Spacer(Modifier.weight(1f))
+                                        Icon(
+                                            if (!isCategoryMenu) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowUp,
+                                            "",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    }
+                                    Row(
+                                        Modifier.padding(horizontal = 16.dp)
+                                    ) {
+                                        DropdownMenu(
+                                            isSubMenu, {
+                                                isSubMenu = false
+                                            },
+                                            modifier = Modifier.sizeIn(maxHeight = 300.dp),
+                                            containerColor = secondaryGray
+                                        ) {
+                                            (state as AddLakunaScreenState.Content).category!!.subCategory.forEach {
+                                                DropdownMenuItem({
+                                                    Text(it, color = Color.White)
+                                                }, {
+                                                    addLakunaScreenViewModel.changeSubCategory(it)
+                                                    isSubMenu = false
+                                                })
+                                            }
+                                        }
+                                    }
+                                }
                                 Column(
                                     modifier = Modifier
                                         .padding(
@@ -190,8 +260,10 @@ fun AddLakunaScreen(
 
                                         )
                                     OutlinedTextField(
-                                        value = "",
-                                        onValueChange = { },
+                                        value = (state as AddLakunaScreenState.Content).text,
+                                        onValueChange = {
+                                            addLakunaScreenViewModel.changeText(it)
+                                        },
                                         modifier = Modifier
                                             .fillMaxWidth(),
                                         colors = TextFieldDefaults.colors(
@@ -212,7 +284,9 @@ fun AddLakunaScreen(
                                         ),
                                     )
                                 }
-                                WhiteButton("Готово", true) { }
+                                WhiteButton("Готово", true) {
+                                    addLakunaScreenViewModel.addLacuna()
+                                }
                             }
 
                             CategoryState.Error -> {

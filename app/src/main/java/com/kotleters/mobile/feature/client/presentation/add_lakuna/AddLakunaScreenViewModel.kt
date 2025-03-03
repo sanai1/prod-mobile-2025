@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.client.presentation.add_lakuna
 
+import android.util.Log
 import android.view.View
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.text.isDigitsOnly
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.category.domain.CategoryInfo
 import com.kotleters.mobile.common.category.domain.CategoryInfoRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
+import com.kotleters.mobile.feature.client.domain.entity.LacunaCreate
 import com.kotleters.mobile.feature.client.domain.repository.ClientRepository
 import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.AddLakunaScreenState
 import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.CategoryState
@@ -28,7 +30,7 @@ class AddLakunaScreenViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<AddLakunaScreenState>(
         AddLakunaScreenState.Content(
-            amount = 0.0,
+            amount = "",
             text = "",
             category = null,
             subCategory = null,
@@ -37,7 +39,7 @@ class AddLakunaScreenViewModel @Inject constructor(
     )
     private var amount = mutableStateOf("")
     private var text = mutableStateOf("")
-    private var category = mutableStateOf<Long?>(null)
+    private var category = mutableStateOf<CategoryUI?>(null)
     private var subCategory = mutableStateOf<String?>(null)
     private var categoryState: CategoryState = CategoryState.Loading
 
@@ -47,13 +49,38 @@ class AddLakunaScreenViewModel @Inject constructor(
         getCategories()
     }
 
-    fun changeText(new: String){
+    fun addLacuna() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = clientRepository.createLacuna(
+                LacunaCreate(
+                    amount = amount.value.toLong(),
+                    text = text.value,
+                    categoryId = category.value!!.id.toInt()
+                )
+            )
+            when(result){
+                is ResponseTemplate.Error -> {
+                    Log.d("ERR", result.message)
+                }
+                is ResponseTemplate.Success -> {
+                    Log.d("SUC", "SUCCESS")
+                }
+            }
+        }
+    }
+
+    fun changeText(new: String) {
         text.value = new
         updateState()
     }
 
-    fun changeCategory(new: Long) {
+    fun changeCategory(new: CategoryUI) {
         category.value = new
+        updateState()
+    }
+
+    fun changeSubCategory(new: String) {
+        subCategory.value = new
         updateState()
     }
 
@@ -73,13 +100,14 @@ class AddLakunaScreenViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     categoryState = CategoryState.Content(
-                        categories = result.data.groupBy { it.category }.map { (category, categoryInfo)->
-                            CategoryUI(
-                                id = categoryInfo.first().id,
-                                category = category,
-                                subCategory = categoryInfo.map { it.subcategory }
-                            )
-                        }
+                        categories = result.data.groupBy { it.category }
+                            .map { (category, categoryInfo) ->
+                                CategoryUI(
+                                    id = categoryInfo.first().id,
+                                    category = category,
+                                    subCategory = categoryInfo.map { it.subcategory }
+                                )
+                            }
                     )
                     updateState()
                 }
@@ -90,7 +118,7 @@ class AddLakunaScreenViewModel @Inject constructor(
     private fun updateState() {
         _state.update {
             AddLakunaScreenState.Content(
-                amount = if(amount.value.isEmpty()) 0.0 else amount.value.toDouble(),
+                amount = amount.value,
                 text = text.value,
                 category = category.value,
                 subCategory = subCategory.value,

@@ -6,9 +6,9 @@ import com.kotleters.mobile.feature.company.presentation.add_offer.states.Catego
 sealed class AddLakunaScreenState {
 
     data class Content(
-        val amount: Double,
+        val amount: String,
         val text: String,
-        val category: Long?,
+        val category: CategoryUI?,
         val subCategory: String?,
         val categoryState: CategoryState,
     ) : AddLakunaScreenState()
