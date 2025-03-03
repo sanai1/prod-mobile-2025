@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShimmerEffectCard(
+    removePadding: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val transition = rememberInfiniteTransition()
@@ -50,7 +51,7 @@ fun ShimmerEffectCard(
 
     Box(
         modifier = modifier
-            .padding(16.dp)
+            .padding(if (removePadding) 0.dp else 16.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(brush = brush)
     )

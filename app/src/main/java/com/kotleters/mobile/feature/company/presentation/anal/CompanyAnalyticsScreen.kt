@@ -39,6 +39,7 @@ import com.kotleters.mobile.common.ui.components.TopScreenHeader
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.secondaryGray
+import com.kotleters.mobile.feature.company.presentation.anal.components.AIShimmer
 import com.kotleters.mobile.feature.company.presentation.anal.components.AnalSlider
 import com.kotleters.mobile.feature.company.presentation.anal.components.AnimatedBarChart
 import com.kotleters.mobile.feature.company.presentation.anal.states.AIState
@@ -89,11 +90,7 @@ fun CompanyAnalyticsScreen(
                     }
 
                     AIState.Loading -> {
-                        ShimmerEffectCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                        )
+                       AIShimmer()
                     }
                 }
             }

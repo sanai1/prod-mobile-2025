@@ -39,14 +39,19 @@ class CompanyAnalScreenViewModel @Inject constructor(
 
     init {
 //        fetchAnal()
-//        sendMessage()
+        sendMessage()
     }
 
     private fun sendMessage() {
         viewModelScope.launch(Dispatchers.IO) {
             currentAIState = AIState.Loading
             updateState()
-            val result = aiRepository.ChatResponce(Message("user", "привет! ты долбоеб"))
+            val result = aiRepository.ChatResponce(
+                Message(
+                    "user",
+                    generateStatisticsPrompt(testData)
+                )
+            )
             currentAIState =
                 AIState.Content(result.toString().removePrefix("Success(").removeSuffix(")"))
             updateState()
