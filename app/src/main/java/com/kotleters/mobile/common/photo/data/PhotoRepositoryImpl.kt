@@ -81,7 +81,6 @@ class PhotoRepositoryImpl(
         val triple = SecretStorage.readPassAndEmail(context)
         userAuthRepository.auth(
             userAuth = UserAuth.Company(
-                name = null,
                 email = triple.first!!,
                 password = triple.second!!
             )

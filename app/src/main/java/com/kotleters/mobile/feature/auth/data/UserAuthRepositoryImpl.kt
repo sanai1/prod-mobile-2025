@@ -38,9 +38,10 @@ class UserAuthRepositoryImpl(
                 is UserAuth.Company -> {
                     val call = AuthRetrofitClient.authRetrofitService.registerCompany(
                         companyAuthRegisterModel = CompanyAuthRegisterModel(
-                            name = userAuth.name ?: "",
                             email = userAuth.email,
-                            password = userAuth.password
+                            password = userAuth.password,
+                            name = userAuth.name ?: "",
+                            categoryId = userAuth.categoryId!!,
                         )
                     ).execute()
                     return if (call.code() == 200) {

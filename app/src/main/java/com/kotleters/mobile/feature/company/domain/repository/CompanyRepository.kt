@@ -11,6 +11,7 @@ interface CompanyRepository {
     suspend fun getProfile(): ResponseTemplate<CompanyProfile>
 
     suspend fun createOffer(
+        categoryId: Int,
         discount: Company.Discount? = null,
         bonus: Company.Bonus? = null
     ): ResponseTemplate<Boolean>

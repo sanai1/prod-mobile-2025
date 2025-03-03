@@ -6,6 +6,7 @@ data class OfferCompanyCreateModel(
     val description: String,
     val start_date: String,
     val end_date: String,
+    val category_id: Int,
     val discount: Double? = null,
     val bonus_from_purchase: Double? = null,
     val bonus_payment_percent: Double? = null
