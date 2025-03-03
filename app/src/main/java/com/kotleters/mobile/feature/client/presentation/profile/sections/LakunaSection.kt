@@ -12,12 +12,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.states.ErrorState
+import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreenViewModel
 import com.kotleters.mobile.feature.client.presentation.profile.components.ClientLakunaCard
 import com.kotleters.mobile.feature.client.presentation.profile.states.LakunaSectionState
 
 @Composable
 fun ClientProfileLakunaSection(
+    addLakuna: () -> Unit,
     state: LakunaSectionState,
     viewModel: ClientProfileScreenViewModel
 ) {
@@ -40,7 +42,9 @@ fun ClientProfileLakunaSection(
                 "Добавить лакуну", fontSize = 20.sp,
                 fontWeight = FontWeight.Medium, color =
                 Color(0xFF2F4ECB),
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp).noRippleClickable {
+                    addLakuna()
+                }
             )
             repeat(10) {
                 ClientLakunaCard()
