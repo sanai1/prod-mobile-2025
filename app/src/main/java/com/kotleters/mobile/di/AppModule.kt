@@ -7,8 +7,8 @@ import com.kotleters.mobile.feature.auth.data.UserAuthRepositoryImpl
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.ClientGenerateQRRepositoryImpl
 import com.kotleters.mobile.feature.client.data.ClientRepositoryImpl
-import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
-import com.kotleters.mobile.feature.client.domain.ClientRepository
+import com.kotleters.mobile.feature.client.domain.repository.ClientGenerateQRRepository
+import com.kotleters.mobile.feature.client.domain.repository.ClientRepository
 import com.kotleters.mobile.feature.company.data.repository.CompanyRepositoryImpl
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import dagger.Module

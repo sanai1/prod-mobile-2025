@@ -1,4 +1,4 @@
-package com.kotleters.mobile.feature.client.domain
+package com.kotleters.mobile.feature.client.domain.repository
 
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 

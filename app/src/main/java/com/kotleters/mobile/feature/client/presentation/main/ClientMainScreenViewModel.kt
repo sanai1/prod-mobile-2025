@@ -1,12 +1,11 @@
 package com.kotleters.mobile.feature.client.presentation.main
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
-import com.kotleters.mobile.feature.client.domain.ClientRepository
+import com.kotleters.mobile.feature.client.domain.repository.ClientRepository
 import com.kotleters.mobile.feature.client.presentation.main.states.ClientMainScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
