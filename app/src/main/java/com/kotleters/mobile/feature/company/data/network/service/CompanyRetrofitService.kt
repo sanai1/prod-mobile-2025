@@ -3,7 +3,7 @@ package com.kotleters.mobile.feature.company.data.network.service
 import com.kotleters.mobile.common.data.network.model.ClientOfferModel
 import com.kotleters.mobile.common.domain.Payload
 import com.kotleters.mobile.feature.company.data.network.model.CompanyProfileModel
-import com.kotleters.mobile.feature.company.data.network.model.LacunaModel
+import com.kotleters.mobile.common.domain.LacunaModel
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
 import com.kotleters.mobile.feature.company.data.network.model.ScanQrModel
 import com.kotleters.mobile.feature.company.data.network.model.StatisticByMonthModel

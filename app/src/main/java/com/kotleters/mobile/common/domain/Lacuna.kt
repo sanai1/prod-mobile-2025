@@ -1,4 +1,4 @@
-package com.kotleters.mobile.feature.company.domain.entity
+package com.kotleters.mobile.common.domain
 
 data class Lacuna(
     val averageSpent: Double,

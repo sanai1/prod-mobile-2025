@@ -15,7 +15,7 @@ import com.kotleters.mobile.feature.company.data.network.mapper.ScanQrMapper
 import com.kotleters.mobile.feature.company.data.network.mapper.StatisticModelMapper
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
 import com.kotleters.mobile.feature.company.domain.entity.CompanyProfile
-import com.kotleters.mobile.feature.company.domain.entity.Lacuna
+import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.company.domain.entity.ScanQr
 import com.kotleters.mobile.feature.company.domain.entity.Statistic
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository

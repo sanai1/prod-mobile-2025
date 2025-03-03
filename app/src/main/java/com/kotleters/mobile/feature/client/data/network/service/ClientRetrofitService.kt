@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.client.data.network.service
 
 import com.kotleters.mobile.common.data.network.model.ClientOfferModel
+import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.client.data.network.model.ClientProfileModel
 import com.kotleters.mobile.feature.client.data.network.model.LacunaCreateModel
 import com.kotleters.mobile.feature.client.data.network.model.TargetInfoModel
@@ -36,4 +37,9 @@ interface ClientRetrofitService {
     fun createLacuna(
         @Header("Authorization") token: String,
     ): Call<LacunaCreateModel>
+
+    @GET("gap/client")
+    fun getLacuna(
+        @Header("Authorization") token: String,
+    ): Call<List<Lacuna>>
 }
