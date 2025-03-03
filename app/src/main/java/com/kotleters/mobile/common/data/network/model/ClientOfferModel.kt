@@ -1,6 +1,5 @@
 package com.kotleters.mobile.common.data.network.model
 
-
 data class ClientOfferModel(
         val id: String,
         val company_id: String,
@@ -11,7 +10,6 @@ data class ClientOfferModel(
         val start_date: String,
         val end_date: String,
         val discount: Double? = null,
-        val free_every: Long? = null,
         val bonus_from_purchase: Double? = null,
         val bonus_payment_percent: Double? = null
 )

@@ -24,12 +24,10 @@ class CompanyRepositoryImpl(
 ) : CompanyRepository {
     override suspend fun createOffer(
         discount: Company.Discount?,
-        freeEvery: Company.FreeEvery?,
         bonus: Company.Bonus?
     ): ResponseTemplate<Boolean> {
         val offerForCreate = OfferMapper.toOfferCompanyCreateModel(
             discount = discount,
-            freeEvery = freeEvery,
             bonus = bonus
         )
         if (offerForCreate == null) {

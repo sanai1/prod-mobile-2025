@@ -9,7 +9,6 @@ import com.kotleters.mobile.feature.company.domain.entity.Statistic
 interface CompanyRepository {
     suspend fun createOffer(
         discount: Company.Discount? = null,
-        freeEvery: Company.FreeEvery? = null,
         bonus: Company.Bonus? = null
     ): ResponseTemplate<Boolean>
 

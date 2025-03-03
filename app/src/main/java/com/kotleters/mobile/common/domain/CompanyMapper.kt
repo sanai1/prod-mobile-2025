@@ -26,22 +26,6 @@ object CompanyMapper {
                         discount = it.discount!!
                     )
                 },
-                freeEveryList = offers.filter { OfferType.valueOf(it.type) == OfferType.STAMP }.map {
-                    Company.FreeEvery(
-                        id = it.id,
-                        title = it.title,
-                        description = it.description,
-                        startDate = LocalDateTime.parse(
-                            it.start_date,
-                            DateTimeFormatter.ISO_DATE_TIME
-                        ),
-                        endDate = LocalDateTime.parse(
-                            it.end_date,
-                            DateTimeFormatter.ISO_DATE_TIME
-                        ),
-                        freeEvery = it.free_every!!
-                    )
-                },
                 bonus = offers.first { OfferType.valueOf(it.type) == OfferType.ACCUM }.let {
                     Company.Bonus(
                         id = it.id,
