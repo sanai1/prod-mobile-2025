@@ -22,6 +22,10 @@ sealed class LakunaSectionState {
     data object Error : LakunaSectionState()
 
     data object Loading : LakunaSectionState()
+
+    data class Content(
+        val her: String,
+    ) : LakunaSectionState()
 }
 
 sealed class BonusSectionState {

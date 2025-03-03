@@ -87,7 +87,7 @@ class ClientProfileScreenViewModel @Inject constructor(
             lakunaSectionState = LakunaSectionState.Loading
             updateState()
             delay(1000)
-            lakunaSectionState = LakunaSectionState.Loading
+            lakunaSectionState = LakunaSectionState.Content("")
             updateState()
         }
     }
