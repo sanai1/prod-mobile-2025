@@ -91,7 +91,26 @@ class ClientRepositoryImpl(
     }
 
     override suspend fun createLacuna(lacunaCreate: LacunaCreate): ResponseTemplate<Boolean> {
-        TODO("Not yet implemented")
+        try {
+            val call = getLacunaRetrofit()
+            if (call.code() == 200) {
+                return ResponseTemplate.Success(data = true)
+            } else if (call.code() == 401) {
+                updateToken()
+                val callAgain = getProfileRetrofit()
+                return if (callAgain.code() == 200) {
+                    ResponseTemplate.Success(
+                        data = true
+                    )
+                } else {
+                    ResponseTemplate.Error(message = callAgain.message())
+                }
+            } else {
+                throw Exception()
+            }
+        } catch (e: Exception) {
+            return ResponseTemplate.Error(message = e.message.toString())
+        }
     }
 
     private fun getProfileRetrofit() = ClientRetrofitClient.clientRetrofitService.getProfile(
@@ -99,6 +118,10 @@ class ClientRepositoryImpl(
     ).execute()
 
     private fun getOffers() = ClientRetrofitClient.clientRetrofitService.getAllOffers(
+        token = getToken()
+    ).execute()
+
+    private fun getLacunaRetrofit() = ClientRetrofitClient.clientRetrofitService.createLacuna(
         token = getToken()
     ).execute()
 
