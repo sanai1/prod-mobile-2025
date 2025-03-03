@@ -2,6 +2,7 @@ package com.kotleters.mobile.feature.client.presentation.add_lakuna
 
 import android.view.View
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.category.domain.CategoryInfoRepository
@@ -25,23 +26,38 @@ class AddLakunaScreenViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<AddLakunaScreenState>(
         AddLakunaScreenState.Content(
-            amount = 0,
+            amount = 0.0,
             text = "",
-            category = "",
-            subCategory = "",
+            category = Pair("0", 0L),
+            subCategory = Pair("0", 0L),
             categoryState = CategoryState.Loading
         )
     )
-    private var amount = mutableStateOf(0)
+    private var amount = mutableStateOf("")
     private var text = mutableStateOf("")
-    private var category = mutableStateOf("")
-    private var subCategory = mutableStateOf("")
+    private var category = mutableStateOf<Pair<String, Long>>(Pair("0", 0L))
+    private var subCategory = mutableStateOf<Pair<String, Long>>(Pair("0", 0L))
     private var categoryState: CategoryState = CategoryState.Loading
 
     val state = _state.asStateFlow()
 
     init {
         getCategories()
+    }
+
+    fun changeText(new: String){
+        text.value = new
+        updateState()
+    }
+
+    fun changeCategory(new: Pair<String, Long>) {
+        category.value = new
+        updateState()
+    }
+
+    fun changeAmount(new: String) {
+        amount.value = new
+        updateState()
     }
 
     private fun getCategories() {
@@ -55,7 +71,7 @@ class AddLakunaScreenViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     categoryState = CategoryState.Content(
-                        categories = result.data
+                        categories = result.data.map { Pair(it.category, it.id) }.toSet().toList()
                     )
                     updateState()
                 }
@@ -66,7 +82,7 @@ class AddLakunaScreenViewModel @Inject constructor(
     private fun updateState() {
         _state.update {
             AddLakunaScreenState.Content(
-                amount = amount.value,
+                amount = amount.value.takeIf { it.isDigitsOnly() }?.toDouble() ?: 0.0,
                 text = text.value,
                 category = category.value,
                 subCategory = subCategory.value,

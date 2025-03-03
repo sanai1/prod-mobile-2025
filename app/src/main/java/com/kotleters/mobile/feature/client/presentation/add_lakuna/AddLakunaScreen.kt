@@ -27,6 +27,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +45,7 @@ import com.kotleters.mobile.common.ui.components.DefaultTextField
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.components.states.ErrorState
+import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.secondaryGray
 import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.AddLakunaScreenState
@@ -55,6 +59,8 @@ fun AddLakunaScreen(
 ) {
 
     val state by addLakunaScreenViewModel.state.collectAsState()
+
+    var isCategoryMenu by remember { mutableStateOf(false) }
 
 
     Column(
@@ -122,14 +128,33 @@ fun AddLakunaScreen(
                                     "Сумма всех трат по категории за\n" +
                                             "последние пол года ", ""
                                 ) { }
-                                DefaultTextField("Категория", "") { }
-                                DropdownMenu(true, {}) {
-                                    ((state as AddLakunaScreenState.Content).categoryState as CategoryState.Content).categories.forEach {
-                                        DropdownMenuItem({
-                                            Text(it.category)
-                                        }, {
-
-                                        })
+                                Row (
+                                    modifier = Modifier.padding(16.dp)
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .background(secondaryGray)
+                                        .noRippleClickable {
+                                            isCategoryMenu = true
+                                        }
+                                        .padding(16.dp)
+                                ){
+                                }
+                                Row(
+                                    Modifier.padding(horizontal = 16.dp)
+                                ) {
+                                    DropdownMenu(isCategoryMenu, {
+                                        isCategoryMenu = false
+                                    },
+                                        modifier = Modifier.height(300.dp),
+                                        containerColor = secondaryGray) {
+                                        ((state as AddLakunaScreenState.Content).categoryState as CategoryState.Content).categories.forEach {
+                                            DropdownMenuItem({
+                                                Text(it.first, color = Color.White)
+                                            }, {
+                                                addLakunaScreenViewModel.changeCategory(it)
+                                                isCategoryMenu = false
+                                            })
+                                        }
                                     }
                                 }
                                 DefaultTextField("Подкатегория", "") { }

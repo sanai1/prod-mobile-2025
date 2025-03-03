@@ -5,10 +5,10 @@ import com.kotleters.mobile.common.category.domain.CategoryInfo
 sealed class AddLakunaScreenState {
 
     data class Content(
-        val amount: Int,
+        val amount: Double,
         val text: String,
-        val category: String,
-        val subCategory: String,
+        val category: Pair<String, Long>,
+        val subCategory: Pair<String, Long>,
         val categoryState: CategoryState,
     ) : AddLakunaScreenState()
 }
@@ -16,7 +16,7 @@ sealed class AddLakunaScreenState {
 sealed class CategoryState {
 
     data class Content(
-        val categories: List<CategoryInfo>,
+        val categories: List<Pair<String, Long>>,
     ) : CategoryState()
 
     data object Loading : CategoryState()

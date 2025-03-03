@@ -90,9 +90,6 @@ class ClientProfileScreenViewModel @Inject constructor(
 
     private fun loadLakunsState() {
         viewModelScope.launch(Dispatchers.IO) {
-            lakunaSectionState = LakunaSectionState.Loading
-            updateState()
-            delay(1000)
             lakunaSectionState = LakunaSectionState.Content("")
             updateState()
             isRefreshing.value = false
