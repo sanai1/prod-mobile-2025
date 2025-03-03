@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
+import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 
 @Composable
@@ -65,6 +66,7 @@ fun AuthOnBoardScreen(
                             )
                         )
                         .background(Color.White.copy())
+                        .noRippleClickable { asClient() }
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -89,6 +91,7 @@ fun AuthOnBoardScreen(
                             )
                         )
                         .background(backgroundColor)
+                        .noRippleClickable { asCompany() }
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically

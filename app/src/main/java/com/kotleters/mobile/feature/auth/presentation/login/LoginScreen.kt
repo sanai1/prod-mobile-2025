@@ -39,6 +39,7 @@ import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.blue
 import com.kotleters.mobile.common.ui.theme.lightGray
+import com.kotleters.mobile.feature.auth.presentation.login.components.AnimatedPercentSymbol
 import com.kotleters.mobile.feature.auth.presentation.login.states.LoginScreenState
 
 @Composable
@@ -117,18 +118,18 @@ fun LoginScreen(
                             Text(buildAnnotatedString {
                                 withStyle(
                                     SpanStyle(
-                                        fontSize = 16.sp,
+                                        fontSize = 14.sp,
                                         color = lightGray,
-                                        fontWeight = FontWeight.Medium
+                                        fontWeight = FontWeight.Normal
                                     )
                                 ) {
                                     append("Нет аккаунта? ")
                                 }
                                 withStyle(
                                     SpanStyle(
-                                        fontSize = 16.sp,
+                                        fontSize = 14.sp,
                                         color = blue,
-                                        fontWeight = FontWeight.Medium,
+                                        fontWeight = FontWeight.Normal,
                                     )
                                 ) {
                                     append("Зарегистрируйтесь")
@@ -137,6 +138,7 @@ fun LoginScreen(
                                 goToReg()
                             })
                         }
+                        AnimatedPercentSymbol()
                     }
 
 

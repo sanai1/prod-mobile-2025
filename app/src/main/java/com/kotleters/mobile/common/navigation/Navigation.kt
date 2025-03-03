@@ -1,5 +1,11 @@
 package com.kotleters.mobile.common.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +31,7 @@ import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.ui.components.BottomBar
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
@@ -44,6 +51,7 @@ import com.kotleters.mobile.feature.company.presentation.COMPANY_ROUTE
 import com.kotleters.mobile.feature.company.presentation.companyNavGraph
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainViewModel
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation(
     viewModel: NavigationViewModel = hiltViewModel()
@@ -54,8 +62,6 @@ fun AppNavigation(
     val loginState by viewModel.state.collectAsState()
 
     val currentRoute = CurrentRoute(navController)
-
-    val clientMainScreenViewModel = hiltViewModel<ClientMainScreenViewModel>()
 
     val clientBottomBarItems = listOf(
         BottomBarScreen(
@@ -95,9 +101,11 @@ fun AppNavigation(
     ) {
         when (loginState) {
             LoginState.Loading -> {
-                ShimmerEffectCard(
-                    modifier = Modifier.fillMaxSize()
-                )
+                Column (
+                    Modifier
+                        .fillMaxSize()
+                        .background(backgroundColor)
+                ){  }
             }
 
             else -> {
@@ -118,6 +126,8 @@ fun AppNavigation(
                 ) { pd ->
                     NavHost(
                         navController,
+                        enterTransition = { slideInHorizontally(initialOffsetX = { 300 }) + fadeIn() },
+                        exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -300 }) },
                         startDestination = when (loginState) {
                             LoginState.AuthClient -> CLIENT_ROUTE
                             LoginState.AuthCompany -> COMPANY_ROUTE
