@@ -9,7 +9,10 @@ object CompanyProfileMapper {
             id = companyProfileModel.id,
             name = companyProfileModel.name,
             email = companyProfileModel.email,
-            photoUrl = "http://prod-team-10-avk8n3cp.final.prodcontest.ru/api/company/${companyProfileModel.id}/image"
+            photoUrl = "http://prod-team-10-avk8n3cp.final.prodcontest.ru/api/company/${companyProfileModel.id}/image",
+            categoryId = companyProfileModel.category_id,
+            category = companyProfileModel.category,
+            subcategory = companyProfileModel.subcategory,
         )
     }
 }

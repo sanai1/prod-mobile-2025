@@ -4,5 +4,8 @@ data class CompanyProfile(
     val id: String,
     val name: String,
     val email: String,
-    val photoUrl: String
+    val photoUrl: String,
+    val categoryId: Int,
+    val category: String,
+    val subcategory: String
 )
