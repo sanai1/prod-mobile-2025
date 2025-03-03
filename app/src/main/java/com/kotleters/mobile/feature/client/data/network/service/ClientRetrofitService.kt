@@ -36,7 +36,8 @@ interface ClientRetrofitService {
     @POST("gap")
     fun createLacuna(
         @Header("Authorization") token: String,
-    ): Call<LacunaCreateModel>
+        @Body lacunaCreateModel: LacunaCreateModel
+    ): Call<ResponseBody>
 
     @GET("gap/client")
     fun getLacuna(

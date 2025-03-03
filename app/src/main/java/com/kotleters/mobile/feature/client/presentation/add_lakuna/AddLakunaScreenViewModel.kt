@@ -53,9 +53,9 @@ class AddLakunaScreenViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = clientRepository.createLacuna(
                 LacunaCreate(
-                    amount = amount.value.toLong(),
+                    amount = amount.value.toDouble(),
                     text = text.value,
-                    categoryId = category.value!!.id.toInt()
+                    categoryId = category.value!!.id
                 )
             )
             when(result){

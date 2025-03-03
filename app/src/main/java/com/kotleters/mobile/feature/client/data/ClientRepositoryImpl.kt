@@ -10,6 +10,7 @@ import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.client.ClientRetrofitClient
 import com.kotleters.mobile.feature.client.data.network.mapper.ClientMapper
+import com.kotleters.mobile.feature.client.data.network.model.LacunaCreateModel
 import com.kotleters.mobile.feature.client.data.network.model.TargetInfoModel
 import com.kotleters.mobile.feature.client.domain.entity.ClientProfile
 import com.kotleters.mobile.feature.client.domain.entity.LacunaCreate
@@ -93,12 +94,24 @@ class ClientRepositoryImpl(
 
     override suspend fun createLacuna(lacunaCreate: LacunaCreate): ResponseTemplate<Boolean> {
         try {
-            val call = getLacunaCreateRetrofit()
+            val call = getLacunaCreateRetrofit(
+                lacunaCreateModel = LacunaCreateModel(
+                    averageSpent = lacunaCreate.amount,
+                    categoryId = lacunaCreate.categoryId,
+                    message = lacunaCreate.text
+                )
+            )
             if (call.code() == 200) {
                 return ResponseTemplate.Success(data = true)
             } else if (call.code() == 401) {
                 updateToken()
-                val callAgain = getProfileRetrofit()
+                val callAgain = getLacunaCreateRetrofit(
+                    lacunaCreateModel = LacunaCreateModel(
+                        averageSpent = lacunaCreate.amount,
+                        categoryId = lacunaCreate.categoryId,
+                        message = lacunaCreate.text
+                    )
+                )
                 return if (callAgain.code() == 200) {
                     ResponseTemplate.Success(
                         data = true
@@ -157,8 +170,9 @@ class ClientRepositoryImpl(
         token = getToken()
     ).execute()
 
-    private fun getLacunaCreateRetrofit() = ClientRetrofitClient.clientRetrofitService.createLacuna(
-        token = getToken()
+    private fun getLacunaCreateRetrofit(lacunaCreateModel: LacunaCreateModel) = ClientRetrofitClient.clientRetrofitService.createLacuna(
+        token = getToken(),
+        lacunaCreateModel = lacunaCreateModel
     ).execute()
 
     private fun getLacunaRetrofit() = ClientRetrofitClient.clientRetrofitService.getLacuna(
