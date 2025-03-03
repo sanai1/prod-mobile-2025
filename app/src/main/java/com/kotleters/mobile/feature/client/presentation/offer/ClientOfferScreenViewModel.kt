@@ -8,6 +8,7 @@ import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
 import com.kotleters.mobile.feature.client.presentation.offer.states.CodeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

@@ -39,29 +39,38 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kotleters.mobile.common.ui.components.CustomSlider
 import com.kotleters.mobile.common.ui.components.Slider
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
 import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
+import com.kotleters.mobile.common.ui.theme.lightGray
 import com.kotleters.mobile.common.ui.theme.secondaryGray
 import com.kotleters.mobile.feature.client.domain.TargetInfo
+import com.kotleters.mobile.feature.client.presentation.profile.sections.ClientProfileBonusSection
+import com.kotleters.mobile.feature.client.presentation.profile.sections.ClientProfileInfoSection
+import com.kotleters.mobile.feature.client.presentation.profile.states.ClientProfileScreenState
+import com.kotleters.mobile.feature.client.presentation.profile.states.InfoSectionState
+import com.kotleters.mobile.feature.client.presentation.profile.states.ProfileSections
 import kotlinx.coroutines.launch
 
 @Composable
 fun ClientProfileScreen(
     back: () -> Unit,
-    viewModel: ClientProfileScreenViewModel = hiltViewModel()
+    viewModel: ClientProfileScreenViewModel
 ) {
 
     val state by viewModel.state.collectAsState()
-    val genders = listOf(
-        Pair(TargetInfo.Gender.MALE, "Мужской"),
-        Pair(TargetInfo.Gender.FEMALE, "Женский"),
-        Pair(null, "Не указан")
+
+    val sections = listOf(
+        Pair(ProfileSections.LAKUNS, "Лакуна"),
+        Pair(ProfileSections.BONUSES, "Бонусы"),
+        Pair(ProfileSections.INFO, "О себе")
     )
 
     Column(
@@ -82,103 +91,34 @@ fun ClientProfileScreen(
         })
         LazyColumn {
             item {
-                Column(
+                Text(
+                    "Привет,\nДаун!", fontSize = 32.sp,
+                    fontWeight = Medium, color = lightGray,
                     modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        "Пол",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White
-                    )
-                    HorizontalDivider(
-                        thickness = 0.5.dp,
-                        color = Color.White.copy(alpha = 0.5f),
-                        modifier = Modifier.padding(vertical = 16.dp)
-                    )
-                    Slider(
-                        genders,
-                        chosen = viewModel.gender.value
-                    ) {
-                        viewModel.changeGender(it)
-                    }
+                )
+                CustomSlider(sections, (state as ClientProfileScreenState.Content).currentState) {
+                    viewModel.changeSection(it as ProfileSections)
                 }
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        "Возраст",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.White
-                    )
-                    HorizontalDivider(
-                        thickness = 0.5.dp,
-                        color = Color.White.copy(alpha = 0.5f),
-                        modifier = Modifier.padding(vertical = 16.dp)
-                    )
-                    if (viewModel.age.value == null) {
-                        Row(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(secondaryGray)
-                                .noRippleClickable {
-                                    viewModel.changeAge(10)
-                                }
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                "Указать возраст", color = Color.White, fontSize = 20.sp,
-                                fontWeight = Bold
-                            )
-                        }
-                    } else {
-                        Row(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(secondaryGray)
-                                .padding(16.dp)
-                        ) {
-                            Text(
-                                "-", color = Color.White, fontSize = 20.sp,
-                                fontWeight = Bold,
-                                modifier = Modifier.noRippleClickable {
-                                    viewModel.changeAge(viewModel.age.value!! - 1)
-                                }
-                            )
-                            Spacer(Modifier.weight(1f))
-                            Text(
-                                viewModel.age.value.toString(),
-                                color = Color.White,
-                                fontSize = 20.sp,
-                                fontWeight = Bold
-                            )
-                            Spacer(Modifier.weight(1f))
-                            Text(
-                                "+", color = Color.White, fontSize = 20.sp,
-                                fontWeight = Bold,
-                                modifier = Modifier.noRippleClickable {
-                                    viewModel.changeAge(viewModel.age.value!! + 1)
-                                }
-                            )
-                        }
-                    }
-                }
-                Spacer(Modifier.height(30.dp))
-                WhiteButton(
-                    "Применить",
-                    viewModel.age.value != null && viewModel.gender.value != null
-                ) {
-                    if (viewModel.age.value != null && viewModel.gender.value != null) {
-                        viewModel.onSend()
-                    }
-                }
+                when (state) {
+                    is ClientProfileScreenState.Content -> {
+                        when ((state as ClientProfileScreenState.Content).currentState) {
+                            ProfileSections.LAKUNS -> {
 
+                            }
+
+                            ProfileSections.BONUSES -> {
+                                ClientProfileBonusSection((state as ClientProfileScreenState.Content).bonusSectionState)
+                            }
+
+                            ProfileSections.INFO -> {
+                                ClientProfileInfoSection(
+                                    (state as ClientProfileScreenState.Content).infoSectionState,
+                                    viewModel = viewModel
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

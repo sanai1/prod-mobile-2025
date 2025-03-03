@@ -22,6 +22,7 @@ import com.kotleters.mobile.feature.client.presentation.main.states.ClientMainSc
 import com.kotleters.mobile.feature.client.presentation.offer.ClientOfferScreen
 import com.kotleters.mobile.feature.client.presentation.offer.ClientOfferScreenViewModel
 import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreen
+import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreenViewModel
 import com.kotleters.mobile.feature.company.presentation.COMPANY_ROUTE
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainViewModel
 
@@ -35,7 +36,8 @@ fun NavGraphBuilder.clientNavGraph(
             val viewModelStoreOwner = remember {
                 navController.getBackStackEntry(CLIENT_ROUTE)
             }
-            val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
+            val clientMainScreenViewModel: ClientMainScreenViewModel =
+                hiltViewModel(viewModelStoreOwner)
             ClientMainScreen(
                 clientMainScreenViewModel,
                 goToCompany = {
@@ -44,13 +46,23 @@ fun NavGraphBuilder.clientNavGraph(
             )
         }
         composable(CLIENT_PROFILE) {
-            ClientProfileScreen({
-                navController.navigate(AUTH_ROUTE) {
-                    popUpTo(CLIENT_ROUTE) {
-                        inclusive = true
+
+            val viewModelStoreOwner = remember {
+                navController.getBackStackEntry(CLIENT_ROUTE)
+            }
+            val clientProfileScreenViewModel: ClientProfileScreenViewModel =
+                hiltViewModel(viewModelStoreOwner)
+
+            ClientProfileScreen(
+                {
+                    navController.navigate(AUTH_ROUTE) {
+                        popUpTo(CLIENT_ROUTE) {
+                            inclusive = true
+                        }
                     }
-                }
-            })
+                },
+                viewModel = clientProfileScreenViewModel,
+            )
         }
         composable("${CLIENT_COMPANY_DETAIL}/{companyIndex}",
             arguments = listOf(
@@ -63,7 +75,8 @@ fun NavGraphBuilder.clientNavGraph(
             val viewModelStoreOwner = remember {
                 navController.getBackStackEntry(CLIENT_ROUTE)
             }
-            val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
+            val clientMainScreenViewModel: ClientMainScreenViewModel =
+                hiltViewModel(viewModelStoreOwner)
             val companyIndex = backStackEntry.arguments?.getInt("companyIndex") ?: 0
             val companies =
                 (clientMainScreenViewModel.state.value as ClientMainScreenState.Content).companies
@@ -90,7 +103,8 @@ fun NavGraphBuilder.clientNavGraph(
             val viewModelStoreOwner = remember {
                 navController.getBackStackEntry(CLIENT_ROUTE)
             }
-            val clientMainScreenViewModel: ClientMainScreenViewModel = hiltViewModel(viewModelStoreOwner)
+            val clientMainScreenViewModel: ClientMainScreenViewModel =
+                hiltViewModel(viewModelStoreOwner)
             val offerIndex = it.arguments?.getInt("offerIndex") ?: 0
             val companyIndex = it.arguments?.getInt("companyIndex") ?: 0
             val offer =
