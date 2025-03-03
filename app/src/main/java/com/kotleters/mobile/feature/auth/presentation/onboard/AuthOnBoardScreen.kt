@@ -115,7 +115,7 @@ fun AuthOnBoardScreen(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ){
-                Text("Offeria ©\n2025", color = Color.White,
+                Text("Lakuna ©\n2025", color = Color.White,
                     fontSize = 12.sp, fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center)
             }
