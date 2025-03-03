@@ -1,8 +1,8 @@
 package com.kotleters.mobile.feature.client.data.network.service
 
 import com.kotleters.mobile.common.data.network.model.ClientOfferModel
-import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.client.data.network.model.ClientProfileModel
+import com.kotleters.mobile.feature.client.data.network.model.LacunaClientModel
 import com.kotleters.mobile.feature.client.data.network.model.LacunaCreateModel
 import com.kotleters.mobile.feature.client.data.network.model.TargetInfoModel
 import okhttp3.ResponseBody
@@ -43,5 +43,5 @@ interface ClientRetrofitService {
     fun getLacuna(
         @Header("Authorization") token: String,
         @Query("limit") limit: Int = 1000,
-    ): Call<List<Lacuna>>
+    ): Call<List<LacunaClientModel>>
 }

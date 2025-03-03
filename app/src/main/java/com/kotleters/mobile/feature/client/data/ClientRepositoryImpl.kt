@@ -5,7 +5,6 @@ import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.CompanyMapper
-import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.client.ClientRetrofitClient
@@ -13,6 +12,7 @@ import com.kotleters.mobile.feature.client.data.network.mapper.ClientMapper
 import com.kotleters.mobile.feature.client.data.network.model.LacunaCreateModel
 import com.kotleters.mobile.feature.client.data.network.model.TargetInfoModel
 import com.kotleters.mobile.feature.client.domain.entity.ClientProfile
+import com.kotleters.mobile.feature.client.domain.entity.LacunaClient
 import com.kotleters.mobile.feature.client.domain.entity.LacunaCreate
 import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
 import com.kotleters.mobile.feature.client.domain.repository.ClientRepository
@@ -127,15 +127,16 @@ class ClientRepositoryImpl(
         }
     }
 
-    override suspend fun getLacuna(): ResponseTemplate<List<Lacuna>> {
+    override suspend fun getLacuna(): ResponseTemplate<List<LacunaClient>> {
         try {
             val call = getLacunaRetrofit()
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
                     data = call.body()!!.map {
-                        Lacuna(
-                            averageSpent = it.averageSpent,
-                            text = it.text
+                        LacunaClient(
+                            category = it.categoryName,
+                            subcategory = it.subcategoryName,
+                            text = it.message
                         )
                     }
                 )
@@ -145,9 +146,10 @@ class ClientRepositoryImpl(
                 return if (callAgain.code() == 200) {
                     ResponseTemplate.Success(
                         data = callAgain.body()!!.map {
-                            Lacuna(
-                                averageSpent = it.averageSpent,
-                                text = it.text
+                            LacunaClient(
+                                category = it.categoryName,
+                                subcategory = it.subcategoryName,
+                                text = it.message
                             )
                         }
                     )
