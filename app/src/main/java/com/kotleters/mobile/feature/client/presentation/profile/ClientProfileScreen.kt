@@ -21,9 +21,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ExitToApp
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -58,6 +60,7 @@ import com.kotleters.mobile.feature.client.presentation.profile.states.InfoSecti
 import com.kotleters.mobile.feature.client.presentation.profile.states.ProfileSections
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClientProfileScreen(
     back: () -> Unit,
@@ -72,51 +75,68 @@ fun ClientProfileScreen(
         Pair(ProfileSections.INFO, "О себе")
     )
 
-    Column(
+    PullToRefreshBox(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
-            .systemBarsPadding()
+            .systemBarsPadding(),
+        isRefreshing = viewModel.isRefreshing.value,
+        onRefresh = {
+            viewModel.onRefresh()
+        },
     ) {
-        TopScreenHeader("Профиль", label = {
-            Icon(Icons.AutoMirrored.Rounded.ExitToApp, "",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(35.dp)
-                    .noRippleClickable {
-                        viewModel.onLogOut()
-                        back()
-                    })
-        })
-        LazyColumn {
-            item {
-                Text(
-                    "Привет,\nДаун!", fontSize = 32.sp,
-                    fontWeight = Medium, color = lightGray,
-                    modifier = Modifier.padding(16.dp)
-                )
-                CustomSlider(sections, (state as ClientProfileScreenState.Content).currentState) {
-                    viewModel.changeSection(it as ProfileSections)
-                }
-                when (state) {
-                    is ClientProfileScreenState.Content -> {
-                        when ((state as ClientProfileScreenState.Content).currentState) {
-                            ProfileSections.LAKUNS -> {
-                                ClientProfileLakunaSection(
-                                    (state as ClientProfileScreenState.Content).lakunaSectionState,
-                                    viewModel
+        Column {
+            TopScreenHeader("Профиль", label = {
+                Icon(Icons.AutoMirrored.Rounded.ExitToApp, "",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(35.dp)
+                        .noRippleClickable {
+                            viewModel.onLogOut()
+                            back()
+                        })
+            })
+            LazyColumn {
+                item {
+                    when (state) {
+                        is ClientProfileScreenState.Content -> {
+                            if ((state as ClientProfileScreenState.Content).infoSectionState is InfoSectionState.Content) {
+                                Text(
+                                    "Привет,\n${((state as ClientProfileScreenState.Content).infoSectionState as InfoSectionState.Content).name}!",
+                                    fontSize = 32.sp,
+                                    fontWeight = Medium,
+                                    color = lightGray,
+                                    modifier = Modifier.padding(16.dp)
                                 )
                             }
+                        }
+                    }
+                    CustomSlider(
+                        sections,
+                        (state as ClientProfileScreenState.Content).currentState
+                    ) {
+                        viewModel.changeSection(it as ProfileSections)
+                    }
+                    when (state) {
+                        is ClientProfileScreenState.Content -> {
+                            when ((state as ClientProfileScreenState.Content).currentState) {
+                                ProfileSections.LAKUNS -> {
+                                    ClientProfileLakunaSection(
+                                        (state as ClientProfileScreenState.Content).lakunaSectionState,
+                                        viewModel
+                                    )
+                                }
 
-                            ProfileSections.BONUSES -> {
-                                ClientProfileBonusSection((state as ClientProfileScreenState.Content).bonusSectionState)
-                            }
+                                ProfileSections.BONUSES -> {
+                                    ClientProfileBonusSection((state as ClientProfileScreenState.Content).bonusSectionState)
+                                }
 
-                            ProfileSections.INFO -> {
-                                ClientProfileInfoSection(
-                                    (state as ClientProfileScreenState.Content).infoSectionState,
-                                    viewModel = viewModel
-                                )
+                                ProfileSections.INFO -> {
+                                    ClientProfileInfoSection(
+                                        (state as ClientProfileScreenState.Content).infoSectionState,
+                                        viewModel = viewModel
+                                    )
+                                }
                             }
                         }
                     }

@@ -45,6 +45,8 @@ class ClientProfileScreenViewModel @Inject constructor(
     private var infoSectionState: InfoSectionState = InfoSectionState.Loading
     private var lakunaSectionState: LakunaSectionState = LakunaSectionState.Loading
 
+    var isRefreshing = mutableStateOf(false)
+
     private var age = mutableStateOf<Int?>(null)
     private var gender = mutableStateOf<TargetInfo.Gender?>(null)
 
@@ -61,7 +63,6 @@ class ClientProfileScreenViewModel @Inject constructor(
             }
 
             ProfileSections.BONUSES -> {
-                loadBonusState()
             }
 
             ProfileSections.INFO -> {
@@ -70,15 +71,20 @@ class ClientProfileScreenViewModel @Inject constructor(
         }
     }
 
-    private fun loadBonusState() {
-        viewModelScope.launch(Dispatchers.IO) {
-            bonusSectionState = BonusSectionState.Loading
-            updateState()
-            delay(1000)
-            bonusSectionState = BonusSectionState.Content(
-                bonuses = 543.56
-            )
-            updateState()
+    fun onRefresh() {
+        isRefreshing.value = true
+        when (currentState.value) {
+            ProfileSections.LAKUNS -> {
+                loadLakunsState()
+            }
+
+            ProfileSections.BONUSES -> {
+                loadInfoState()
+            }
+
+            ProfileSections.INFO -> {
+                loadInfoState()
+            }
         }
     }
 
@@ -89,19 +95,37 @@ class ClientProfileScreenViewModel @Inject constructor(
             delay(1000)
             lakunaSectionState = LakunaSectionState.Content("")
             updateState()
+            isRefreshing.value = false
         }
     }
 
     private fun loadInfoState() {
         viewModelScope.launch(Dispatchers.IO) {
-            infoSectionState = InfoSectionState.Loading
-            updateState()
-            delay(1000)
-            infoSectionState = InfoSectionState.Content(
-                gender = TargetInfo.Gender.MALE,
-                age = 17
-            )
-            updateState()
+            if (infoSectionState !is InfoSectionState.Content) {
+                infoSectionState = InfoSectionState.Loading
+                updateState()
+            }
+            val result = clientRepository.getProfile()
+            when (result) {
+                is ResponseTemplate.Error -> {
+                    infoSectionState = InfoSectionState.Error
+                    bonusSectionState = BonusSectionState.Error
+                    updateState()
+                }
+
+                is ResponseTemplate.Success -> {
+                    infoSectionState = InfoSectionState.Content(
+                        gender = TargetInfo.Gender.valueOf(result.data.gender ?: ""),
+                        age = result.data.age,
+                        name = result.data.firstName
+                    )
+                    bonusSectionState = BonusSectionState.Content(
+                        bonuses = result.data.bonus
+                    )
+                    updateState()
+                }
+            }
+            isRefreshing.value = false
         }
     }
 
@@ -110,7 +134,8 @@ class ClientProfileScreenViewModel @Inject constructor(
             age.value = new
             infoSectionState = InfoSectionState.Content(
                 gender = gender.value,
-                age = age.value
+                age = age.value,
+                name = (infoSectionState as InfoSectionState.Content).name
             )
             updateState()
         }
@@ -120,7 +145,8 @@ class ClientProfileScreenViewModel @Inject constructor(
         gender.value = new
         infoSectionState = InfoSectionState.Content(
             gender = gender.value,
-            age = age.value
+            age = age.value,
+            name = (infoSectionState as InfoSectionState.Content).name
         )
         updateState()
     }
@@ -141,12 +167,9 @@ class ClientProfileScreenViewModel @Inject constructor(
             }
             when (result) {
                 is ResponseTemplate.Error -> {
-                    Log.d("PENIS", result.message)
-                    age.value = 62
                 }
 
                 is ResponseTemplate.Success -> {
-                    age.value = 52
                 }
 
                 null -> {

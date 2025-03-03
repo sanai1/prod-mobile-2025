@@ -5,7 +5,7 @@ import java.time.LocalDate
 data class Statistic(
     val month: Month,
     val quarter: Quarter,
-    val year: Year
+    val year: Year,
 ) {
     data class Month(
         val month: LocalDate,
@@ -15,7 +15,7 @@ data class Statistic(
         val kidsAmount: Long,
         val youngAmount: Long,
         val middleAmount: Long,
-        val oldAmount: Long
+        val oldAmount: Long,
     )
 
     data class Quarter(
@@ -27,7 +27,7 @@ data class Statistic(
         val kidsAmount: Long,
         val youngAmount: Long,
         val middleAmount: Long,
-        val oldAmount: Long
+        val oldAmount: Long,
     )
 
     data class Year(
@@ -39,6 +39,6 @@ data class Statistic(
         val kidsAmount: Long,
         val youngAmount: Long,
         val middleAmount: Long,
-        val oldAmount: Long
+        val oldAmount: Long,
     )
 }

@@ -46,6 +46,7 @@ sealed class InfoSectionState {
     data object Loading : InfoSectionState()
 
     data class Content(
+        val name: String,
         val gender: TargetInfo.Gender? = null,
         val age: Int?,
     ) : InfoSectionState()

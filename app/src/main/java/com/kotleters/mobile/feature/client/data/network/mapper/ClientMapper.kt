@@ -19,7 +19,9 @@ object ClientMapper {
                 )
             } else {
                 null
-            }
+            },
+            gender = clientProfileModel.gender,
+            age = clientProfileModel.age
         )
     }
 }

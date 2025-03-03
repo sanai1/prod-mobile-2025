@@ -48,7 +48,8 @@ fun ImproveScreen(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
                     .background(secondaryGray)
-                    .padding(16.dp)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
                     "Ваша  компания может заработать \n" +

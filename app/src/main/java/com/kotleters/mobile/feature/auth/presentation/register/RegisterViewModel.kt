@@ -183,7 +183,11 @@ class RegisterViewModel @Inject constructor(
     private fun updateState(isClient: Boolean) {
         viewModelScope.launch {
             if (isClient) {
-
+//                _state.update {
+//                    RegisterScreenState.Content(
+//
+//                    )
+//                }
             } else {
                 _state.update {
                     RegisterScreenState.Content(

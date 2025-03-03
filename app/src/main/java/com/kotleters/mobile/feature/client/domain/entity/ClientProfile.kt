@@ -6,5 +6,7 @@ data class ClientProfile(
     val lastName: String,
     val email: String,
     val bonus: Double,
-    val targetInfo: TargetInfo?
+    val targetInfo: TargetInfo?,
+    val gender: String?,
+    val age: Int?,
 )

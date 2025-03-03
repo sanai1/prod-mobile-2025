@@ -51,12 +51,12 @@ class CompanyRepositoryImpl(
     override suspend fun createOffer(
         categoryId: Int,
         discount: Company.Discount?,
-        bonus: Company.Bonus?
+        bonus: Company.Bonus?,
     ): ResponseTemplate<Boolean> {
         val offerForCreate = OfferMapper.toOfferCompanyCreateModel(
             categoryId = categoryId,
             discount = discount,
-            bonus = bonus
+            bonus = bonus,
         )
         if (offerForCreate == null) {
             return ResponseTemplate.Error(message = "all data is null")
