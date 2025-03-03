@@ -68,7 +68,7 @@ fun CompanyMainScreen(
             Icon(Icons.AutoMirrored.Rounded.ExitToApp, "",
                 tint = Color.White,
                 modifier = Modifier
-                    .size(45.dp)
+                    .size(35.dp)
                     .noRippleClickable {
                         companyMainViewModel.onLogOut()
                         back()
@@ -154,14 +154,14 @@ fun CompanyMainScreen(
                             is OffersState.Content -> {
                                 Row(
                                     modifier = Modifier
-                                        .padding(16.dp)
+                                        .padding(20.dp)
                                         .fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
                                         "Предложения",
-                                        fontSize = 32.sp,
-                                        fontWeight = FontWeight.Medium,
+                                        fontSize = 26.sp,
+                                        fontWeight = FontWeight.Normal,
                                         color = lightGray
                                     )
                                     Spacer(Modifier.weight(1f))

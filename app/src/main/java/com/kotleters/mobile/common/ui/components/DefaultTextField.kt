@@ -38,18 +38,18 @@ fun DefaultTextField(
         onValueChange = { onChange(it) },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(vertical = 16.dp, horizontal = 32.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             containerColor = secondaryGray,
             cursorColor = Color.White,
             focusedBorderColor = Color.White
         ),
         placeholder = {
-            Text(placeholder, color = Color(0xFFBABABA), fontSize = 20.sp)
+            Text(placeholder, color = Color(0xFFBABABA), fontSize = 16.sp)
         },
         shape = RoundedCornerShape(16.dp),
         textStyle = TextStyle(
-            color = Color.White, fontSize = 20.sp
+            color = Color.White, fontSize = 16.sp
         ),
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(

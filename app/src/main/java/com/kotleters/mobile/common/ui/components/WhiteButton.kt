@@ -38,7 +38,7 @@ fun WhiteButton(
                 .noRippleClickable {
                     onClick()
                 }
-                .padding(vertical = 16.dp, horizontal = 25.dp),
+                .padding(vertical = 12.dp, horizontal = 32.dp),
             contentAlignment = Alignment.Center
         ){
 

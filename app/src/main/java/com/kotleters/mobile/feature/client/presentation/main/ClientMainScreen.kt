@@ -54,7 +54,7 @@ fun ClientMainScreen(
                     item {
                         Text(
                             "Предложения от\n" +
-                                    "компаний", fontSize = 32.sp,
+                                    "компаний", fontSize = 26.sp,
                             fontWeight = FontWeight.Medium, color = lightGray,
                             modifier = Modifier.padding(16.dp)
                         )

@@ -23,16 +23,16 @@ fun TopScreenHeader(
 
     Column {
         Row(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(title, fontSize = 46.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+            Text(title, fontSize = 36.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.weight(1f))
             label()
         }
         HorizontalDivider(
             thickness = 0.3.dp,
-            color = Color.White.copy(alpha = 0.5f),
+            color = Color.White.copy(alpha = 0.3f),
             modifier = Modifier.fillMaxWidth()
         )
     }

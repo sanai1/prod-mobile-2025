@@ -27,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,6 +47,7 @@ import com.kotleters.mobile.common.ui.components.GrayButton
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.lightGray
+import com.kotleters.mobile.feature.client.presentation.offer.components.QRShimmerEffect
 import com.kotleters.mobile.feature.client.presentation.offer.states.CodeState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -146,9 +148,10 @@ fun ClientOfferScreen(
                     }
 
                     CodeState.Lading -> {
-                        ShimmerEffectCard(
-                            modifier = Modifier.size(300.dp)
-                        )
+//                        ShimmerEffectCard(
+//                            modifier = Modifier.size(300.dp)
+//                        )
+                        QRShimmerEffect()
                     }
                 }
             }

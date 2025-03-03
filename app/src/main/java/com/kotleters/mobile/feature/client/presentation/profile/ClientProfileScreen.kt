@@ -74,7 +74,7 @@ fun ClientProfileScreen(
             Icon(Icons.AutoMirrored.Rounded.ExitToApp, "",
                 tint = Color.White,
                 modifier = Modifier
-                    .size(45.dp)
+                    .size(35.dp)
                     .noRippleClickable {
                         viewModel.onLogOut()
                         back()
