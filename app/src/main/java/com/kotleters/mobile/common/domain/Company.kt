@@ -9,10 +9,14 @@ data class Company(
 ) {
     data class Offer(
         val id: String,
+        val type: OfferType,
         val title: String,
         val description: String,
-        val discount: Double,
         val startDate: LocalDateTime,
-        val endDate: LocalDateTime
+        val endDate: LocalDateTime,
+        val discount: Double? = null,
+        val freeEvery: Long? = null,
+        val bonusFromPurchase: Double? = null,
+        val bonusPaymentPercent: Double? = null
     )
 }

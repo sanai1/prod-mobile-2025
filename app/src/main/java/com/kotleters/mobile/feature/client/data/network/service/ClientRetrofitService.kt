@@ -1,6 +1,6 @@
 package com.kotleters.mobile.feature.client.data.network.service
 
-import com.kotleters.mobile.common.data.network.model.ClientOffers
+import com.kotleters.mobile.common.data.network.model.ClientOfferModel
 import com.kotleters.mobile.feature.client.data.network.model.TargetInfoModel
 import retrofit2.Call
 import retrofit2.http.Body
@@ -15,7 +15,7 @@ interface ClientRetrofitService {
         @Header ("Authorization") token: String,
         @Query("limit") limit: Int = 1000,
         @Query("offset") offset: Int = 0
-    ): Call<List<ClientOffers>>
+    ): Call<List<ClientOfferModel>>
 
     @PUT("clients/profile")
     fun updateTarget(

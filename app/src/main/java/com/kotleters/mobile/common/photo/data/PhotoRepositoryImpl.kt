@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
-import com.kotleters.mobile.common.data.network.model.SecretStorage
+import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.photo.data.network.PhotoRetrofitClient
 import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.domain.UserAuth

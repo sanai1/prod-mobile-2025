@@ -2,7 +2,7 @@ package com.kotleters.mobile.feature.auth.data
 
 import android.content.Context
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
-import com.kotleters.mobile.common.data.network.model.SecretStorage
+import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.domain.UserLogIn
 import com.kotleters.mobile.feature.auth.data.network.AuthRetrofitClient
 import com.kotleters.mobile.feature.auth.data.network.model.ClientAuthRegisterModel

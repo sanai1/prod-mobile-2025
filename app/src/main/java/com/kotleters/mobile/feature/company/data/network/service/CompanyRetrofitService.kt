@@ -1,6 +1,6 @@
 package com.kotleters.mobile.feature.company.data.network.service
 
-import com.kotleters.mobile.common.data.network.model.ClientOffers
+import com.kotleters.mobile.common.data.network.model.ClientOfferModel
 import com.kotleters.mobile.common.domain.Payload
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
 import com.kotleters.mobile.feature.company.data.network.model.ScanQrModel
@@ -25,7 +25,7 @@ interface CompanyRetrofitService {
         @Header("Authorization") token: String,
         @Query("limit") limit: Int = 1000,
         @Query("offset") offset: Int = 0
-    ): Call<List<ClientOffers>>
+    ): Call<List<ClientOfferModel>>
 
     @POST("offers/company/scanQr")
     fun scanQr(

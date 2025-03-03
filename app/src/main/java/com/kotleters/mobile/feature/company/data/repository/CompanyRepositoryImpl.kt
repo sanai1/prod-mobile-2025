@@ -2,33 +2,28 @@ package com.kotleters.mobile.feature.company.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
-import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.CompanyMapper
 import com.kotleters.mobile.common.domain.Payload
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.company.data.network.client.CompanyRetrofitClient
-import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
+import com.kotleters.mobile.feature.company.data.network.mapper.OfferMapper
 import com.kotleters.mobile.feature.company.data.network.mapper.ScanQrMapper
 import com.kotleters.mobile.feature.company.data.network.mapper.StatisticModelMapper
-import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
+import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
 import com.kotleters.mobile.feature.company.domain.entity.ScanQr
 import com.kotleters.mobile.feature.company.domain.entity.Statistic
+import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 
 class CompanyRepositoryImpl(
     private val context: Context,
     private val userAuthRepository: UserAuthRepository
 ) : CompanyRepository {
     override suspend fun createOffer(offer: Company.Offer): ResponseTemplate<Boolean> {
-        val offerForCreate = OfferCompanyCreateModel(
-            title = offer.title,
-            description = offer.description,
-            discount = offer.discount,
-            startDate = offer.startDate.toString(),
-            endDate = offer.endDate.toString()
-        )
+        val offerForCreate = OfferMapper.toOfferCompanyCreateModel(offer)
         try {
             val call = create(offerForCreate)
             if (call.code() == 201) {
