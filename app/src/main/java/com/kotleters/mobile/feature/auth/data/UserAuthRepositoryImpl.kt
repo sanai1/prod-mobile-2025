@@ -41,8 +41,7 @@ class UserAuthRepositoryImpl(
                             email = userAuth.email,
                             password = userAuth.password,
                             name = userAuth.name ?: "",
-                            category = userAuth.category!!,
-                            subcategory = userAuth.subcategory!!
+                            category_id = userAuth.categoryId!!
                         )
                     ).execute()
                     return if (call.code() == 200) {

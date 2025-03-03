@@ -11,6 +11,7 @@ import com.kotleters.mobile.feature.client.data.network.client.ClientRetrofitCli
 import com.kotleters.mobile.feature.client.data.network.mapper.ClientMapper
 import com.kotleters.mobile.feature.client.data.network.model.TargetInfoModel
 import com.kotleters.mobile.feature.client.domain.entity.ClientProfile
+import com.kotleters.mobile.feature.client.domain.entity.LacunaCreate
 import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
 import com.kotleters.mobile.feature.client.domain.repository.ClientRepository
 
@@ -87,6 +88,10 @@ class ClientRepositoryImpl(
         } catch (e: Exception) {
             return ResponseTemplate.Error(message = e.message.toString())
         }
+    }
+
+    override suspend fun createLacuna(lacunaCreate: LacunaCreate): ResponseTemplate<Boolean> {
+        TODO("Not yet implemented")
     }
 
     private fun getProfileRetrofit() = ClientRetrofitClient.clientRetrofitService.getProfile(
