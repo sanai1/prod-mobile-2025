@@ -1,20 +1,30 @@
 package com.kotleters.mobile.common.domain
 
-import androidx.compose.ui.graphics.Color
 import java.time.LocalDateTime
 
 data class Company(
     val id: String,
     val name: String,
-    val offers: List<Offer>
+    val photoUrl: String,
+    val discountList: List<Discount>,
+    val bonus: Bonus
 ) {
-    data class Offer(
+    data class Discount(
         val id: String,
         val title: String,
         val description: String,
-        val discount: Double,
         val startDate: LocalDateTime,
         val endDate: LocalDateTime,
-        var color: Color? = null,
+        val discount: Double
+    )
+
+    data class Bonus(
+        val id: String,
+        val title: String,
+        val description: String,
+        val startDate: LocalDateTime,
+        val endDate: LocalDateTime,
+        val bonusFromPurchase: Double,
+        val bonusPaymentPercent: Double
     )
 }

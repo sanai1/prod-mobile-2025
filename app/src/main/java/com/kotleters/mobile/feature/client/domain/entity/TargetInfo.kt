@@ -1,4 +1,4 @@
-package com.kotleters.mobile.feature.client.domain
+package com.kotleters.mobile.feature.client.domain.entity
 
 data class TargetInfo(
     val age: Int,

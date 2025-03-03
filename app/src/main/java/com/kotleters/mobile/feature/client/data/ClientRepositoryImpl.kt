@@ -1,28 +1,51 @@
 package com.kotleters.mobile.feature.client.data
 
 import android.content.Context
-import android.util.Log
+import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
-import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.CompanyMapper
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.client.ClientRetrofitClient
+import com.kotleters.mobile.feature.client.data.network.mapper.ClientMapper
 import com.kotleters.mobile.feature.client.data.network.model.TargetInfoModel
-import com.kotleters.mobile.feature.client.domain.ClientRepository
-import com.kotleters.mobile.feature.client.domain.TargetInfo
+import com.kotleters.mobile.feature.client.domain.entity.ClientProfile
+import com.kotleters.mobile.feature.client.domain.entity.TargetInfo
+import com.kotleters.mobile.feature.client.domain.repository.ClientRepository
 
 class ClientRepositoryImpl(
     private val context: Context,
     private val userAuthRepository: UserAuthRepository
 ) : ClientRepository {
+    override suspend fun getProfile(): ResponseTemplate<ClientProfile> {
+        try {
+            val call = getProfileRetrofit()
+            if (call.code() == 200) {
+                return ResponseTemplate.Success(
+                    data = ClientMapper.toClientProfile(call.body()!!)
+                )
+            } else if (call.code() == 401) {
+                updateToken()
+                val callAgain = getProfileRetrofit()
+                return if (callAgain.code() == 200) {
+                    ResponseTemplate.Success(
+                        data = ClientMapper.toClientProfile(callAgain.body()!!)
+                    )
+                } else {
+                    ResponseTemplate.Error(message = callAgain.message())
+                }
+            } else {
+                throw Exception()
+            }
+        } catch (e: Exception) {
+            return ResponseTemplate.Error(message = e.message.toString())
+        }
+    }
 
     override suspend fun getAllOffers(): ResponseTemplate<List<Company>> {
         try {
-            Log.d("TOKEN", getToken())
             val call = getOffers()
-            Log.d("CODE", call.code().toString())
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
                     data = CompanyMapper.map(call.body()!!)
@@ -65,6 +88,10 @@ class ClientRepositoryImpl(
             return ResponseTemplate.Error(message = e.message.toString())
         }
     }
+
+    private fun getProfileRetrofit() = ClientRetrofitClient.clientRetrofitService.getProfile(
+        token = getToken()
+    ).execute()
 
     private fun getOffers() = ClientRetrofitClient.clientRetrofitService.getAllOffers(
         token = getToken()

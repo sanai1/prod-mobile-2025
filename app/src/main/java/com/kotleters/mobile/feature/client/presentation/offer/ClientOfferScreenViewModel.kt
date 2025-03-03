@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
-import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
+import com.kotleters.mobile.feature.client.domain.repository.ClientGenerateQRRepository
 import com.kotleters.mobile.feature.client.presentation.offer.states.CodeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

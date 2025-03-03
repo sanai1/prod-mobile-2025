@@ -1,60 +1,59 @@
 package com.kotleters.mobile.feature.client.data
 
 import android.content.Context
-import android.util.Log
+import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
-import com.kotleters.mobile.common.data.network.model.SecretStorage
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import com.kotleters.mobile.feature.client.data.network.client.ClientGenerateQRClient
-import com.kotleters.mobile.feature.client.domain.ClientGenerateQRRepository
+import com.kotleters.mobile.feature.client.domain.repository.ClientGenerateQRRepository
 
 class ClientGenerateQRRepositoryImpl(
     private val context: Context,
     private val userAuthRepository: UserAuthRepository
 ) : ClientGenerateQRRepository {
     override suspend fun clientGenerateQRRepository(offerId: String): ResponseTemplate<String> {
-        return try {
-            val call =
-                ClientGenerateQRClient.clientGenerateQRService.getPayload(offerId, getToken())
-                    .execute()
-            if (call.code() == 401) {
-                val (email, pass) = getPassAndEmail()
-
-                userAuthRepository.auth(
-                    userAuth = UserAuth.Client(
-                        firstName = null,
-                        secondName = null,
-                        email = email!!,
-                        password = pass!!
-                    )
+        try {
+            val call = getPayload(offerId)
+            if (call.code() == 200) {
+                return ResponseTemplate.Success(
+                    data = call.body()!!.payload
                 )
-                val call =
-                    ClientGenerateQRClient.clientGenerateQRService.getPayload(
-                        token = getToken(),
-                        offerId = offerId
+            } else if (call.code() == 401) {
+                updateToken()
+                val callAgain = getPayload(offerId)
+                return if (callAgain.code() == 200) {
+                    ResponseTemplate.Success(
+                        data = callAgain.body()!!.payload
                     )
-                        .execute()
-                return if (call.body() != null) {
-                    ResponseTemplate.Success(call.body()!!.payload)
                 } else {
-                    ResponseTemplate.Error("hui")
+                    ResponseTemplate.Error(message = callAgain.message())
                 }
             } else {
-                if (call.body() != null) {
-                    ResponseTemplate.Success(call.body()!!.payload)
-                } else {
-                    ResponseTemplate.Error("hui")
-                }
+                throw Exception()
             }
-
         } catch (e: Exception) {
-            ResponseTemplate.Error(message = e.message.toString())
+            return ResponseTemplate.Error(message = e.message.toString())
         }
     }
 
+    private fun getPayload(offerId: String) =
+        ClientGenerateQRClient.clientGenerateQRService.getPayload(
+            token = getToken(),
+            offerId = offerId
+        ).execute()
+
+    private suspend fun updateToken() {
+        val triple = SecretStorage.readPassAndEmail(context)
+        userAuthRepository.auth(
+            userAuth = UserAuth.Client(
+                firstName = null,
+                secondName = null,
+                email = triple.first!!,
+                password = triple.second!!
+            )
+        )
+    }
 
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
-
-    private fun getPassAndEmail() = SecretStorage.readPassAndEmail(context)
 }
