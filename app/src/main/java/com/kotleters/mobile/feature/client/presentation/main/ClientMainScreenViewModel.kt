@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.client.presentation.main
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -40,6 +41,7 @@ class ClientMainScreenViewModel @Inject constructor(
             when (result) {
                 is ResponseTemplate.Error -> {
                     _state.update {
+                        Log.d("ERROR", result.message)
                         ClientMainScreenState.Error(result.message)
                     }
                 }

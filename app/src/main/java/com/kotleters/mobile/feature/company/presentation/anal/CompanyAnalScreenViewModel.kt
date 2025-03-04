@@ -10,6 +10,7 @@ import com.kotleters.mobile.common.ai.data.SECOND_KEY
 import com.kotleters.mobile.common.ai.data.network.model.Message
 import com.kotleters.mobile.common.ai.domain.AIRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
+import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import com.kotleters.mobile.feature.company.presentation.anal.states.AIState
 import com.kotleters.mobile.feature.company.presentation.anal.states.AnalListState
@@ -50,6 +51,8 @@ class CompanyAnalScreenViewModel @Inject constructor(
     private var currentAnalState: AnalListState = AnalListState.Loading
     private var lacunasState: LacunasState = LacunasState.OnBoard
 
+    private var dataToAnalyze = mutableStateListOf<Lacuna>()
+
     init {
 //        fetchAnal()
         sendMessage()
@@ -60,7 +63,7 @@ class CompanyAnalScreenViewModel @Inject constructor(
             lacunasState = LacunasState.Loading
             updateState()
             getLacunas()
-            generateLacunas()
+//            generateLacunas()
         }
     }
 
@@ -70,7 +73,7 @@ class CompanyAnalScreenViewModel @Inject constructor(
                 val result = aiRepository.ChatResponce(
                     Message(
                         "user",
-                        buildPrompt(lacunaData),
+                        buildPrompt(dataToAnalyze),
                     ),
                     apiKey = FIRST_KEY
                 )
@@ -96,6 +99,10 @@ class CompanyAnalScreenViewModel @Inject constructor(
                 }
 
                 is ResponseTemplate.Success -> {
+                    dataToAnalyze.clear()
+                    dataToAnalyze.addAll(result.data)
+                    updateState()
+                    generateLacunas()
                     Log.d("RES", result.data.toString())
                 }
             }
