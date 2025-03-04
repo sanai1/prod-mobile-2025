@@ -296,6 +296,7 @@ fun AddLakunaScreen(
                                 }
                                 WhiteButton("Готово", true) {
                                     addLakunaScreenViewModel.addLacuna()
+                                    back()
                                 }
                             }
 

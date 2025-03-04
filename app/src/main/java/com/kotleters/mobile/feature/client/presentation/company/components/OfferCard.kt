@@ -53,7 +53,7 @@ fun OfferCard(
         Row {
             Spacer(Modifier.weight(1f))
             Text(
-                "${(offer.discount * 10).toInt()}%", color = Color.White, fontSize = 46.sp,
+                "${(offer.discount).toInt()}%", color = Color.White, fontSize = 46.sp,
                 fontWeight = FontWeight.Medium
             )
         }

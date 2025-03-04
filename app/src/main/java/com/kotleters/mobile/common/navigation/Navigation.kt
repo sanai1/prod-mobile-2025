@@ -131,7 +131,7 @@ fun AppNavigation(
                         startDestination = when (loginState) {
                             LoginState.AuthClient -> CLIENT_ROUTE
                             LoginState.AuthCompany -> COMPANY_ROUTE
-                            LoginState.Loading -> "hui"
+                            LoginState.Loading -> CLIENT_ROUTE
                             LoginState.NotAuth -> AUTH_ROUTE
                         },
                         modifier = Modifier
