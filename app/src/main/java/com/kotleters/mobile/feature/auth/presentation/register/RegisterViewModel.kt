@@ -218,7 +218,6 @@ class RegisterViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     if (!isClient.value) {
-                        val photoResult = photoRepository.addCompanyPhoto(photoUri.value)
                         val offerResult = companyRepository.createOffer(
                             discount = Company.Discount(
                                 id = "",
@@ -229,6 +228,11 @@ class RegisterViewModel @Inject constructor(
                                 discount = registerStep3.percent.toDouble()/10
                             )
                         )
+                        _state.update {
+                            RegisterScreenState.Success
+
+                        }
+                    }else{
                         _state.update {
                             RegisterScreenState.Success
 

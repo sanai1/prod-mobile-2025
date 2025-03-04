@@ -18,7 +18,8 @@ fun RegStep4(
     }
     DefaultTextField(
         "Придумайте пароль*",
-        (state as RegisterScreenState.Content).registerStep4.password
+        (state as RegisterScreenState.Content).registerStep4.password,
+        isPassword = true
     ) {
         viewModel.changeCompanyPassword(it)
     }
@@ -29,7 +30,8 @@ fun RegStep4(
                 state.registerStep4.email.isNotEmpty()
     ) {
         if (state.registerStep4.password.isNotEmpty() &&
-            state.registerStep4.email.isNotEmpty()){
+            state.registerStep4.email.isNotEmpty()
+        ) {
             viewModel.onRegister()
         }
     }

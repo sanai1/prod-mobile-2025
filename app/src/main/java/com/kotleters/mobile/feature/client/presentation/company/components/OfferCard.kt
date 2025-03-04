@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.lightGray
+import java.util.UUID
+import kotlin.math.absoluteValue
 
 val offersColors = listOf(
     Color(0xFF6D7EAE),
@@ -34,13 +36,12 @@ fun OfferCard(
     onClick: () -> Unit
 ) {
 
-
     Column(
         Modifier
             .padding(16.dp)
             .size(150.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.Black)
+            .background(getColorForUUID(offer.id))
             .noRippleClickable { onClick() }
             .padding(16.dp)
     ) {
@@ -57,4 +58,9 @@ fun OfferCard(
             )
         }
     }
+}
+
+fun getColorForUUID(uuid: String): Color {
+    val index = uuid.hashCode().absoluteValue % offersColors.size
+    return offersColors[index]
 }

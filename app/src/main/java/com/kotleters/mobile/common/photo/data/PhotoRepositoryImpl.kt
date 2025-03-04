@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toFile
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.data.SecretStorage
 import com.kotleters.mobile.common.photo.data.network.PhotoRetrofitClient
@@ -12,6 +13,7 @@ import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.domain.UserAuth
 import com.kotleters.mobile.feature.auth.domain.UserAuthRepository
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 class PhotoRepositoryImpl(
     private val context: Context,
@@ -64,17 +66,8 @@ class PhotoRepositoryImpl(
     private fun getToken() = "Bearer ${SecretStorage.readToken(context)}"
 
     private fun compressImage(imageUri: Uri, quality: Int = 100): ByteArray {
-        val contentResolver = context.contentResolver
-
-        val bitmap: Bitmap? = contentResolver.openInputStream(imageUri)?.use { inputStream ->
-            BitmapFactory.decodeStream(inputStream)
-        }
-
-        return bitmap?.let { bmp ->
-            val outputStream = ByteArrayOutputStream()
-            bmp.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-            outputStream.toByteArray()
-        } ?: ByteArray(0)
+        val file = imageUri.toFile()
+        return file.readBytes()
     }
 
     private suspend fun updateToken() {

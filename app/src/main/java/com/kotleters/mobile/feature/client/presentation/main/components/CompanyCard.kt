@@ -29,6 +29,9 @@ import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.lightGray
 import com.kotleters.mobile.common.ui.theme.secondaryGray
+import com.kotleters.mobile.feature.client.presentation.company.components.offersColors
+import kotlin.math.absoluteValue
+
 
 @Composable
 fun CompanyCard(
@@ -41,7 +44,7 @@ fun CompanyCard(
             .padding(16.dp)
             .size(168.dp)
             .clip(RoundedCornerShape(16.dp))
-            .paint(painterResource(R.drawable.placeholder), contentScale = ContentScale.Crop)
+            .paint(painterResource(R.drawable.fabric), contentScale = ContentScale.Crop)
             .background(Color.Black.copy(alpha = 0.5f))
             .noRippleClickable { onClick() }
             .padding(16.dp)
@@ -59,4 +62,9 @@ fun CompanyCard(
                 tint = lightGray)
         }
     }
+}
+
+fun getCompanyColor(uuid: String): Color {
+    val index = uuid.hashCode().absoluteValue % offersColors.size
+    return offersColors[index]
 }

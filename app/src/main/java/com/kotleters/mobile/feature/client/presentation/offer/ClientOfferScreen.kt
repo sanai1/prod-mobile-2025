@@ -48,6 +48,7 @@ import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.lightGray
+import com.kotleters.mobile.feature.client.presentation.company.components.getColorForUUID
 import com.kotleters.mobile.feature.client.presentation.offer.components.QRShimmerEffect
 import com.kotleters.mobile.feature.client.presentation.offer.states.CodeState
 
@@ -84,7 +85,7 @@ fun ClientOfferScreen(
                 .fillMaxWidth()
                 .height(230.dp)
                 .clip(RoundedCornerShape(0.dp, 0.dp, 16.dp, 16.dp))
-                .background(Color.Black)
+                .background(getColorForUUID(offer.id))
                 .statusBarsPadding()
                 .padding(16.dp)
         ) {
@@ -99,14 +100,22 @@ fun ClientOfferScreen(
                 horizontalAlignment = Alignment.End
             ) {
                 Spacer(Modifier.weight(1f))
-                Text(offer.title, fontSize = 24.sp, fontWeight = FontWeight.Medium,
-                    color = Color.White)
-                Text("${(offer.discount*10).toInt()}%", fontSize = 64.sp, fontWeight = FontWeight.Medium,
-                    color = Color.White)
+                Text(
+                    offer.title, fontSize = 24.sp, fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
+                Text(
+                    "${(offer.discount * 10).toInt()}%",
+                    fontSize = 64.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
             }
         }
-        Text("Действует до ${offer.endDate.dayOfMonth}.${offer.endDate.month.value}.${offer.endDate.year}",
-            color = lightGray, modifier = Modifier.padding(16.dp))
+        Text(
+            "Действует до ${offer.endDate.dayOfMonth}.${offer.endDate.month.value}.${offer.endDate.year}",
+            color = lightGray, modifier = Modifier.padding(16.dp)
+        )
         Text(
             offer.description, fontSize = 16.sp, fontWeight = FontWeight.Normal,
             color = Color.White, modifier = Modifier.padding(16.dp)

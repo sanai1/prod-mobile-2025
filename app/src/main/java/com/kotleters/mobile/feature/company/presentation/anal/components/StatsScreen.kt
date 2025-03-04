@@ -71,16 +71,31 @@ fun StatsScreen(
             }
         }
         item {
-            when(state){
+            AnalSlider(axisTypes, yAxisType) {
+                yAxisType = it
+            }
+            AnalSlider(periods, period) {
+                period = it
+            }
+            AnimatedBarChart(
+                data = testData,
+                yAxisType = yAxisType,
+                period = period,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(500.dp)
+                    .padding(24.dp)
+            )
+            when (state) {
                 is CompanyAnalyticsScreenState.Content -> {
-                    when(state.statsState.analListState){
+                    when (state.statsState.analListState) {
                         is AnalListState.Content -> {
-                            AnalSlider(axisTypes, yAxisType) {
-                                yAxisType = it
-                            }
-                            AnalSlider(periods, period) {
-                                period = it
-                            }
+//                            AnalSlider(axisTypes, yAxisType) {
+//                                yAxisType = it
+//                            }
+//                            AnalSlider(periods, period) {
+//                                period = it
+//                            }
 //                            AnimatedBarChart(
 //                                data = state.statsState.analListState.analytics ,
 //                                yAxisType = yAxisType,
@@ -91,18 +106,22 @@ fun StatsScreen(
 //                                    .padding(24.dp)
 //                            )
                         }
+
                         AnalListState.Error -> {
                             ErrorState()
                         }
+
                         AnalListState.Loading -> {
                             ShimmerEffectCard(
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
                                     .height(500.dp)
                             )
                         }
                     }
 
                 }
+
                 is CompanyAnalyticsScreenState.DetailMessage -> TODO()
             }
         }

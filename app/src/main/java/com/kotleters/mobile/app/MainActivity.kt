@@ -1,6 +1,8 @@
 package com.kotleters.mobile.app
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -26,6 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            Toast.makeText(this, "Ошибка!", Toast.LENGTH_SHORT).show()
+        }
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(0),
             navigationBarStyle = SystemBarStyle.dark(0)

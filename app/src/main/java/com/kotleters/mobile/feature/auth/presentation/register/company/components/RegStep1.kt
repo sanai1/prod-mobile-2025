@@ -43,48 +43,6 @@ fun RegStep1(
     state: RegisterScreenState
 ) {
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            imageUri = it
-            viewModel.changePhoto(imageUri!!)
-        }
-    }
-
-    if (imageUri == null) {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(secondaryGray)
-                .noRippleClickable {
-                    launcher.launch("image/*")
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "Выбрать фотографию*",
-                fontSize = 16.sp,
-                color = lightGray,
-                fontWeight = FontWeight.Medium
-            )
-        }
-    } else {
-        Image(
-            rememberAsyncImagePainter(imageUri), "",
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape(16.dp)),
-            contentScale = ContentScale.Crop
-        )
-    }
     DefaultTextField("Название компании*", (state as RegisterScreenState.Content).registerStep1.title) {
         viewModel.changeCompanyName(it)
     }

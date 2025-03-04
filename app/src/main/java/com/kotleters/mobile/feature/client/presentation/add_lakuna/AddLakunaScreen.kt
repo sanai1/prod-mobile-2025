@@ -137,7 +137,8 @@ fun AddLakunaScreen(
                                 DefaultTextField(
                                     "Сумма всех трат по категории за\n" +
                                             "последние пол года ",
-                                    (state as AddLakunaScreenState.Content).amount.toString()
+                                    (state as AddLakunaScreenState.Content).amount.toString(),
+                                    isNumber = true
                                 ) {
                                     addLakunaScreenViewModel.changeAmount(it)
                                 }
@@ -324,7 +325,7 @@ fun getTextClass(text: String): Triple<Float, String, Color> {
         in 301..400 -> textTypes[3]
         else -> textTypes[4]
     }
-    val color = when(text.length){
+    val color = when (text.length) {
         in 0..200 -> Color(0xFFB53900)
         in 201..400 -> Color(0xFFB58500)
         else -> Color(0xFF60B500)

@@ -51,7 +51,7 @@ class CompanyAnalScreenViewModel @Inject constructor(
     private var lacunasState: LacunasState = LacunasState.OnBoard
 
     init {
-        fetchAnal()
+//        fetchAnal()
         sendMessage()
     }
 

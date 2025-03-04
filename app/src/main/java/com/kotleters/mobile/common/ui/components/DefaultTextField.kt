@@ -31,6 +31,7 @@ fun DefaultTextField(
     text: String,
     isError: Boolean = false,
     isPassword: Boolean = false,
+    isNumber: Boolean = false,
     onChange: (String) -> Unit
 ) {
 
@@ -43,7 +44,8 @@ fun DefaultTextField(
         colors = TextFieldDefaults.colors(
             focusedContainerColor = secondaryGray,
             cursorColor = Color.White,
-            unfocusedContainerColor = secondaryGray
+            unfocusedContainerColor = secondaryGray,
+            errorContainerColor = secondaryGray
         ),
         placeholder = {
             Text(placeholder, color = Color(0xFFBABABA), fontSize = 16.sp)
@@ -55,7 +57,7 @@ fun DefaultTextField(
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
             capitalization = if (isPassword) KeyboardCapitalization.None else KeyboardCapitalization.Sentences,
-            keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Text
+            keyboardType = if (isPassword) KeyboardType.Password else if (isNumber) KeyboardType.Number else KeyboardType.Text
         ),
         isError = isError
     )

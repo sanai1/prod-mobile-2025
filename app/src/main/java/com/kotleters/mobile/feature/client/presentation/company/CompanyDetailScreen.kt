@@ -61,8 +61,8 @@ fun CompanyDetailScreen(
                 .height(230.dp)
                 .clip(RoundedCornerShape(0.dp, 0.dp, 16.dp, 16.dp))
                 .paint(
-                    painterResource(R.drawable.placeholder),
-                    contentScale = ContentScale.FillBounds
+                    painterResource(R.drawable.fabric),
+                    contentScale = ContentScale.Crop
                 )
                 .background(Color.Black.copy(alpha = 0.5f))
                 .statusBarsPadding()
@@ -75,8 +75,6 @@ fun CompanyDetailScreen(
                 )
             }
         }
-        WhiteButton("Списать баллы", true) { }
-        WhiteButton("Накопить баллы", true) { }
         LazyColumn {
             item {
                 Text(
