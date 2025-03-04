@@ -11,5 +11,6 @@ interface ClientGenerateQRService {
     fun getPayload(
         @Header("Authorization") token: String,
         @Query("offerId") offerId: String,
+        @Query("spendBonus") spendBonus: String
     ): Call<PayloadClient>
 }

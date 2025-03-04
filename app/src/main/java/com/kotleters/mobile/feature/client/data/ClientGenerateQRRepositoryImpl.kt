@@ -12,16 +12,19 @@ class ClientGenerateQRRepositoryImpl(
     private val context: Context,
     private val userAuthRepository: UserAuthRepository
 ) : ClientGenerateQRRepository {
-    override suspend fun clientGenerateQRRepository(offerId: String): ResponseTemplate<String> {
+    override suspend fun clientGenerateQRRepository(
+        offerId: String,
+        spendBonus: Boolean
+    ): ResponseTemplate<String> {
         try {
-            val call = getPayload(offerId)
+            val call = getPayload(offerId, spendBonus.toString())
             if (call.code() == 200) {
                 return ResponseTemplate.Success(
                     data = call.body()!!.payload
                 )
             } else if (call.code() == 401) {
                 updateToken()
-                val callAgain = getPayload(offerId)
+                val callAgain = getPayload(offerId, spendBonus.toString())
                 return if (callAgain.code() == 200) {
                     ResponseTemplate.Success(
                         data = callAgain.body()!!.payload
@@ -37,10 +40,11 @@ class ClientGenerateQRRepositoryImpl(
         }
     }
 
-    private fun getPayload(offerId: String) =
+    private fun getPayload(offerId: String, spendBonus: String) =
         ClientGenerateQRClient.clientGenerateQRService.getPayload(
             token = getToken(),
-            offerId = offerId
+            offerId = offerId,
+            spendBonus = spendBonus,
         ).execute()
 
     private suspend fun updateToken() {
