@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.category.domain.CategoryInfo
 import com.kotleters.mobile.common.category.domain.CategoryInfoRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
+import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.photo.data.PhotoRepositoryImpl
 import com.kotleters.mobile.common.photo.domain.PhotoRepository
 import com.kotleters.mobile.feature.auth.domain.UserAuth
@@ -18,19 +19,25 @@ import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterSt
 import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterStep2
 import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterStep3
 import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterStep4
+import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
+import com.kotleters.mobile.feature.company.presentation.add_offer.states.CategoryUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authRepository: UserAuthRepository,
     private val photoRepository: PhotoRepository,
+    private val companyRepository: CompanyRepository,
     private val categoryInfoRepository: CategoryInfoRepository
 ) : ViewModel() {
 
@@ -50,22 +57,24 @@ class RegisterViewModel @Inject constructor(
         title = ""
     )
     private var registerStep2 = RegisterStep2(
-        category = "",
+        category = null,
         underCategory = ""
     )
     private var registerStep3 = RegisterStep3(
         title = "",
         percent = 0,
         description = "",
-        startDate = LocalDateTime.now(),
-        endDate = LocalDateTime.now()
+        startDate = "",
+        endDate = ""
     )
     private var registerStep4 = RegisterStep4(
         email = "",
         password = "",
         passwordAgain = ""
     )
-    private var categories = mutableStateListOf<CategoryInfo>()
+    private var categories = mutableStateListOf<CategoryUI>()
+    private var category = mutableStateOf<CategoryUI?>(null)
+    private var subCategory = mutableStateOf<String?>(null)
 
     var photoUri = mutableStateOf<Uri>(Uri.parse(""))
 
@@ -88,8 +97,15 @@ class RegisterViewModel @Inject constructor(
 
                 is ResponseTemplate.Success -> {
                     categories.clear()
-                    categories.addAll(categories)
-                    updateState(isClient.value)
+                    categories.addAll(result.data.groupBy { it.category }
+                        .map { (category, categoryInfo) ->
+                            CategoryUI(
+                                id = categoryInfo.first().id,
+                                category = category,
+                                subCategory = categoryInfo.map { it.subcategory }
+                            )
+                        })
+
                 }
             }
         }
@@ -104,7 +120,7 @@ class RegisterViewModel @Inject constructor(
         updateState(isClient.value)
     }
 
-    fun changeCategory(new: String) {
+    fun changeCategory(new: CategoryUI) {
         registerStep2 = registerStep2.copy(category = new)
         updateState(isClient.value)
     }
@@ -130,12 +146,12 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun changeOfferStartDate(new: String) {
-        registerStep3 = registerStep3.copy(startDate = LocalDateTime.now())
+        registerStep3 = registerStep3.copy(startDate = new)
         updateState(isClient.value)
     }
 
     fun changeOfferEndDate(new: String) {
-        registerStep3 = registerStep3.copy(endDate = LocalDateTime.now())
+        registerStep3 = registerStep3.copy(endDate = new)
         updateState(isClient.value)
     }
 
@@ -190,22 +206,41 @@ class RegisterViewModel @Inject constructor(
             _state.update {
                 RegisterScreenState.Loading
             }
+            Log.d("AUTH", authState.toString())
             val result = authRepository.register(authState)
-            if (!isClient.value){
-                val photoResult = photoRepository.addCompanyPhoto(photoUri.value)
-            }
+
             when (result) {
                 is ResponseTemplate.Error -> {
+                    Log.d("ERR", result.message)
                     isError.value = true
                     updateState(isClient.value)
                 }
 
                 is ResponseTemplate.Success -> {
-                    _state.update {
-                        RegisterScreenState.Success
+                    if (!isClient.value) {
+                        val photoResult = photoRepository.addCompanyPhoto(photoUri.value)
+                        val offerResult = companyRepository.createOffer(
+                            discount = Company.Discount(
+                                id = "",
+                                title = registerStep3.title,
+                                description = registerStep3.description,
+                                startDate = parseDate(registerStep3.startDate)!!,
+                                endDate = parseDate(registerStep3.endDate)!!,
+                                discount = registerStep3.percent.toDouble()
+                            )
+                        )
+                        if (photoResult is ResponseTemplate.Success
+                            && offerResult is ResponseTemplate.Success
+                        ) {
+                            _state.update {
+                                RegisterScreenState.Success
+
+                            }
+                        }
                     }
                 }
             }
+
         }
     }
 
@@ -241,7 +276,8 @@ class RegisterViewModel @Inject constructor(
                         userAuth = UserAuth.Company(
                             name = registerStep1.title,
                             email = registerStep4.email,
-                            password = registerStep4.password
+                            password = registerStep4.password,
+                            categoryId = registerStep2.category?.id
                         ),
                         categories = categories
                     )
@@ -250,4 +286,14 @@ class RegisterViewModel @Inject constructor(
         }
     }
 
+}
+
+fun parseDate(input: String): LocalDateTime? {
+    return try {
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        val localDate = LocalDate.parse(input, formatter)
+        localDate.atStartOfDay() // Преобразуем в LocalDateTime (00:00:00)
+    } catch (e: Exception) {
+        null // Вернем null, если формат неверный
+    }
 }

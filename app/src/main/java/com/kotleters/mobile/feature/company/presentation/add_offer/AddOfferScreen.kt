@@ -17,19 +17,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kotleters.mobile.common.ui.components.CustomSlider
+import com.kotleters.mobile.common.ui.components.DateInputField
 import com.kotleters.mobile.common.ui.components.DefaultTextField
 import com.kotleters.mobile.common.ui.components.WhiteButton
+import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.theme.backgroundColor
+import com.kotleters.mobile.feature.auth.presentation.register.company.components.ColorChangingSlider
+import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterScreenState
 import com.kotleters.mobile.feature.company.presentation.add_offer.states.AddOfferScreenState
 
 @Composable
 fun AddOfferScreen(
     back: () -> Unit,
     success: () -> Unit,
+    isBn: Boolean,
     viewModel: AddOfferScreenViewModel = hiltViewModel()
 ) {
 
@@ -56,34 +65,121 @@ fun AddOfferScreen(
             item {
                 when (state) {
                     is AddOfferScreenState.Content -> {
-                        DefaultTextField(
-                            placeholder = "Название",
-                            text = (state as AddOfferScreenState.Content).title,
-                        ) {
-                            viewModel.changeTitle(it)
+                        var percentValue by remember {
+                            mutableStateOf(0f)
                         }
-                        DefaultTextField(
-                            placeholder = "Описание",
-                            text = (state as AddOfferScreenState.Content).description,
-                        ) {
-                            viewModel.changeDescription(it)
+                        var percentValue1 by remember {
+                            mutableStateOf(0f)
                         }
-                        DefaultTextField(
-                            placeholder = "Процент скидки",
-                            text = (state as AddOfferScreenState.Content).discount.toString(),
-                        ) {
-                            viewModel.changeDiscount(it)
+                        var percentValue2 by remember {
+                            mutableStateOf(0f)
                         }
-                        WhiteButton(
-                            "Создать",
-                            isEnabled = true
-                        ) {
-                            viewModel.createOffer()
+
+                        var b1 by remember {
+                            mutableStateOf(0f)
+                        }
+                        var b2 by remember {
+                            mutableStateOf(0f)
+                        }
+
+                        if (isBn){
+                            CustomSlider(listOf(Pair(false, "Акция"),
+                                Pair(true, "Бонус")), viewModel.isBonus.value) {
+                                viewModel.isBonus.value = it as Boolean
+                            }
+                        }
+
+                        if (viewModel.isBonus.value){
+                            DefaultTextField(
+                                "Название*",
+                                (state as AddOfferScreenState.Content).title
+                            ) {
+                                viewModel.changeTitle(it)
+                            }
+                            DefaultTextField(
+                                "Описание*",
+                                (state as AddOfferScreenState.Content).description
+                            ) {
+                                viewModel.changeDescription(it)
+                            }
+                            DateInputField(
+                                "Начало действия",
+                                (state as AddOfferScreenState.Content).startDate
+                            ) {
+                                viewModel.changeStartDate(it)
+                            }
+                            DateInputField(
+                                "Окончание действия",
+                                (state as AddOfferScreenState.Content).endDate
+                            ) {
+                                viewModel.changeEndDate(it)
+                            }
+                            ColorChangingSlider("Клиентская выгода", percentValue1) {
+                                viewModel.bonusFromPurchase.value = it.toDouble()
+                                percentValue1 = it
+                            }
+                            ColorChangingSlider("Макс. процент оплаты бонусами", percentValue2) {
+                                viewModel.bonusPaymentPercent.value = it.toDouble()
+                                percentValue2 = it
+                            }
+                            WhiteButton(
+                                "Продолжить",
+                                (state as AddOfferScreenState.Content).title.isNotEmpty() && (state as AddOfferScreenState.Content).description.isNotEmpty()
+                                        && (state as AddOfferScreenState.Content).startDate.isNotEmpty() && (state as AddOfferScreenState.Content).endDate.isNotEmpty()
+                            ) {
+                                if ((state as AddOfferScreenState.Content).title.isNotEmpty() && (state as AddOfferScreenState.Content).description.isNotEmpty()
+                                    && (state as AddOfferScreenState.Content).startDate.isNotEmpty() && (state as AddOfferScreenState.Content).endDate.isNotEmpty()
+                                ) {
+                                    viewModel.createOffer()
+                                }
+
+                            }
+                        }else{
+                            DefaultTextField(
+                                "Название*",
+                                (state as AddOfferScreenState.Content).title
+                            ) {
+                                viewModel.changeTitle(it)
+                            }
+                            ColorChangingSlider("Процент скидки", percentValue) {
+                                viewModel.offerPercent.value = it.toDouble()
+                                percentValue = it
+                            }
+                            DefaultTextField(
+                                "Описание*",
+                                (state as AddOfferScreenState.Content).description
+                            ) {
+                                viewModel.changeDescription(it)
+                            }
+                            DateInputField(
+                                "Начало действия",
+                                (state as AddOfferScreenState.Content).startDate
+                            ) {
+                                viewModel.changeStartDate(it)
+                            }
+                            DateInputField(
+                                "Окончание действия",
+                                (state as AddOfferScreenState.Content).endDate
+                            ) {
+                                viewModel.changeEndDate(it)
+                            }
+                            WhiteButton(
+                                "Продолжить",
+                                (state as AddOfferScreenState.Content).title.isNotEmpty() && (state as AddOfferScreenState.Content).description.isNotEmpty()
+                                        && (state as AddOfferScreenState.Content).startDate.isNotEmpty() && (state as AddOfferScreenState.Content).endDate.isNotEmpty()
+                            ) {
+                                if ((state as AddOfferScreenState.Content).title.isNotEmpty() && (state as AddOfferScreenState.Content).description.isNotEmpty()
+                                    && (state as AddOfferScreenState.Content).startDate.isNotEmpty() && (state as AddOfferScreenState.Content).endDate.isNotEmpty()
+                                ) {
+                                    viewModel.createOffer()
+                                }
+
+                            }
                         }
                     }
 
                     AddOfferScreenState.Error -> {
-                        Text("Error", color = Color.White)
+                        ErrorState()
                     }
 
                     AddOfferScreenState.Success -> {

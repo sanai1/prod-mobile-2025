@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -54,6 +55,10 @@ import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.secondaryGray
 import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.AddLakunaScreenState
 import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.CategoryState
+
+val textTypes = listOf(
+    "Очень мало", "Чуть лучше", "В целом неплохо", "Уже хорошо", "Супер!"
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,7 +136,8 @@ fun AddLakunaScreen(
                                 }
                                 DefaultTextField(
                                     "Сумма всех трат по категории за\n" +
-                                            "последние пол года ", (state as AddLakunaScreenState.Content).amount.toString()
+                                            "последние пол года ",
+                                    (state as AddLakunaScreenState.Content).amount.toString()
                                 ) {
                                     addLakunaScreenViewModel.changeAmount(it)
                                 }
@@ -242,24 +248,25 @@ fun AddLakunaScreen(
                                         .background(secondaryGray)
                                 ) {
                                     Text(
-                                        "Немного слабовато", fontSize = 10.sp,
+                                        getTextClass((state as AddLakunaScreenState.Content).text).second,
+                                        fontSize = 10.sp,
                                         color = Color.White,
                                         modifier = Modifier
                                             .padding(horizontal = 16.dp)
                                             .padding(top = 16.dp, bottom = 8.dp)
                                     )
                                     LinearProgressIndicator(
-                                        0.5f,
+                                        getTextClass((state as AddLakunaScreenState.Content).text).first,
                                         modifier = Modifier
                                             .padding(horizontal = 16.dp)
                                             .height(5.dp)
                                             .width(150.dp),
                                         strokeCap = StrokeCap.Round,
-                                        color = Color(0xFFB58500),
+                                        color = getTextClass((state as AddLakunaScreenState.Content).text).third,
                                         trackColor = Color(0xFF383838),
 
                                         )
-                                    OutlinedTextField(
+                                    TextField(
                                         value = (state as AddLakunaScreenState.Content).text,
                                         onValueChange = {
                                             addLakunaScreenViewModel.changeText(it)
@@ -270,6 +277,8 @@ fun AddLakunaScreen(
                                             unfocusedContainerColor = secondaryGray,
                                             focusedContainerColor = secondaryGray,
                                             cursorColor = Color.White,
+                                            unfocusedIndicatorColor = Color.White.copy(0f),
+                                            focusedIndicatorColor = Color.White.copy(0f)
                                         ),
                                         placeholder = {
                                             Text(
@@ -305,4 +314,20 @@ fun AddLakunaScreen(
         }
     }
 
+}
+
+fun getTextClass(text: String): Triple<Float, String, Color> {
+    val classs = when (text.length) {
+        in 0..100 -> textTypes[0]
+        in 101..200 -> textTypes[1]
+        in 201..300 -> textTypes[2]
+        in 301..400 -> textTypes[3]
+        else -> textTypes[4]
+    }
+    val color = when(text.length){
+        in 0..200 -> Color(0xFFB53900)
+        in 201..400 -> Color(0xFFB58500)
+        else -> Color(0xFF60B500)
+    }
+    return Triple(text.length / 500f, classs, color)
 }

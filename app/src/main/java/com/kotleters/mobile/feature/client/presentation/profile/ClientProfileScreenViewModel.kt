@@ -96,11 +96,13 @@ class ClientProfileScreenViewModel @Inject constructor(
             when(result){
                 is ResponseTemplate.Error -> {
                     lakunaSectionState = LakunaSectionState.Error
+                    updateState()
                 }
                 is ResponseTemplate.Success -> {
                     lakunaSectionState = LakunaSectionState.Content(
                         lacunas = result.data
                     )
+                    updateState()
                 }
             }
             isRefreshing.value = false

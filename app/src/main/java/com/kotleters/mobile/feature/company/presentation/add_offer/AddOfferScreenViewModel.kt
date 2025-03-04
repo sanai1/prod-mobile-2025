@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kotleters.mobile.common.category.domain.CategoryInfoRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
 import com.kotleters.mobile.common.domain.Company
+import com.kotleters.mobile.feature.auth.presentation.register.parseDate
 import com.kotleters.mobile.feature.company.domain.repository.CompanyRepository
 import com.kotleters.mobile.feature.company.presentation.add_offer.states.AddOfferScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,6 +40,12 @@ class AddOfferScreenViewModel @Inject constructor(
     private var discount = mutableStateOf("0.1")
     private var startDate = mutableStateOf("")
     private var endDate = mutableStateOf("")
+
+    var bonusFromPurchase = mutableStateOf(0.0)
+    var bonusPaymentPercent = mutableStateOf(0.0)
+    var offerPercent = mutableStateOf(0.0)
+
+    var isBonus = mutableStateOf(false)
 
     fun changeTitle(new: String) {
         title.value = new
@@ -72,16 +80,16 @@ class AddOfferScreenViewModel @Inject constructor(
                         title = title.value,
                         description = description.value,
                         discount = discount.value.toDouble(),
-                        startDate = LocalDateTime.now().minusDays(1),
-                        endDate = LocalDateTime.now().plusDays(5),
+                        startDate = parseDate(startDate.value)!!,
+                        endDate = parseDate(endDate.value)!!,
                         id = ""
                     ),
                     bonus = Company.Bonus(
-                        id = "0",
-                        title = "TODO()",
-                        description = "TODO()",
-                        startDate = LocalDateTime.now().minusDays(1),
-                        endDate = LocalDateTime.now().plusDays(5),
+                        id = "",
+                        title = title.value,
+                        description = description.value,
+                        startDate = parseDate(startDate.value)!!,
+                        endDate = parseDate(endDate.value)!!,
                         bonusFromPurchase = 0.2,
                         bonusPaymentPercent = 9.5
                     )

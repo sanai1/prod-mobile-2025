@@ -1,5 +1,6 @@
 package com.kotleters.mobile.feature.company.data.network.mapper
 
+import android.util.Log
 import com.kotleters.mobile.common.domain.Company
 import com.kotleters.mobile.common.domain.OfferType
 import com.kotleters.mobile.feature.company.data.network.model.OfferCompanyCreateModel
@@ -12,12 +13,13 @@ object OfferMapper {
     ): OfferCompanyCreateModel? {
         val zone = ZoneId.systemDefault()
         if (discount != null) {
+            Log.d("HHH", discount.startDate.atZone(zone).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime().toString())
             return OfferCompanyCreateModel(
                 type = OfferType.DISCOUNT.name,
                 title = discount.title,
                 description = discount.description,
-                start_date = discount.startDate.atZone(zone).withZoneSameInstant(ZoneId.of("UTC")).toLocalTime().toString(),
-                end_date = discount.endDate.atZone(zone).withZoneSameInstant(ZoneId.of("UTC")).toLocalTime().toString(),
+                start_date = discount.startDate.atZone(zone).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime().toString(),
+                end_date = discount.endDate.atZone(zone).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime().toString(),
                 discount = discount.discount,
             )
         } else if (bonus != null) {

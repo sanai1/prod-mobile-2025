@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.backgroundColor
@@ -32,6 +33,7 @@ import com.kotleters.mobile.feature.company.presentation.anal.CompanyAnalScreenV
 import com.kotleters.mobile.feature.company.presentation.anal.axisTypes
 import com.kotleters.mobile.feature.company.presentation.anal.periods
 import com.kotleters.mobile.feature.company.presentation.anal.states.AIState
+import com.kotleters.mobile.feature.company.presentation.anal.states.AnalListState
 import com.kotleters.mobile.feature.company.presentation.anal.states.CompanyAnalyticsScreenState
 import com.kotleters.mobile.feature.company.presentation.anal.testData
 
@@ -69,18 +71,40 @@ fun StatsScreen(
             }
         }
         item {
-            AnalSlider(axisTypes, yAxisType) {
-                yAxisType = it
+            when(state){
+                is CompanyAnalyticsScreenState.Content -> {
+                    when(state.statsState.analListState){
+                        is AnalListState.Content -> {
+                            AnalSlider(axisTypes, yAxisType) {
+                                yAxisType = it
+                            }
+                            AnalSlider(periods, period) {
+                                period = it
+                            }
+//                            AnimatedBarChart(
+//                                data = state.statsState.analListState.analytics ,
+//                                yAxisType = yAxisType,
+//                                period = period,
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .height(500.dp)
+//                                    .padding(24.dp)
+//                            )
+                        }
+                        AnalListState.Error -> {
+                            ErrorState()
+                        }
+                        AnalListState.Loading -> {
+                            ShimmerEffectCard(
+                                modifier = Modifier.fillMaxWidth()
+                                    .height(500.dp)
+                            )
+                        }
+                    }
+
+                }
+                is CompanyAnalyticsScreenState.DetailMessage -> TODO()
             }
-            AnalSlider(periods, period) {
-                period = it
-            }
-            AnimatedBarChart(
-                data = testData,
-                yAxisType = yAxisType,
-                period = period,
-                modifier = Modifier.fillMaxWidth().height(500.dp).padding(24.dp)
-            )
         }
     }
 

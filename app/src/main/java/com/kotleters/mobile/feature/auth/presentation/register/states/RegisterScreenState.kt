@@ -2,6 +2,7 @@ package com.kotleters.mobile.feature.auth.presentation.register.states
 
 import com.kotleters.mobile.common.category.domain.CategoryInfo
 import com.kotleters.mobile.feature.auth.domain.UserAuth
+import com.kotleters.mobile.feature.company.presentation.add_offer.states.CategoryUI
 import java.time.LocalDateTime
 
 sealed class RegisterScreenState {
@@ -9,6 +10,7 @@ sealed class RegisterScreenState {
     data object Loading : RegisterScreenState()
 
     data object Success : RegisterScreenState()
+
 
     data class Content(
         val currentRegisterStep: Int,
@@ -18,7 +20,7 @@ sealed class RegisterScreenState {
         val registerStep4: RegisterStep4,
         val isError: Boolean,
         val userAuth: UserAuth,
-        val categories: List<CategoryInfo>
+        val categories: List<CategoryUI>
     ) : RegisterScreenState()
 }
 
@@ -32,12 +34,12 @@ data class RegisterStep3(
     val title: String,
     val percent: Int,
     val description: String,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime
+    val startDate: String,
+    val endDate: String
 )
 
 data class RegisterStep2(
-    val category: String,
+    val category: CategoryUI?,
     val underCategory: String,
 )
 

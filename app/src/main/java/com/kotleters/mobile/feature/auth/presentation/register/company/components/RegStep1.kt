@@ -92,7 +92,9 @@ fun RegStep1(
         "Продолжить",
         state.registerStep1.title.isNotEmpty()
     ) {
-        viewModel.nextStep()
+        if (state.registerStep1.title.isNotEmpty()){
+            viewModel.nextStep()
+        }
     }
 
 }

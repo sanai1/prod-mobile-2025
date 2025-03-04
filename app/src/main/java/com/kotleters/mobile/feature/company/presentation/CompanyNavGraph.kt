@@ -17,6 +17,7 @@ import com.kotleters.mobile.feature.company.presentation.anal.CompanyAnalScreenV
 import com.kotleters.mobile.feature.company.presentation.anal.CompanyAnalyticsScreen
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainScreen
 import com.kotleters.mobile.feature.company.presentation.main.CompanyMainViewModel
+import com.kotleters.mobile.feature.company.presentation.main.states.CompanyMainScreenState
 import com.kotleters.mobile.feature.company.presentation.pay.CompanyPayScreen
 import com.kotleters.mobile.feature.company.presentation.pay.CompanyPayScreenViewModel
 
@@ -55,7 +56,8 @@ fun NavGraphBuilder.companyNavGraph(
                 success = {
                     companyMainViewModel.fetchData()
                     navController.popBackStack()
-                }
+                },
+                isBn = true,
             )
         }
         composable(COMPANY_PAY) {

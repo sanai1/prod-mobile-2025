@@ -3,15 +3,29 @@ package com.kotleters.mobile.feature.auth.presentation.register.company.componen
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +50,8 @@ import com.kotleters.mobile.common.ui.theme.secondaryGray
 import com.kotleters.mobile.feature.auth.presentation.register.RegisterViewModel
 import com.kotleters.mobile.feature.auth.presentation.register.company.regSteps
 import com.kotleters.mobile.feature.auth.presentation.register.states.RegisterScreenState
+import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.AddLakunaScreenState
+import com.kotleters.mobile.feature.client.presentation.add_lakuna.states.CategoryState
 
 @Composable
 fun RegStep2(
@@ -43,21 +59,115 @@ fun RegStep2(
     state: RegisterScreenState
 ) {
 
+    var isCategoryMenu by remember { mutableStateOf(false) }
+    var isSubMenu by remember { mutableStateOf(false) }
 
-    DefaultTextField("Категория*", (state as RegisterScreenState.Content).registerStep2.category) {
-        viewModel.changeCategory(it)
-    }
-    DefaultTextField(
-        "Подкатегория*",
-        (state as RegisterScreenState.Content).registerStep2.underCategory
+    Row(
+        modifier = Modifier
+            .padding(
+                vertical = 16.dp,
+                horizontal = 32.dp
+            )
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(secondaryGray)
+            .noRippleClickable {
+                isCategoryMenu = true
+            }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        viewModel.changeUnderCategory(it)
+        Text(
+            if ((state as RegisterScreenState.Content).registerStep2.category != null) "${(state as RegisterScreenState.Content).registerStep2.category?.category}" else "Выбрать категорию",
+            fontSize = 16.sp, color = Color.White
+        )
+        Spacer(Modifier.weight(1f))
+        Icon(
+            if (!isCategoryMenu) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowUp,
+            "",
+            tint = Color.White,
+            modifier = Modifier.size(24.dp)
+        )
+    }
+    Row(
+        Modifier.padding(horizontal = 16.dp)
+    ) {
+        DropdownMenu(
+            isCategoryMenu, {
+                isCategoryMenu = false
+            },
+            modifier = Modifier.height(300.dp),
+            containerColor = secondaryGray
+        ) {
+            (state as RegisterScreenState.Content).categories.forEach {
+                DropdownMenuItem({
+                    Text(it.category, color = Color.White)
+                }, {
+                    viewModel.changeCategory(it)
+                    isCategoryMenu = false
+                })
+            }
+        }
+    }
+    if ((state as RegisterScreenState.Content).registerStep2.category != null) {
+        Row(
+            modifier = Modifier
+                .padding(
+                    vertical = 16.dp,
+                    horizontal = 32.dp
+                )
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(secondaryGray)
+                .noRippleClickable {
+                    isSubMenu = true
+                }
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                if (state.registerStep2.underCategory != "") state.registerStep2.underCategory else "Выбрать подкатегорию",
+                fontSize = 16.sp, color = Color.White
+            )
+            Spacer(Modifier.weight(1f))
+            Icon(
+                if (!isCategoryMenu) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowUp,
+                "",
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        Row(
+            Modifier.padding(horizontal = 16.dp)
+        ) {
+            DropdownMenu(
+                isSubMenu, {
+                    isSubMenu = false
+                },
+                modifier = Modifier.sizeIn(maxHeight = 300.dp),
+                containerColor = secondaryGray
+            ) {
+                (state as RegisterScreenState.Content).registerStep2.category!!.subCategory.forEach {
+                    DropdownMenuItem({
+                        Text(it, color = Color.White)
+                    }, {
+                        viewModel.changeUnderCategory(it)
+                        isSubMenu = false
+                    })
+                }
+            }
+        }
     }
     WhiteButton(
         "Продолжить",
-        state.registerStep2.category.isNotEmpty()
+        (state as RegisterScreenState.Content).registerStep2.category != null
+                && state.registerStep2.underCategory != ""
     ) {
-        viewModel.nextStep()
+        if ((state as RegisterScreenState.Content).registerStep2.category != null
+            && state.registerStep2.underCategory != ""){
+            viewModel.nextStep()
+        }
     }
 
 }
+

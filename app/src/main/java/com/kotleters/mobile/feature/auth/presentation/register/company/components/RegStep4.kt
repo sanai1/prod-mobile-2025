@@ -22,18 +22,16 @@ fun RegStep4(
     ) {
         viewModel.changeCompanyPassword(it)
     }
-    DefaultTextField(
-        "Подтвердите пароль*",
-        (state as RegisterScreenState.Content).registerStep4.passwordAgain
-    ) {
-        viewModel.changeCompanyPasswordAgain(it)
-    }
+
     WhiteButton(
         "Готово",
         state.registerStep4.password.isNotEmpty() &&
-                state.registerStep4.email.isNotEmpty() && state.registerStep4.passwordAgain.isNotEmpty()
+                state.registerStep4.email.isNotEmpty()
     ) {
-        viewModel.nextStep()
+        if (state.registerStep4.password.isNotEmpty() &&
+            state.registerStep4.email.isNotEmpty()){
+            viewModel.onRegister()
+        }
     }
 
 }

@@ -18,11 +18,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kotleters.mobile.common.domain.Lacuna
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.common.ui.theme.secondaryGray
+import com.kotleters.mobile.feature.client.domain.entity.LacunaClient
 
 @Composable
-fun ClientLakunaCard() {
+fun ClientLakunaCard(
+    lacuna: LacunaClient
+) {
 
     Column(
         modifier = Modifier
@@ -33,9 +37,9 @@ fun ClientLakunaCard() {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Еда", fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+        Text(lacuna.category, fontSize = 24.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
         Text(
-            "Рестораны",
+            lacuna.subcategory,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium,
             color = Color.White.copy(0.7f)
@@ -53,22 +57,10 @@ fun ClientLakunaCard() {
                     fontSize = 14.sp
                 )
                 ){
-                    append("Бля мне пиздец не нравится ебучий ресторан\n" +
-                            "под названием Вкус Очка. Там еда говнище, а \n" +
-                            "также тупоеблый персонал и ")
-                }
-                withStyle(
-                    SpanStyle(
-                    color = Color(0xFF2F4ECB),
-                    fontSize = 14.sp
-                )
-                ){
-                    append("еще...")
+                    append(lacuna.text)
                 }
             },
-            modifier = Modifier.noRippleClickable {
-
-            }
+            maxLines = 4,
         )
     }
 

@@ -49,7 +49,7 @@ class CompanyAnalScreenViewModel @Inject constructor(
     private var lacunasState: LacunasState = LacunasState.Loading
 
     init {
-//        fetchAnal()
+        fetchAnal()
         sendMessage()
         getLacunas()
         generateLacunas()

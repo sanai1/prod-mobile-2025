@@ -46,8 +46,8 @@ fun ClientProfileLakunaSection(
                     addLakuna()
                 }
             )
-            repeat(10) {
-                ClientLakunaCard()
+            state.lacunas.forEach {
+                ClientLakunaCard(it)
             }
         }
     }
