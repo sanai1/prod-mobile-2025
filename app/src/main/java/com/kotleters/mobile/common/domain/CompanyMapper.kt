@@ -46,7 +46,7 @@ object CompanyMapper {
                                 it.end_date,
                                 DateTimeFormatter.ISO_DATE_TIME
                             ),
-                            bonusFromPurchase = it.bonus_from_purchase!!,
+                            bonusFromPurchase = it.bonus_from_purchases!!,
                             bonusPaymentPercent = it.bonus_payment_percent!!
                         )
                     }
