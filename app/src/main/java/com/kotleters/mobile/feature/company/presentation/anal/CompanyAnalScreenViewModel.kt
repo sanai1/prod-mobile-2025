@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kotleters.mobile.common.ai.data.FIRST_KEY
+import com.kotleters.mobile.common.ai.data.SECOND_KEY
 import com.kotleters.mobile.common.ai.data.network.model.Message
 import com.kotleters.mobile.common.ai.domain.AIRepository
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
@@ -37,7 +39,7 @@ class CompanyAnalScreenViewModel @Inject constructor(
                     aiState = AIState.Loading
                 ),
                 currentState = AnalState.STATS,
-                lacunasState = LacunasState.Loading
+                lacunasState = LacunasState.OnBoard
             )
         )
     val state = _state.asStateFlow()
@@ -46,37 +48,46 @@ class CompanyAnalScreenViewModel @Inject constructor(
 
     private var currentAIState: AIState = AIState.Loading
     private var currentAnalState: AnalListState = AnalListState.Loading
-    private var lacunasState: LacunasState = LacunasState.Loading
+    private var lacunasState: LacunasState = LacunasState.OnBoard
 
     init {
         fetchAnal()
         sendMessage()
-        getLacunas()
-        generateLacunas()
     }
 
-    fun generateLacunas(){
+    fun startGenerate(){
+        viewModelScope.launch(Dispatchers.IO) {
+            lacunasState = LacunasState.Loading
+            updateState()
+            getLacunas()
+            generateLacunas()
+        }
+    }
+
+    private fun generateLacunas() {
         viewModelScope.launch {
             try {
                 val result = aiRepository.ChatResponce(
                     Message(
                         "user",
-                        buildPrompt(lacunaData)
-                    )
+                        buildPrompt(lacunaData),
+                    ),
+                    apiKey = FIRST_KEY
                 )
-                val lacunas = parseResponse(result.toString().removePrefix("Success(").removeSuffix(")"))
+                val lacunas =
+                    parseResponse(result.toString().removePrefix("Success(").removeSuffix(")"))
                 lacunasState = LacunasState.Content(
                     lacunas = lacunas
                 )
                 updateState()
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 lacunasState = LacunasState.Error
                 updateState()
             }
         }
     }
 
-    fun getLacunas() {
+    private fun getLacunas() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = companyRepository.getLacunas()
             when (result) {
@@ -104,7 +115,8 @@ class CompanyAnalScreenViewModel @Inject constructor(
                 Message(
                     "user",
                     generateStatisticsPrompt(testData)
-                )
+                ),
+                apiKey = SECOND_KEY
             )
             currentAIState =
                 AIState.Content(result.toString().removePrefix("Success(").removeSuffix(")"))

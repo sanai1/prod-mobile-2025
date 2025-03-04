@@ -30,6 +30,8 @@ sealed class LacunasState{
     data class Content(
         val lacunas: List<LacunaUI>,
     ) : LacunasState()
+
+    data object OnBoard : LacunasState()
 }
 
 sealed class AIState {

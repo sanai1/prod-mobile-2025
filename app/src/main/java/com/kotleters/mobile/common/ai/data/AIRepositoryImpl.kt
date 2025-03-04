@@ -9,13 +9,14 @@ import kotlinx.coroutines.withContext
 
 class AIRepositoryImpl: AIRepository{
 
-   override suspend fun ChatResponce(message: Message): Result<String>{
+   override suspend fun ChatResponce(message: Message, apiKey: String): Result<String>{
         return withContext(Dispatchers.IO){
             try {
                 val res = AIRetrofitClient.aiRetrofitService.getAIAdvice(
                     request = MistralRequest(
                         messages = listOf(message)
-                    )
+                    ),
+                    apikey = apiKey
                 ).execute()
 
                 if (res.code() == 200) {

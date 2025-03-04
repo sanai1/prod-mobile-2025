@@ -105,6 +105,14 @@ fun ImproveScreen(
                             )
                         }
                     }
+
+                    LacunasState.OnBoard -> {
+                        item {
+                            OnBoardCard {
+                                viewModel.startGenerate()
+                            }
+                        }
+                    }
                 }
             }
 
