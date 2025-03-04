@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -65,8 +66,34 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
+
+    // Security Storage
+    implementation (libs.androidx.security.crypto)
+
+    // QR code
+    implementation(libs.core)
+    implementation(libs.barcode.scanning)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    // Coil
+    implementation(libs.coil.compose)
+
+    // Animated nav
+    implementation(libs.accompanist.navigation.animation)
+
+    // PullToRefresh
+    implementation (libs.accompanist.swiperefresh)
+
+    // Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+
 }
