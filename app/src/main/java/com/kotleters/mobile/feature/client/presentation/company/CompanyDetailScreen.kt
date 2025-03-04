@@ -36,8 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.R
 import com.kotleters.mobile.common.domain.Company
+import com.kotleters.mobile.common.ui.components.WhiteButton
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.feature.client.presentation.company.components.OfferCard
+import com.kotleters.mobile.feature.client.presentation.main.ClientMainScreenViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -73,6 +75,8 @@ fun CompanyDetailScreen(
                 )
             }
         }
+        WhiteButton("Списать баллы", true) { }
+        WhiteButton("Накопить баллы", true) { }
         LazyColumn {
             item {
                 Text(

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
+import com.kotleters.mobile.common.ui.components.states.EmptyState
 import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.theme.backgroundColor
 import com.kotleters.mobile.common.ui.theme.lightGray
@@ -63,18 +64,22 @@ fun ClientMainScreen(
                                 fontWeight = FontWeight.Medium, color = lightGray,
                                 modifier = Modifier.padding(16.dp)
                             )
-                            FlowRow(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                (state as ClientMainScreenState.Content).companies.forEach {
-                                    CompanyCard(company = it, onClick = {
-                                        goToCompany(
-                                            (state as ClientMainScreenState.Content).companies.indexOf(
-                                                it
+                            if ((state as ClientMainScreenState.Content).companies.isEmpty()){
+                                EmptyState()
+                            }else{
+                                FlowRow(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    (state as ClientMainScreenState.Content).companies.forEach {
+                                        CompanyCard(company = it, onClick = {
+                                            goToCompany(
+                                                (state as ClientMainScreenState.Content).companies.indexOf(
+                                                    it
+                                                )
                                             )
-                                        )
-                                    })
+                                        })
+                                    }
                                 }
                             }
                         }

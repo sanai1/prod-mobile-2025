@@ -1,6 +1,7 @@
 package com.kotleters.mobile.feature.client.presentation.main
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kotleters.mobile.common.data.network.model.ResponseTemplate
@@ -29,18 +30,20 @@ class ClientMainScreenViewModel @Inject constructor(
         fetchCompanies()
     }
 
-    fun fetchCompanies(){
+
+    fun fetchCompanies() {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update {
                 ClientMainScreenState.Loading
             }
             val result = clientRepository.getAllOffers()
-            when(result){
+            when (result) {
                 is ResponseTemplate.Error -> {
                     _state.update {
                         ClientMainScreenState.Error(result.message)
                     }
                 }
+
                 is ResponseTemplate.Success -> {
                     companies.clear()
                     companies.addAll(result.data)
@@ -50,10 +53,10 @@ class ClientMainScreenViewModel @Inject constructor(
         }
     }
 
-    private fun updateState(){
+    private fun updateState() {
         _state.update {
             ClientMainScreenState.Content(
-                companies = companies
+                companies = companies,
             )
         }
     }

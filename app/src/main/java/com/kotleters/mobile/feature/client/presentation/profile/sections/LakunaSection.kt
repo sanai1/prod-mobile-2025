@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
+import com.kotleters.mobile.common.ui.components.states.EmptyState
 import com.kotleters.mobile.common.ui.components.states.ErrorState
 import com.kotleters.mobile.common.ui.extensions.noRippleClickable
 import com.kotleters.mobile.feature.client.presentation.profile.ClientProfileScreenViewModel
@@ -46,8 +47,12 @@ fun ClientProfileLakunaSection(
                     addLakuna()
                 }
             )
-            state.lacunas.forEach {
-                ClientLakunaCard(it)
+            if (state.lacunas.isEmpty()){
+                EmptyState()
+            }else{
+                state.lacunas.forEach {
+                    ClientLakunaCard(it)
+                }
             }
         }
     }

@@ -56,7 +56,7 @@ fun ClientProfileBonusSection(
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            "балла", fontSize = 24.sp,
+                            "баллoв", fontSize = 24.sp,
                             color = Color.White.copy(alpha = 0.7f),
                             fontWeight = FontWeight.Normal
                         )

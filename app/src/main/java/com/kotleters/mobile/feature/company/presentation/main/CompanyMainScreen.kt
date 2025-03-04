@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.kotleters.mobile.common.ui.components.ShimmerEffectCard
 import com.kotleters.mobile.common.ui.components.TopScreenHeader
@@ -92,7 +93,7 @@ fun CompanyMainScreen(
                                 is InfoState.Content -> {
                                     Box() {
                                         Image(
-                                            painter = rememberImagePainter(((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image),
+                                            painter = rememberAsyncImagePainter(((state as CompanyMainScreenState.Content).infoState as InfoState.Content).image),
                                             contentDescription = "Loaded Image",
                                             modifier = Modifier
                                                 .padding(16.dp)

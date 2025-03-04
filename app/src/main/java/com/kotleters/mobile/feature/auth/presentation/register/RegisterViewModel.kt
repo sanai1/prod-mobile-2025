@@ -226,16 +226,12 @@ class RegisterViewModel @Inject constructor(
                                 description = registerStep3.description,
                                 startDate = parseDate(registerStep3.startDate)!!,
                                 endDate = parseDate(registerStep3.endDate)!!,
-                                discount = registerStep3.percent.toDouble()
+                                discount = registerStep3.percent.toDouble()/10
                             )
                         )
-                        if (photoResult is ResponseTemplate.Success
-                            && offerResult is ResponseTemplate.Success
-                        ) {
-                            _state.update {
-                                RegisterScreenState.Success
+                        _state.update {
+                            RegisterScreenState.Success
 
-                            }
                         }
                     }
                 }
